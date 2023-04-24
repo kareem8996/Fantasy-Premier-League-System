@@ -5,13 +5,13 @@ using namespace std;
 
 class Admin {
 private:
-	int id;
-	string phoneNumber, name, password, email, Adminname;
+	
+	string phoneNumber, name, password, email, userName;
 public:
 
-	Admin(int id, string& name,
+	Admin(string& name,
 		string& email,
-		string& Adminname,
+		string& userName,
 		string& password,
 		string& phoneNumber);
 	Admin();
@@ -19,14 +19,14 @@ public:
 
 
 
-	void setId(int id);
+	
 	void setName(string name);
 	void setEmail(string email);
 	void setUsername(string username);
 	bool setPhoneNumber(string phone_number);
 	void setPassword(string password);
 
-	int getId();
+	
 	string getName();
 	string getEmail();
 	string getUsername();
