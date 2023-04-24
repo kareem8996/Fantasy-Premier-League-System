@@ -1,4 +1,5 @@
 #include "User_Team.h"
+#include "System.h"
 User_Team::User_Team() {
 	totalPlayers = 0;
 	totalAttackers = 0;
@@ -27,6 +28,7 @@ bool User_Team::canAddPlayerPrice(Player p) {
 }
 
 bool User_Team::canAddPlayerCount(Player p) {
+
 	return teamCount[p.getClub()] !=3;
 }
 
@@ -42,7 +44,7 @@ void User_Team::pickSquad() {
 		
 		if (position_picked == "1") {
 			if (canAddPlayerPosition("GoalKeeper")) {
-				//show goalkeepers to choose from
+				
 			}
 			else {
 				cout << "You have reached the maximum number of GoalKeepers to choose from\n";
@@ -125,4 +127,10 @@ void User_Team::RemovePlayer(Player p) {
 	}
 	totalPlayers--;
 	Squad.erase(p.getNumber());
+}
+void displayPlayers(string position) {
+	
+}
+void displayPlayers(int ID) {
+
 }
