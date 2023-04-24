@@ -3,7 +3,7 @@
 int main()
 {
 
-    System* system = new System();
-    system->RunSys();
+    
+    System::RunSys();
     
 }

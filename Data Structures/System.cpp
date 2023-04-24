@@ -8,21 +8,29 @@
 #include <fstream>
 #include <signal.h>
 using namespace std;
-System::System() {
-    startchoice = "";
-    loginChoice = "";
-    menuChoice = "";
-    registerChoice = "";
 
-}
-  void System::printSeprator() {
+string const System::choice_error = "\tPlease enter your choice here --->\t";
+vector<string> const System::domains = { "gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" };
+string  System::startchoice="",
+        System:: registerChoice = "",
+        System::loginChoice = "",
+        System::menuChoice = "";
+User System::CurrUser;
+Admin System::CurrAdmin;
+vector<User> System::Allusers;
+vector<Admin> System::AllAdmins;
+unordered_map<string, Club> System::AllClub; //name,club object
+unordered_map < string, unordered_map<int, Player>> System::AllPlayers;
+void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
     cout << "\033[2J\033[1;1H";
 }
- void System::printSeprator_for_errors() {
+
+void System::printSeprator_for_errors() {
     cout << "-------------------------------------------------------------------------------------\n";
 
 }
+
 void System::InputFaliure(string& choice, string message) {
     while (cin.fail()) {
         cin.clear();
@@ -88,20 +96,6 @@ void System::RegisterMenu() {
 
 }
 
-bool System::Check_Database(string username) {
-    for (int i = 0; i < Allusers.size(); i++) {
-
-        if (Allusers[i].getUsername() == username) {
-            return false;
-        }
-    }
-    /*for (int i = 0; i<AllAdmins.size(); i++) {
-        if (AllAdmins[i].username == username) {
-            return false;
-        }
-    }*/
-    return true;
-}
 bool System::Check_Name(string& Name) {
 
     /*Here we validate that the name should be at least three letters*/
@@ -124,6 +118,21 @@ bool System::Check_Name(string& Name) {
             break;
         }
     }
+    return true;
+}
+
+bool System::Check_Database(string username) {
+    for (int i = 0; i < Allusers.size(); i++) {
+
+        if (Allusers[i].getUsername() == username) {
+            return false;
+        }
+    }
+    /*for (int i = 0; i<AllAdmins.size(); i++) {
+        if (AllAdmins[i].username == username) {
+            return false;
+        }
+    }*/
     return true;
 }
 bool System::Check_Username(string& Username) {
@@ -252,7 +261,7 @@ bool System::Check_Email(string& Email) {
 }
 
 void System::RegisterUser() {
-
+    cout << "Now Registering as an User\n";
     string Name;
     string Username;
     string Phone;
@@ -345,6 +354,94 @@ void System::RegisterUser() {
     } while (vUsername != true);
 }
 
+void System::RegisterAdmin() {
+    cout << "Now Registering as an Admin\n";
+    string Name;
+    string Username;
+    string Phone;
+    string Email;
+    
+    string Password, conpass;         //For entering and checking password before sending it to database "Vector"
+    int at_index = 1;
+    bool test_name = true;       //A boolean to check if the name has numbers or not
+    bool vUsername = true;
+    bool Check_Password = true;
+    bool vPhone = true;
+    bool vEmail = true;
+    cin.ignore();
+    /*Input of Name*/
+    do {
+        cout << "Enter your Full name: ";
+        getline(cin, Name);
+        if (cin.fail())
+            InputFaliure(Name, "Please Enter your Full name:");
+        test_name = Check_Name(Name);
+    } while (test_name != true);
+
+    /*Input of username*/
+    do {
+        do {
+            cout << "Enter Username: ";
+            getline(cin, Username);
+            if (cin.fail())
+                InputFaliure(Username, "Please Enter your Username:");
+            test_name = Check_Username(Username);
+        } while (test_name != true);
+
+
+        vUsername = Check_Database(Username);
+        if (vUsername) {
+            // input password
+            do {
+                cout << "Enter Password: ";
+                do {
+                    cin >> Password;
+                    if (cin.fail())
+                        InputFaliure(Password, "Please enter your Password:");
+                    if (Password == Username) {
+                        Check_Password = false;
+                        cout << "The password is the same as your username\nPlease enter another password:";
+                    }
+                    else
+                        Check_Password = true;
+                } while (Check_Password != true);
+                cout << "Renter password: ";
+                cin >> conpass;
+                if (cin.fail())
+                    InputFaliure(conpass, "Please renter password: ");
+                if (Password != conpass)
+                    cout << "Password doesn't match\nPlease enter the password again\n";
+            } while (Password != conpass);
+            // input Phone
+            do {
+                cout << "Enter Phone Number: ";
+                cin >> Phone;
+                if (cin.fail())
+                    InputFaliure(Phone, "Please enter Phone Number:");
+                vPhone = Check_Phone(Phone);
+            } while (!vPhone);
+            // input Email
+            do {
+                cout << "Enter Your email";
+                cin >> Email;
+                if (cin.fail())
+                    InputFaliure(Email, "Please enter Email:");
+                vEmail = Check_Email(Email);
+            } while (!vEmail);
+            Admin admin = { Name, Email, Username, Password, Phone};
+            AllAdmins.push_back(admin);
+            CurrAdmin = AllAdmins.back();
+        }
+        else {
+            cout << "this username is already taken, Please enter another username.\n";
+        }
+        cout << "\t\tThank You for registering on our system!\n";
+        printSeprator();
+        loginChoice = "1";
+        startchoice = "1";
+    } while (vUsername != true);
+}
+
 bool System::userLogin(vector<User>allusers, string attemptedUsername, string attemptedPassword) {
     for (int i = 0; i < allusers.size(); i++) {
         if (allusers[i].getUsername() == attemptedUsername) {
@@ -367,6 +464,7 @@ bool System::AdminLogin(vector<Admin>AllAdmins, string attemptedUsername, string
     }
     return false;
 }
+
 void System::Pass_Encode(string& pass) {
     char input = '0';
     while (input != '\r') {
@@ -385,26 +483,183 @@ void System::Pass_Encode(string& pass) {
     pass.pop_back();
 }
 void System::loginInput() {
+    string tAgain="Y";
+    do{
+        string attemptedUserName, attemptedPassword;
 
-    string attemptedUserName, attemptedPassword;
+        cout << "Enter username: \n";
+        cin >> attemptedUserName;
+        if (cin.fail())
+            InputFaliure(attemptedUserName, "Try to enter Your username");
 
-    cout << "Enter username: \n";
-    cin >> attemptedUserName;
-    cout << "Enter password: \n";
-    Pass_Encode(attemptedPassword);
-    if (userLogin(Allusers, attemptedUserName, attemptedPassword))
-        loginChoice = '2';
-    else if (AdminLogin(AllAdmins, attemptedUserName, attemptedPassword))
-    {
-        loginChoice = '1';
-    }
+        cout << "Enter password: \n";
+        
+        Pass_Encode(attemptedPassword);
+        if (userLogin(Allusers, attemptedUserName, attemptedPassword)) {
+            loginChoice = '2';
+            tAgain = "N";
+        }
+        else if (AdminLogin(AllAdmins, attemptedUserName, attemptedPassword))
+        {
+            loginChoice = '1';
+            tAgain = "N";
+        }
+        else {
+            cout << "Invalid Username or Password\n";
+            do{
+                cout << "Would you like to Try again?? (Y/N)";
+                cin >> tAgain;
+                if (cin.fail())
+                    InputFaliure(tAgain, "Please enter your choice correctly");
+            } while (tAgain != "Y" || tAgain != "y" || tAgain != "N" || tAgain != "n");
 
+        }
+        printSeprator();
+
+    } while (tAgain!= "N" && tAgain != "n");
+    printSeprator();
 }
 
 void System::printUserMenu() {
+    string Logout_choice = "";
+    string Quit_choice = "";
+    do{
+
     cout << "Hello " << CurrUser.getName();
+    cout << "\t\tWhat would you like to do ??\n"
+        << "\t\t1 - Manage Squad\n"
+        << "\t\t2 - Create League\n"
+        << "\t\t3 - Join League\n"
+        << "\t\t4 - Change Account Info\n"
+        << "\t\t7 - To Logout\n"
+        << "\t\t8 - To Quit the System\n";
+    do {
+        cout << "\tPlease enter your choice here --->\t";
+        cin >> menuChoice;
+        if (cin.fail())
+            InputFaliure(menuChoice, choice_error);
+        if (menuChoice.size() == 1 && isdigit(menuChoice[0])) {
+            break;
+        }
+        else {
+            printSeprator_for_errors();
+            cout << "\t\t\tPlease enter a digit\n";
+            printSeprator_for_errors();
+        }
+    } while (true);
+    switch (menuChoice[0])
+    {
+    case '1':
+        printSeprator();
+        ManageSqaudMenu(CurrUser.getSquad());
+        printSeprator();
+        break;
+    case '2':
+
+        Sleep(5000);
+        printSeprator();
+        break;
+    case '3':
+
+        Sleep(5000);
+        printSeprator();
+        break;
+    case '4':
+
+        Sleep(3000);
+        printSeprator();
+        break;
+    case '5':
+
+        do {
+            cin >> Logout_choice;
+            if (Logout_choice.size() == 1 && isalpha(Logout_choice[0])) {
+                if (Logout_choice[0] == 'Y' || Logout_choice[0] == 'y') {
+                    cout << "Logging you out";
+                    for (int i = 0; i < 3; i++) {
+                        Sleep(1000);
+                        cout << ". ";
+                    }
+                    loginChoice = "3";
+                    cout << "\n--------------------Thank You for using our system!--------------------\n";
+                    Sleep(1000);
+                    break;
+                }
+                else if (Logout_choice[0] == 'N' || Logout_choice[0] == 'n') {
+                    Sleep(1000);
+                    printSeprator();
+                    break;
+                }
+                else {
+
+                    printSeprator_for_errors();
+                    cout << "\t\tPlease enter a (Y/N)\n";
+                    printSeprator_for_errors();
+                }
+            }
+            else {
+                printSeprator_for_errors();
+                cout << "\t\tPlease enter a (Y/N)\n";
+                printSeprator_for_errors();
+            }
+
+        } while (Logout_choice[0] != 'Y' || Logout_choice[0] != 'y' || Logout_choice[0] == 'N' || Logout_choice[0] == 'n');
+        break;
+    case '6':
+        cout << "Are you Sure you want to Quit?\n";
+        do {
+            cin >> Quit_choice;
+            if (Quit_choice.size() == 1 && isalpha(Quit_choice[0])) {
+                if (Quit_choice[0] == 'Y' || Quit_choice[0] == 'y') {
+                    cout << "Exiting the system";
+
+                    for (int i = 0; i < 3; i++) {
+                        Sleep(1000);
+                        cout << ". ";
+                    }
+                    cout << "\n--------------------Thank You for using our system!--------------------\n";
+                  
+                    Sleep(1000);
+                    exit(0);
+                    break;
+                }
+                else if (Quit_choice[0] == 'N' || Quit_choice[0] == 'n') {
+                    Sleep(1000);
+                    printSeprator();
+                    break;
+                }
+                else {
+
+                    printSeprator_for_errors();
+                    cout << "\t\tPlease enter (Y/N)\n";
+                    printSeprator_for_errors();
+                }
+            }
+            else {
+                printSeprator_for_errors();
+                cout << "\t\tPlease enter (Y/N)\n";
+                printSeprator_for_errors();
+            }
+
+        } while (Quit_choice[0] != 'Y' || Quit_choice[0] != 'y' || Quit_choice[0] == 'N' || Quit_choice[0] == 'n');
+        break;
+    default:
+        printSeprator();
+        cout << "\tSorry this is an invalid choice please enter again.\n";
+        printSeprator();
+        break;
+    }
+
+
+    } while (menuChoice != "5");
+    
+}
+void System::printAdminMenu() {
+    cout << "Hello " << CurrAdmin.getName();
     cin >> loginChoice;
 }
+
+
 void System::RunSys() {
     do {
         /*
@@ -437,7 +692,7 @@ void System::RunSys() {
         if (startchoice == "1") {
             do {
                 if (loginChoice == "") {
-                    if (Allusers.size() != 0) {
+                    if (Allusers.size() != 0||AllAdmins.size()!=0) {
                         /*
                         LoginInput is the function that the user enter his username and password
                         ==========================================================================
@@ -472,7 +727,7 @@ void System::RunSys() {
                 */
                 switch (loginChoice[0]) {
                 case '1':
-                    //printAdminMenu();
+                    printAdminMenu();
                     break;
                 case '2':
                     printUserMenu();
@@ -515,7 +770,7 @@ void System::RunSys() {
                     3-Password
                     4-Phone number
                     */
-                    //RegisterAdmin();
+                    RegisterAdmin();
                     break;
                 case '2':
                     /*Patient Registeration
@@ -568,4 +823,68 @@ void System::RunSys() {
         }
     } while (true);
 
+}
+
+void System::ManageSqaudMenu(User_Team& c) {
+    
+    if (c.getTotalPlayers() != 0) {
+        cout << "\t\tWhat would you like to do ??\n"
+            << "\t\t1 - Manage Squad\n"
+            << "\t\t2 - Create League\n"
+            << "\t\t3 - Join League\n"
+            << "\t\t4 - Change Account Info\n"
+            << "\t\t7 - To Logout\n"
+            << "\t\t8 - To Quit the System\n";
+    }
+    else {
+        c.pickSquad();
+    }
+    CurrUser.setSquad(c);
+    
+
+}
+void System::displayPlayers(Player p, bool flag, string delim) {
+    /// <summary>
+    /// displays only one player
+    /// </summary>
+    /// <param name="p">player obkect</param>
+    /// <param name="flag">This is used so we can use the same code twice</param>
+    /// <param name="delim"> the delimiter can either be enter or tab</param>
+    System::printSeprator_for_errors();
+    cout << "ID: " << p.getID() << delim;
+    cout << "Name: " << p.getFullname() << delim;
+    cout << "Club: " << p.getClub() << delim;
+    cout << "Price: " << p.getPrice() << delim;
+    cout << "Current Week Points: " << p.getPoints() << delim;
+    cout << "Total Points: " << p.getTotalPoints() << delim;
+    if (!flag) {
+        cout << "Name: " << p.getFullname() << delim;
+        cout << "Position: " << p.getPosition() << delim;
+        cout << "Status: " << p.getStatus() << delim;
+        cout << "Tshirt Number: " << p.getNumber() << delim;
+        cout << "Current Week Goals: " << p.getGoals() << delim;
+        cout << "Total Goals: " << p.getTotalGoals() << delim;
+        cout << "Current Week Assists: " << p.getAssists() << delim;
+        cout << "Total Assists: " << p.getTotalAssists() << delim;
+        cout << "Current Week Yellow Cards: " << p.getYellowCards() << delim;
+        cout << "Total Yellow Cards: " << p.getTotalYellowCards() << delim;
+        cout << "Current Week Red Card: " << p.getRedCards() << delim;
+        cout << "Total Red Cards: " << p.getTotalRedCards() << delim;
+
+        if (p.getPosition() != "Attacker") {
+            cout << "Current Week Cleensheet: " << p.getCurrentCleanSheet() << delim;
+            cout << "Current Week Cleensheet: " << p.getTotalCleanSheets() << delim;
+        }
+    }
+    System::printSeprator_for_errors();
+}
+void System::displayPlayers(string position) {
+
+    /// <summary>
+    /// Displays all players who play in a certain position
+    /// </summary>
+    /// <param name="position"></param>
+    for (auto& it : System::AllPlayers[position]) {
+        displayPlayers(it.second, true, "\t||\t");
+    }
 }

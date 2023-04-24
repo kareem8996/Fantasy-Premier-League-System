@@ -11,47 +11,55 @@ using namespace std;
 
 class System {
 private:
-	string const choice_error = "\tPlease enter your choice here --->\t";
-	vector<string> const domains = {"gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" };
+	static string const choice_error ;
+	static vector<string> const domains;
 
 public:
-	System();
+	
 
-	string startchoice = "",
-		registerChoice = "",
-		loginChoice = "",
-		menuChoice = "";
-	User CurrUser;
-	Admin CurrAdmin;
+	static string startchoice ,
+		registerChoice ,
+		loginChoice ,
+		menuChoice ;
+	static User CurrUser;
+	static Admin CurrAdmin;
 	static vector<User> Allusers;
 	static vector<Admin> AllAdmins;
 	static unordered_map<string, Club> AllClub; //name,club object
 	static unordered_map < string, unordered_map<int, Player>> AllPlayers;
 	
 	//============= System Run ===========
-	void RunSys();
+	static void RunSys();
 	//============= Menus ================
-	void Start_menu();
-	void RegisterMenu();
-	void loginInput();
-	void printUserMenu();
+	static void Start_menu();
+	static void RegisterMenu();
+	static void loginInput();
+	static void printUserMenu();
+	static void printAdminMenu();
 	//============= System functions ==========
 	static void printSeprator();
 	static void printSeprator_for_errors();
-	void InputFaliure(string& choice, string message);
-	bool Check_Name(string& name);
-	bool Check_Phone(string& Phone);
-	bool Check_Username(string& Username);
-	bool Check_Password(string& Password);
-	bool Check_Email(string& Email);
-	bool Check_EmailDatabase(string Email);
-	void Pass_Encode(string& pass);
+	static void InputFaliure(string& choice, string message);
+	static bool Check_Name(string& name);
+	static bool Check_Phone(string& Phone);
+	static bool Check_Username(string& Username);
+	static bool Check_Password(string& Password);
+	static bool Check_Email(string& Email);
+	static bool Check_EmailDatabase(string Email);
+	static void Pass_Encode(string& pass);
 	//============= Registeration functions ================
-	void RegisterUser();
-	void RegisterAdmin();
-	bool Check_Database(string username);
-	bool Check_PhoneDatabase(string phone);
+	static void RegisterUser();
+	static void RegisterAdmin();
+	static bool Check_Database(string username);
+	static bool Check_PhoneDatabase(string phone);
 	//============= login functions====================
-	bool userLogin(vector<User>allusers, string attemptedUsername, string attemptedPassword);
-	bool AdminLogin(vector<Admin>AllAdmins, string attemptedUsername, string attemptedPassword);
+	static bool userLogin(vector<User>allusers, string attemptedUsername, string attemptedPassword);
+	static bool AdminLogin(vector<Admin>AllAdmins, string attemptedUsername, string attemptedPassword);
+	//================User Menus=======================
+	static void ManageSqaudMenu(User_Team& c);
+
+
+	// 
+	static void displayPlayers(string position);
+	static void displayPlayers(Player p, bool flag, string delim);
 };
