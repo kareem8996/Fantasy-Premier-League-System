@@ -93,6 +93,7 @@ public:
 	void updateTotalRedCards();
 	void setTotalRedCards(int RedCards);
 
-
+	int getID();
+	void setID(int id);
 };
 	
