@@ -1,13 +1,17 @@
 #pragma once
 #include "User.h"
 #include "Admin.h"
+#include "Player.h"
+#include "Club.h"
 #include <string>
 #include <vector>
+#include <map>
 using namespace std;
+
 class System {
 private:
 	string const choice_error = "\tPlease enter your choice here --->\t";
-	vector<string> const domains = { "gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" };
+	vector<string> const domains = {"gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" };
 
 public:
 	System();
@@ -20,6 +24,9 @@ public:
 	Admin CurrAdmin;
 	vector<User> Allusers;
 	vector<Admin> AllAdmins;
+	map<int, Player> AllPlayers; //id, player object
+	map<string, Club> AllClub; //name,club object
+	
 	//============= System Run ===========
 	void RunSys();
 	//============= Menus ================
