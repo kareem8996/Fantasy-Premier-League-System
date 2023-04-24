@@ -1,4 +1,12 @@
 #include "User_Team.h"
+User_Team::User_Team() {
+	totalPlayers = 0;
+	totalAttackers = 0;
+	totalDefenders = 0;
+	totalMidfielders = 0;
+	isGoalKeeper = 0;
+	totalBudget = MAX_BUDGET;
+}
 bool User_Team::canAddPlayerPosition(string pos) {
 	if (pos == "GoalKeeper" && !isGoalKeeper) {
 		return true;
@@ -15,7 +23,7 @@ bool User_Team::canAddPlayerPosition(string pos) {
 }
 
 bool User_Team::canAddPlayerPrice(Player p) {
-	return MAX_BUDGET >= (totalPrice + p.getPrice()); 
+	return 0 <= (totalBudget - p.getPrice()); 
 }
 
 bool User_Team::canAddPlayerCount(Player p) {
@@ -27,12 +35,12 @@ void User_Team::pickSquad() {
 	/// This is the main menu for picking squad
 	/// </summary>
 	int current_totalPlayers = totalPlayers;
-	int position_picked;
+	string position_picked;
 	while(totalPlayers!=MAX_PLAYERS) {
-		cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n";
+		cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Quit";
 		cin >> position_picked;
 		
-		if (position_picked == 1) {
+		if (position_picked == "1") {
 			if (canAddPlayerPosition("GoalKeeper")) {
 				//show goalkeepers to choose from
 			}
@@ -40,7 +48,7 @@ void User_Team::pickSquad() {
 				cout << "You have reached the maximum number of GoalKeepers to choose from\n";
 			}
 		}
-		else if (position_picked == 2) {
+		else if (position_picked == "2") {
 			if (canAddPlayerPosition("Defender")) {
 				//show Defender to choose from
 			}
@@ -48,7 +56,7 @@ void User_Team::pickSquad() {
 				cout << "You have reached the maximum number of Defenders to choose from\n";
 			}
 		}
-		else if (position_picked == 3) {
+		else if (position_picked == "3") {
 			if (canAddPlayerPosition("Midfielder")) {
 				//show Midfielders to choose from
 			}
@@ -56,7 +64,7 @@ void User_Team::pickSquad() {
 				cout << "You have reached the maximum number of Midfielders to choose from\n";
 			}
 		}
-		else if (position_picked == 4) {
+		else if (position_picked == "4") {
 			if (canAddPlayerPosition("Attacker")) {
 				//show Attackers to choose from
 			}
@@ -64,8 +72,8 @@ void User_Team::pickSquad() {
 				cout << "You have reached the maximum number of Attackers to choose from\n";
 			}
 		}
-		else {
-			cout << "Invalid Option\n";
+		else if(position_picked=="5") {
+			break;
 		}
 	}
 }
@@ -75,7 +83,7 @@ void User_Team::pickPlayer(Player p) {
 	/// this function updates all User_Team variables
 	/// </summary>
 	/// <param name="p">Player object</param>
-	totalPrice += p.getPrice();
+	totalBudget -= p.getPrice();
 
 	teamCount[p.getClub()]++;
 
@@ -93,4 +101,28 @@ void User_Team::pickPlayer(Player p) {
 	}
 	totalPlayers++;
 	Squad.insert({ p.getID(),p });
+}
+void User_Team::RemovePlayer(Player p) {
+	/// <summary>
+	/// this function removes player from squad and updates User_Team variables
+	/// </summary>
+	/// <param name="p">Player object</param>
+	totalBudget += p.getPrice();
+
+	teamCount[p.getClub()]--;
+
+	if (p.getPosition() == "Goalkeeper") {
+		isGoalKeeper = false;
+	}
+	else if (p.getPosition() == "Defender") {
+		totalDefenders--;
+	}
+	else if (p.getPosition() == "Midfielder") {
+		totalMidfielders--;
+	}
+	else if (p.getPosition() == "Attacker") {
+		totalAttackers--;
+	}
+	totalPlayers--;
+	Squad.erase(p.getNumber());
 }

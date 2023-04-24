@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <unordered_map>
 using namespace std;
 
 class System {
@@ -24,8 +25,11 @@ public:
 	Admin CurrAdmin;
 	vector<User> Allusers;
 	vector<Admin> AllAdmins;
-	map<int, Player> AllPlayers; //id, player object
-	map<string, Club> AllClub; //name,club object
+	unordered_map<string, Club> AllClub; //name,club object
+	unordered_map<int, Player> allGoalkeepers;
+	unordered_map<int, Player> allDefenders;
+	unordered_map<int, Player> allMidfielders;
+	unordered_map<int, Player> allAttackers;
 	
 	//============= System Run ===========
 	void RunSys();
