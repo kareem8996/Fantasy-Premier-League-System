@@ -4,29 +4,23 @@
 #include "string"
 using namespace std;
 
-Admin::Admin(int id, string& name, string& email, string& Adminname, string& password, string& phoneNumber) {
-	id = id;
-	name = name;
-	phoneNumber = phoneNumber;
-	email = email;
-	Adminname = Adminname;
-	password = password;
+Admin::Admin(string& name, string& email, string& Adminname, string& password, string& phoneNumber) {
+
+	this-> name = name;
+	this->phoneNumber = phoneNumber;
+	this->email = email;
+	this->userName = Adminname;
+	this-> password = password;
 
 }
 Admin::Admin() {}
 
-void Admin::setId(int id) {
-	this->id = id;
-}
 
-int Admin::getId() {
-	return id;
-}
 
 bool Admin::setPhoneNumber(string phone_number) {
 	bool vPhone;
-	System checker;
-	vPhone = checker.Check_Phone(phone_number);
+	
+	vPhone =System::Check_Phone(phone_number);
 	if (vPhone) {
 		cout << "Your Phone number changed Successfully";
 		return true;
@@ -43,8 +37,8 @@ string Admin::getPhoneNumber() {
 }
 void Admin::setName(string name) {
 	bool VName;
-	System checker;
-	VName = checker.Check_Name(name);
+	
+	VName = System::Check_Name(name);
 	if (VName) {
 		cout << "Your Phone number changed Successfully";
 		this->name = name;
@@ -58,8 +52,8 @@ void Admin::setName(string name) {
 void Admin::setEmail(string email)
 {
 	bool vEmail;
-	System checker;
-	vEmail = checker.Check_Email(email);
+	
+	vEmail = System::Check_Email(email);
 	if (vEmail) {
 		cout << "Your Phone number changed Successfully";
 
@@ -74,8 +68,8 @@ void Admin::setEmail(string email)
 void Admin::setUsername(string username)
 {
 	bool vUserName;
-	System checker;
-	vUserName = checker.Check_Username(username);
+	
+	vUserName = System::Check_Username(username);
 	if (vUserName) {
 		cout << "Your Phone number changed Successfully";
 
@@ -99,7 +93,7 @@ void Admin::setPassword(string password) {
 
 string Admin::getUsername()
 {
-	return Adminname;
+	return userName;
 }
 
 string Admin::getPassword() {
