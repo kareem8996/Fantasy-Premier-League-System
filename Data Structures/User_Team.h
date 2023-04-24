@@ -28,6 +28,7 @@ public:
 	bool canAddPlayerPosition(string pos); //validation for position
 	bool canAddPlayerPrice(Player p); //validation for price
 	bool canAddPlayerCount(Player p); //validation for teamCount
-	
+	void displayPlayers(Player p, bool flag = false, string delim = "\n");//Multiple players
+	void displayPlayers(string pos);//single player
 };
 

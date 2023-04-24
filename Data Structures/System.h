@@ -23,13 +23,10 @@ public:
 		menuChoice = "";
 	User CurrUser;
 	Admin CurrAdmin;
-	vector<User> Allusers;
-	vector<Admin> AllAdmins;
-	unordered_map<string, Club> AllClub; //name,club object
-	unordered_map<int, Player> allGoalkeepers;
-	unordered_map<int, Player> allDefenders;
-	unordered_map<int, Player> allMidfielders;
-	unordered_map<int, Player> allAttackers;
+	static vector<User> Allusers;
+	static vector<Admin> AllAdmins;
+	static unordered_map<string, Club> AllClub; //name,club object
+	static unordered_map < string, unordered_map<int, Player>> AllPlayers;
 	
 	//============= System Run ===========
 	void RunSys();
@@ -39,8 +36,8 @@ public:
 	void loginInput();
 	void printUserMenu();
 	//============= System functions ==========
-	void printSeprator();
-	void printSeprator_for_errors();
+	static void printSeprator();
+	static void printSeprator_for_errors();
 	void InputFaliure(string& choice, string message);
 	bool Check_Name(string& name);
 	bool Check_Phone(string& Phone);

@@ -15,11 +15,11 @@ System::System() {
     registerChoice = "";
 
 }
-void System::printSeprator() {
+  void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
     cout << "\033[2J\033[1;1H";
 }
-void System::printSeprator_for_errors() {
+ void System::printSeprator_for_errors() {
     cout << "-------------------------------------------------------------------------------------\n";
 
 }

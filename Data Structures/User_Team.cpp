@@ -1,4 +1,5 @@
 #include "User_Team.h"
+#include "System.h"
 User_Team::User_Team() {
 	totalPlayers = 0;
 	totalAttackers = 0;
@@ -41,8 +42,23 @@ void User_Team::pickSquad() {
 		cin >> position_picked;
 		
 		if (position_picked == "1") {
-			if (canAddPlayerPosition("GoalKeeper")) {
-				//show goalkeepers to choose from
+			if (canAddPlayerPosition("Goalkeeper")) {
+				displayPlayers("Goalkeeper");
+				int id;
+				cout << "Enter the player ID\n";
+				cin >> id;
+				if (canAddPlayerPrice(System::AllPlayers["Goalkeeper"][id])) {
+					if (canAddPlayerCount(System::AllPlayers["Goalkeeper"][id])) {
+						pickPlayer(System::AllPlayers["Goalkeeper"][id]);
+						continue;
+					}
+					else {
+						cout<<"Players limit from the same team exceeded\n";
+					}
+				}
+				else {
+					cout << "Player Price exceeds budget\n";
+				}
 			}
 			else {
 				cout << "You have reached the maximum number of GoalKeepers to choose from\n";
@@ -50,7 +66,22 @@ void User_Team::pickSquad() {
 		}
 		else if (position_picked == "2") {
 			if (canAddPlayerPosition("Defender")) {
-				//show Defender to choose from
+				displayPlayers("Defender");
+				int id;
+				cout << "Enter the player ID\n";
+				cin >> id;
+				if (canAddPlayerPrice(System::AllPlayers["Defender"][id])) {
+					if (canAddPlayerCount(System::AllPlayers["Defender"][id])) {
+						pickPlayer(System::AllPlayers["Defender"][id]);
+						continue;
+					}
+					else {
+						cout << "Players limit from the same team exceeded\n";
+					}
+				}
+				else {
+					cout << "Player Price exceeds budget\n";
+				}
 			}
 			else {
 				cout << "You have reached the maximum number of Defenders to choose from\n";
@@ -58,7 +89,22 @@ void User_Team::pickSquad() {
 		}
 		else if (position_picked == "3") {
 			if (canAddPlayerPosition("Midfielder")) {
-				//show Midfielders to choose from
+				displayPlayers("Midfielder");
+				int id;
+				cout << "Enter the player ID\n";
+				cin >> id;
+				if (canAddPlayerPrice(System::AllPlayers["Midfielder"][id])) {
+					if (canAddPlayerCount(System::AllPlayers["Midfielder"][id])) {
+						pickPlayer(System::AllPlayers["Midfielder"][id]);
+						continue;
+					}
+					else {
+						cout << "Players limit from the same team exceeded\n";
+					}
+				}
+				else {
+					cout << "Player Price exceeds budget\n";
+				}
 			}
 			else {
 				cout << "You have reached the maximum number of Midfielders to choose from\n";
@@ -66,7 +112,22 @@ void User_Team::pickSquad() {
 		}
 		else if (position_picked == "4") {
 			if (canAddPlayerPosition("Attacker")) {
-				//show Attackers to choose from
+				displayPlayers("Attacker");
+				int id;
+				cout << "Enter the player ID\n";
+				cin >> id;
+				if (canAddPlayerPrice(System::AllPlayers["Attacker"][id])) {
+					if (canAddPlayerCount(System::AllPlayers["Attacker"][id])) {
+						pickPlayer(System::AllPlayers["Attacker"][id]);
+						continue;
+					}
+					else {
+						cout<<"Players limit from the same team exceeded\n";
+					}
+				}
+				else {
+					cout << "Player Price exceeds budget\n";
+				}
 			}
 			else {
 				cout << "You have reached the maximum number of Attackers to choose from\n";
@@ -125,4 +186,49 @@ void User_Team::RemovePlayer(Player p) {
 	}
 	totalPlayers--;
 	Squad.erase(p.getNumber());
+}
+
+void User_Team::displayPlayers(Player p,bool flag=false,string delim="\n") {
+	/// <summary>
+	/// displays only one player
+	/// </summary>
+	/// <param name="p">player obkect</param>
+	/// <param name="flag">This is used so we can use the same code twice</param>
+	/// <param name="delim"> the delimiter can either be enter or tab</param>
+	System::printSeprator_for_errors();
+	cout << "ID: " << p.getID() << delim;
+	cout << "Name: " << p.getFullname() << delim;
+	cout << "Club: " << p.getClub() << delim;
+	cout << "Price: " << p.getPrice() << delim;
+	cout << "Current Week Points: " << p.getPoints() << delim;
+	cout << "Total Points: " << p.getTotalPoints() << delim;
+	if (!flag) {
+	cout << "Name: " << p.getFullname() << delim;
+	cout << "Position: " << p.getPosition() << delim;
+	cout << "Status: " << p.getStatus() << delim;
+	cout << "Tshirt Number: " << p.getNumber() << delim;
+	cout << "Current Week Goals: " << p.getGoals() << delim;
+	cout << "Total Goals: " << p.getTotalGoals() << delim;
+	cout << "Current Week Assists: " << p.getAssists() << delim;
+	cout << "Total Assists: " << p.getTotalAssists() << delim;
+	cout << "Current Week Yellow Cards: " << p.getYellowCards() << delim;
+	cout << "Total Yellow Cards: " << p.getTotalYellowCards() << delim;
+	cout << "Current Week Red Card: " << p.getRedCards() << delim;
+	cout << "Total Red Cards: " << p.getTotalRedCards()<<delim;
+
+	if (p.getPosition() != "Attacker") {
+		cout << "Current Week Cleensheet: " << p.getCurrentCleanSheet() << delim;
+		cout << "Current Week Cleensheet: " << p.getTotalCleanSheets() << delim;
+	}
+	}
+	System::printSeprator_for_errors();
+}
+void User_Team::displayPlayers(string position) {
+	/// <summary>
+	/// Displays all players who play in a certain position
+	/// </summary>
+	/// <param name="position"></param>
+	for (auto& it : System::AllPlayers[position]) {
+		displayPlayers(it.second, true,"\t||\t");
+	}
 }
