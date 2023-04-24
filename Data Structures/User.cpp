@@ -56,6 +56,11 @@ void User::setLeagues(vector<string>& leagues) {
     this->leagues = leagues;
 }
 
+void User::setSquad(User_Team squad)
+{
+    Squad = squad;
+}
+
 // Getters
 string& User::getName() {
     return name;
@@ -95,4 +100,9 @@ string& User::getTeamName() {
 vector<string>& User::getLeagues() {
     return leagues;
 
+}
+
+User_Team& User::getSquad()
+{
+    return Squad;
 }
