@@ -36,8 +36,8 @@ public:
 	void loginInput();
 	void printUserMenu();
 	//============= System functions ==========
-	void printSeprator();
-	void printSeprator_for_errors();
+	static void printSeprator();
+	static void printSeprator_for_errors();
 	void InputFaliure(string& choice, string message);
 	bool Check_Name(string& name);
 	bool Check_Phone(string& Phone);

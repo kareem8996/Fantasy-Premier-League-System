@@ -128,9 +128,37 @@ void User_Team::RemovePlayer(Player p) {
 	totalPlayers--;
 	Squad.erase(p.getNumber());
 }
-void displayPlayers(string position) {
-	
-}
-void displayPlayers(int ID) {
 
+void displayPlayers(Player p,bool flag=false,string delim="\n") {
+	System::printSeprator_for_errors();
+	cout << "Name: " << p.getFullname() << delim;
+	cout << "Club: " << p.getClub() << delim;
+	cout << "Price: " << p.getPrice() << delim;
+	cout << "Current Week Points: " << p.getPoints() << delim;
+	cout << "Total Points: " << p.getTotalPoints() << delim;
+	if (!flag) {
+	cout << "Name: " << p.getFullname() << delim;
+	cout << "Position: " << p.getPosition() << delim;
+	cout << "Status: " << p.getStatus() << delim;
+	cout << "Tshirt Number: " << p.getNumber() << delim;
+	cout << "Current Week Goals: " << p.getGoals() << delim;
+	cout << "Total Goals: " << p.getTotalGoals() << delim;
+	cout << "Current Week Assists: " << p.getAssists() << delim;
+	cout << "Total Assists: " << p.getTotalAssists() << delim;
+	cout << "Current Week Yellow Cards: " << p.getYellowCards() << delim;
+	cout << "Total Yellow Cards: " << p.getTotalYellowCards() << delim;
+	cout << "Current Week Red Card: " << p.getRedCards() << delim;
+	cout << "Total Red Cards: " << p.getTotalRedCards()<<delim;
+
+	if (p.getPosition() != "Attacker") {
+		cout << "Current Week Cleensheet: " << p.getCurrentCleanSheet() << delim;
+		cout << "Current Week Cleensheet: " << p.getTotalCleanSheets() << delim;
+	}
+	}
+	System::printSeprator_for_errors();
+}
+void displayPlayers(string position) {
+	for (auto& it : System::AllPlayers[position]) {
+		displayPlayers(it.second, true,"\t||\t");
+	}
 }
