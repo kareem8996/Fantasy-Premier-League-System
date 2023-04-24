@@ -1,5 +1,5 @@
 #pragma once
-#include "User.h"
+
 #include "Player.h"
 #include "Club.h"
 #include <map>
@@ -16,6 +16,7 @@ private:
 	map<string, int> teamCount; // this is a map to count number of player picked in each team ex: Chelsea, 2
 
 public:
+	User_Team();
 	static const int MAX_PLAYERS = 11;
 	static const int MAX_BUDGET = 10000000; //10 million
 	static const int MAX_GOALKEEPERS = 1;
@@ -28,7 +29,6 @@ public:
 	bool canAddPlayerPosition(string pos); //validation for position
 	bool canAddPlayerPrice(Player p); //validation for price
 	bool canAddPlayerCount(Player p); //validation for teamCount
-	void displayPlayers(Player p, bool flag = false, string delim = "\n");//Multiple players
-	void displayPlayers(string pos);//single player
+	int getTotalPlayers();
 };
 
