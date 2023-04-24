@@ -186,3 +186,11 @@ void Player::updateTotalYellowCards() {
 void Player::updateTotalRedCards() {
 	TotalRedCards += RedCards;
 }
+
+int Player::getID() {
+	return ID;
+}
+
+void Player::setID(int id) {
+	ID = id;
+}
