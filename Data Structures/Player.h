@@ -29,6 +29,7 @@ private:
 
 
 public:
+	Player();
 	Player(string PlayerName, string PlayerTeam, int PlayerTotalPoints, float PlayerPrice, string PlayerPosition, string PlayerStatus, int PlayerNumber);
 	string getFullname();
 	void setFullname(string Fullname);

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "User_Team.h"
 using namespace std;
 class User {
 private:
@@ -14,6 +15,7 @@ private:
     int currPoints;
     string teamName;
     vector<string> leagues;
+    User_Team Squad;
 
 public:
     // Constructor
@@ -40,7 +42,8 @@ public:
     void setCurrPoints(int currPoints);
     void setTeamName(string& teamName);
     void setLeagues(vector<string>& leagues);
-
+    void setSquad(User_Team squad);
+    
     // Getters
     string& getName();
     string& getEmail();
@@ -52,4 +55,7 @@ public:
     int getCurrPoints();
     string& getTeamName();
     vector<string>& getLeagues();
+    User_Team& getSquad();
+    // Menus
+
 };

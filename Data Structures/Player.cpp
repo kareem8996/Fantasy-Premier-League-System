@@ -2,6 +2,15 @@
 #include <iostream>
 using namespace std;
 
+Player::Player() {
+	FullName = "";
+	Team = "";
+	Points = 0;
+	Price = 0;
+	Position = "";
+	Status = "";
+	Number = 0;
+}
 Player::Player(string PlayerName, string PlayerTeam, int PlayerTotalPoints, float PlayerPrice, string PlayerPosition, string PlayerStatus, int PlayerNumber) {
 	FullName = PlayerName;
 	Team = PlayerTeam;
