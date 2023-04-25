@@ -2,7 +2,7 @@
 #include <iostream>
 #include "string"
 #include"Player.h"
-#include <map>
+#include <unordered_map>
 using namespace std;
 
 
@@ -10,7 +10,7 @@ class Club
 {
 private:
 	string Name;
-	map<int, Player> Squad;
+	unordered_map<int, Player> Squad;
 	string NextFixture;
 	int LeaguePoints;
 public:
