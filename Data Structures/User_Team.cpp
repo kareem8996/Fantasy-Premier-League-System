@@ -186,7 +186,7 @@ void User_Team::RemovePlayer(Player p) {
 		totalAttackers--;
 	}
 	totalPlayers--;
-	Squad.erase(p.getNumber());
+	Squad.erase(p.getID());
 }
 
 

@@ -863,7 +863,6 @@ void System::displayPlayers(Player p, bool flag, string delim) {
         cout << "Name: " << p.getFullname() << delim;
         cout << "Position: " << p.getPosition() << delim;
         cout << "Status: " << p.getStatus() << delim;
-        cout << "Tshirt Number: " << p.getNumber() << delim;
         cout << "Current Week Goals: " << p.getGoals() << delim;
         cout << "Total Goals: " << p.getTotalGoals() << delim;
         cout << "Current Week Assists: " << p.getAssists() << delim;
