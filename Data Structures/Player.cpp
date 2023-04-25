@@ -102,14 +102,6 @@ void Player::setTotalAssists(int totalAssists) {
 	TotalAssists = totalAssists;
 }
 
-void Player::setCurrentCleanSheet(bool currentCleanSheet) {
-	CurrentCleanSheet = currentCleanSheet;
-}
-
-void Player::setTotalCleanSheets(int totalCleanSheets) {
-	TotalCleanSheets = totalCleanSheets;
-}
-
 void Player::setYellowCards(int yellowCards) {
 	YellowCards = yellowCards;
 }
@@ -143,13 +135,6 @@ int Player::getTotalAssists() {
 	return TotalAssists;
 }
 
-bool Player::getCurrentCleanSheet() {
-	return CurrentCleanSheet;
-}
-
-int Player::getTotalCleanSheets() {
-	return TotalCleanSheets;
-}
 
 int Player::getYellowCards() {
 	return YellowCards;
@@ -175,10 +160,6 @@ void Player::updateTotalGoals() {
 	TotalGoals += Goals;
 }
 
-void Player::updateTotalCleanSheets() {
-	if (CurrentCleanSheet)
-		TotalCleanSheets++;
-}
 
 void Player::updateTotalYellowCards() {
 	TotalYellowCards += YellowCards;
@@ -196,22 +177,3 @@ void Player::setID(int id) {
 	ID = id;
 }
 
-int Player::getSaves() {
-	return Saves;
-}
-
-void Player::setSaves(int saves) {
-	Saves = saves;
-}
-
-int Player::getTotalSaves() {
-	return TotalSaves;
-}
-
-void Player::setTotalSaves(int totalsave) {
-	TotalSaves = totalsave;
-}
-
-void Player::updateTotalSaves() {
-	TotalSaves += Saves;
-}
