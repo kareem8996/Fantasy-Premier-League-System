@@ -10,27 +10,30 @@ private:
 	string FullName;
 	string Team;
 	int Points;
-	float Price;
-	int TotalPoints;
+	int Price;
 	string Position;
 	string Status;
-	int Number;
 	int Goals;
-	int TotalGoals;
 	int Assists;
-	int TotalAssists;
 	bool CurrentCleanSheet;
-	int TotalCleanSheets;
 	int YellowCards;
-	int TotalYellowCards;
 	int RedCards;
+	int Saves;
+
+
+	int TotalPoints;
+	int TotalGoals;
+	int TotalAssists;
+	int TotalCleanSheets;
+	int TotalYellowCards;
 	int TotalRedCards;
+	int TotalSaves;
 
 
 
 public:
 	Player();
-	Player(string PlayerName, string PlayerTeam, int PlayerTotalPoints, float PlayerPrice, string PlayerPosition, string PlayerStatus, int PlayerNumber);
+	Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus);
 	string getFullname();
 	void setFullname(string Fullname);
 
@@ -41,8 +44,8 @@ public:
 	void setPoints(int PLayerPoints);
 	void ResetPoints();
 
-	float getPrice();
-	void setPrice(float PlayerPrice);
+	int getPrice();
+	void setPrice(int PlayerPrice);
 	void increasePrice();
 	void decreasePrice();
 
@@ -96,5 +99,12 @@ public:
 
 	int getID();
 	void setID(int id);
+	
+	int getSaves();
+	void setSaves(int save);
+	
+	int getTotalSaves();
+	void setTotalSaves(int totalsave);
+	void updateTotalSaves();
 };
 	

@@ -59,7 +59,10 @@ public:
 	static void ManageSqaudMenu(User_Team& c);
 
 
-	// 
+	// ======================Player Display=======================
 	static void displayPlayers(string position);
 	static void displayPlayers(Player p, bool flag, string delim);
+
+	//==================File Handling:Read========================
+
 };

@@ -6,7 +6,9 @@
 #include <conio.h>
 #include <stdio.h>   
 #include <fstream>
+#include <string>
 #include <signal.h>
+#include <sstream>
 using namespace std;
 
 string const System::choice_error = "\tPlease enter your choice here --->\t";
@@ -861,7 +863,6 @@ void System::displayPlayers(Player p, bool flag, string delim) {
         cout << "Name: " << p.getFullname() << delim;
         cout << "Position: " << p.getPosition() << delim;
         cout << "Status: " << p.getStatus() << delim;
-        cout << "Tshirt Number: " << p.getNumber() << delim;
         cout << "Current Week Goals: " << p.getGoals() << delim;
         cout << "Total Goals: " << p.getTotalGoals() << delim;
         cout << "Current Week Assists: " << p.getAssists() << delim;
@@ -888,3 +889,4 @@ void System::displayPlayers(string position) {
         displayPlayers(it.second, true, "\t||\t");
     }
 }
+
