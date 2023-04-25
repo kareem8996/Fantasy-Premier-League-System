@@ -48,6 +48,9 @@
     <ClCompile Include="GoalKeeper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gameWeek.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Club.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GoalKeeper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameWeek.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,10 @@
 #include "GoalKeeper.h"
 
+GoalKeeper::GoalKeeper(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus,int TotalSaves,int TotalCleanSheets) 
+	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus){
+	
+}
+
 void GoalKeeper::setCurrentCleanSheet(bool currentCleanSheet) {
 	CurrentCleanSheet = currentCleanSheet;
 }

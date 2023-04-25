@@ -1,4 +1,7 @@
 #include "Defender.h"
+Defender::Defender(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus, bool CurrentCleanSheet, int TotalCleanSheets):Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus) {
+	
+}
 void Defender::setCurrentCleanSheet(bool currentCleanSheet) {
 	CurrentCleanSheet = currentCleanSheet;
 }

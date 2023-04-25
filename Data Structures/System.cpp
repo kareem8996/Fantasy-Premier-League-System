@@ -26,7 +26,7 @@ Admin System::CurrAdmin;
 vector<User> System::Allusers;
 vector<Admin> System::AllAdmins;
 unordered_map<string, Club> System::AllClub; //name,club object
-unordered_map < string, unordered_map<int, Player>> System::AllPlayers;
+unordered_map < string, unordered_map<int, Player*>> System::AllPlayers;
 void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
     cout << "\033[2J\033[1;1H";
@@ -849,7 +849,7 @@ void System::ManageSqaudMenu(User_Team& c) {
     
 
 }
-void System::displayPlayers(Player p, bool flag, string delim) {
+void System::displayPlayers(Player*p, bool flag, string delim) {
     /// <summary>
     /// displays only one player
     /// </summary>
@@ -857,31 +857,31 @@ void System::displayPlayers(Player p, bool flag, string delim) {
     /// <param name="flag">This is used so we can use the same code twice</param>
     /// <param name="delim"> the delimiter can either be enter or tab</param>
     System::printSeprator_for_errors();
-    cout << "ID: " << p.getID() << delim;
-    cout << "Name: " << p.getFullname() << delim;
-    cout << "Club: " << p.getClub() << delim;
-    cout << "Price: " << p.getPrice() << delim;
-    cout << "Current Week Points: " << p.getPoints() << delim;
-    cout << "Total Points: " << p.getTotalPoints() << delim;
+    cout << "ID: " << p->getID() << delim;
+    cout << "Name: " << p->getFullname() << delim;
+    cout << "Club: " << p->getClub() << delim;
+    cout << "Price: " << p->getPrice() << delim;
+    cout << "Current Week Points: " << p->getPoints() << delim;
+    cout << "Total Points: " << p->getTotalPoints() << delim;
     if (!flag) {
-        cout << "Name: " << p.getFullname() << delim;
-        cout << "Position: " << p.getPosition() << delim;
-        cout << "Status: " << p.getStatus() << delim;
-        cout << "Current Week Goals: " << p.getGoals() << delim;
-        cout << "Total Goals: " << p.getTotalGoals() << delim;
-        cout << "Current Week Assists: " << p.getAssists() << delim;
-        cout << "Total Assists: " << p.getTotalAssists() << delim;
-        cout << "Current Week Yellow Cards: " << p.getYellowCards() << delim;
-        cout << "Total Yellow Cards: " << p.getTotalYellowCards() << delim;
-        cout << "Current Week Red Card: " << p.getRedCards() << delim;
-        cout << "Total Red Cards: " << p.getTotalRedCards() << delim;
+        cout << "Name: " << p->getFullname() << delim;
+        cout << "Position: " << p->getPosition() << delim;
+        cout << "Status: " << p->getStatus() << delim;
+        cout << "Current Week Goals: " << p->getGoals() << delim;
+        cout << "Total Goals: " << p->getTotalGoals() << delim;
+        cout << "Current Week Assists: " << p->getAssists() << delim;
+        cout << "Total Assists: " << p->getTotalAssists() << delim;
+        cout << "Current Week Yellow Cards: " << p->getYellowCards() << delim;
+        cout << "Total Yellow Cards: " << p->getTotalYellowCards() << delim;
+        cout << "Current Week Red Card: " << p->getRedCards() << delim;
+        cout << "Total Red Cards: " << p->getTotalRedCards() << delim;
         
-        if (p.getPosition() != "Attacker") {
+        if (p->getPosition() != "Attacker") {
 
             if (typeid(Midfielder) == typeid(p)) {
                 Midfielder* defensive = (Midfielder*)&p;
-                cout << "Current Week Cleansheet: " << p.getCurrentCleanSheet() << delim;
-                cout << "Total Cleansheet: " << p.getTotalCleanSheets() << delim;
+                cout << "Current Week Cleansheet: " << defensive->getCurrentCleanSheet() << delim;
+                cout << "Total Cleansheet: " << defensive->getTotalCleanSheets() << delim;
             } 
             else if (typeid(Defender) == typeid(p)) {
                 Defender *defensive = (Defender*)&p;
@@ -895,7 +895,7 @@ void System::displayPlayers(Player p, bool flag, string delim) {
                 cout << "Current Week Cleansheet: " << defensive->getCurrentCleanSheet() << delim;
                 cout << "Total Cleansheet: " << defensive->getTotalCleanSheets() << delim;
             }
-           
+            
         }
     }
     System::printSeprator_for_errors();
@@ -911,3 +911,162 @@ void System::displayPlayers(string position) {
     }
 }
 
+void System::readPlayers() {
+    /// <summary>
+    /// Reads AllPlayers
+    /// First while loop loops on row
+    /// Second While loop loops on column
+    /// First iteration gathers column names
+    /// Rest iterations gathers player data and stores them in AllPlayers
+    /// </summary>
+    unordered_map<string, vector<string>>row;
+    string line, cellData;
+    fstream file("D:\\Uni Projects\\Data Structure\\Data\\total_players.csv", ios::in);
+    int row_counter = -1;
+    Player* p=nullptr;
+    bool flag = false;
+    if (file.is_open())
+    {
+        vector<string> column_names;
+        while (getline(file, line))
+        {
+            stringstream str(line);
+            int column_counter = 0;
+            while (getline(str, cellData, ',')) {
+                if (row_counter == -1) {
+                    row.insert({ cellData,vector<string>{} });
+                    column_names.push_back(cellData);
+                    continue;
+                }
+                else {
+                    row[column_names[column_counter]].push_back(cellData);
+                }
+                column_counter++;
+            }
+            if (flag) {
+                if (p==nullptr||stoi(row["id_player"].at(row_counter)) != p->getID()) {//initializing
+                    if (row["position"].at(row_counter) == "MID") {
+                        Midfielder* m = new Midfielder(stoi(row["id_player"].at(row_counter)),
+                            row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
+                            row["name"].at(row_counter),
+                            stoi(row["gameweek_points"].at(row_counter)),
+                            stoi(row["value"].at(row_counter)),
+                            row["position"].at(row_counter),
+                            row["status"].at(row_counter),
+                            stoi(row["total_clean_sheets"].at(row_counter)));
+                      
+                        
+                        m->updatePlayer_History({
+                            row["status"].at(row_counter),
+                            stoi(row["value"].at(row_counter)),
+                            stoi(row["gameweek_points"].at(row_counter)),
+                            stoi(row["gameweek_goals"].at(row_counter)),
+                            stoi(row["gameweek_assists"].at(row_counter)),
+                            stoi(row["gameweek_clean_sheets"].at(row_counter)),
+                            stoi(row["gameweek_red_cards"].at(row_counter)),
+                            stoi(row["gameweek_yellow_cards"].at(row_counter)),
+                            stoi(row["gameweek_saves"].at(row_counter))
+                            });
+                    
+                        p = m;
+                    }
+                    else if (row["position"].at(row_counter) == "DEF") {
+                        Defender* d = new Defender(stoi(row["id_player"].at(row_counter)),
+                            row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
+                            row["name"].at(row_counter),
+                            stoi(row["gameweek_points"].at(row_counter)),
+                            stoi(row["value"].at(row_counter)),
+                            row["position"].at(row_counter),
+                            row["status"].at(row_counter),
+                            (bool)stoi(row["gameweek_clean_sheets"].at(row_counter)),
+                            stoi(row["total_clean_sheets"].at(row_counter)));
+
+
+                        d->updatePlayer_History({
+                            row["status"].at(row_counter),
+                            stoi(row["value"].at(row_counter)),
+                            stoi(row["gameweek_points"].at(row_counter)),
+                            stoi(row["gameweek_goals"].at(row_counter)),
+                            stoi(row["gameweek_assists"].at(row_counter)),
+                            stoi(row["gameweek_clean_sheets"].at(row_counter)),
+                            stoi(row["gameweek_red_cards"].at(row_counter)),
+                            stoi(row["gameweek_yellow_cards"].at(row_counter)),
+                            stoi(row["gameweek_saves"].at(row_counter))
+                            });
+                        
+                        p = d;
+                    }
+                    else if (row["position"].at(row_counter) == "FWD") {
+                        Attacker* a = new Attacker(
+                            stoi(row["id_player"].at(row_counter)),
+                            row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
+                            row["name"].at(row_counter), stoi(row["gameweek_points"].at(row_counter)), 
+                            stoi(row["value"].at(row_counter)), row["position"].at(row_counter),
+                            row["status"].at(row_counter));
+
+                        a->updatePlayer_History({
+                            row["status"].at(row_counter),
+                            stoi(row["value"].at(row_counter)),
+                            stoi(row["gameweek_points"].at(row_counter)),
+                            stoi(row["gameweek_goals"].at(row_counter)),
+                            stoi(row["gameweek_assists"].at(row_counter)),
+                            stoi(row["gameweek_clean_sheets"].at(row_counter)),
+                            stoi(row["gameweek_red_cards"].at(row_counter)),
+                            stoi(row["gameweek_yellow_cards"].at(row_counter)),
+                            stoi(row["gameweek_saves"].at(row_counter))
+                            });
+                        p = a;
+                    }
+                    else if (row["position"].at(row_counter) == "GKP") {
+                        GoalKeeper* g = new GoalKeeper(
+                            stoi(row["id_player"].at(row_counter)),
+                            row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
+                            row["name"].at(row_counter), stoi(row["gameweek_points"].at(row_counter)), 
+                            stoi(row["value"].at(row_counter)), row["position"].at(row_counter), 
+                            row["status"].at(row_counter), stoi(row["total_saves"].at(row_counter)),  
+                            stoi(row["total_clean_sheets"].at(row_counter)));
+
+                        g->updatePlayer_History({
+                           row["status"].at(row_counter),
+                           stoi(row["value"].at(row_counter)),
+                           stoi(row["gameweek_points"].at(row_counter)),
+                           stoi(row["gameweek_goals"].at(row_counter)),
+                           stoi(row["gameweek_assists"].at(row_counter)),
+                           stoi(row["gameweek_clean_sheets"].at(row_counter)),
+                           stoi(row["gameweek_red_cards"].at(row_counter)),
+                           stoi(row["gameweek_yellow_cards"].at(row_counter)),
+                           stoi(row["gameweek_saves"].at(row_counter))
+                            });
+                        p = g;
+                    }
+                    p->setTotalPoints(stoi(row["total_points"].at(row_counter)));
+                    p->setTotalGoals(stoi(row["total_goals"].at(row_counter)));
+                    p->setTotalAssists(stoi(row["total_assists"].at(row_counter)));
+                    p->setTotalYellowCards(stoi(row["total_yellow_cards"].at(row_counter)));
+                    p->setTotalRedCards(stoi(row["total_red_cards"].at(row_counter)));
+                    System::AllPlayers[p->getPosition()].insert({ p->getID(),p });
+                }
+                else {//updating
+
+                    p->updatePlayer_History({
+                            row["status"].at(row_counter),
+                            stoi(row["value"].at(row_counter)),
+                            stoi(row["gameweek_points"].at(row_counter)),
+                            stoi(row["gameweek_goals"].at(row_counter)),
+                            stoi(row["gameweek_assists"].at(row_counter)),
+                            stoi(row["gameweek_clean_sheets"].at(row_counter)),
+                            stoi(row["gameweek_red_cards"].at(row_counter)),
+                            stoi(row["gameweek_yellow_cards"].at(row_counter)),
+                            stoi(row["gameweek_saves"].at(row_counter))
+                        });
+                }
+            }
+            row_counter++;
+            if(flag)
+            cout << p->getFullname() << endl;
+            flag = true;
+
+        }
+    }
+        cout << row_counter;
+}
