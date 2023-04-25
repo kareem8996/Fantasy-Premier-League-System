@@ -103,7 +103,7 @@ string Admin::getPassword() {
 
 
 //===================== Update Player Data=========================
-void Admin::edit_player_menu() { aajsjsj; }
+void Admin::edit_player_menu() {}
 
 //===================== Update Team Data=========================
 void Admin::edit_team_menu() {}
