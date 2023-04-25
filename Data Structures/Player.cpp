@@ -9,16 +9,15 @@ Player::Player() {
 	Price = 0;
 	Position = "";
 	Status = "";
-	Number = 0;
 }
-Player::Player(string PlayerName, string PlayerTeam, int PlayerTotalPoints, float PlayerPrice, string PlayerPosition, string PlayerStatus, int PlayerNumber) {
+Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus) {
+	ID = id;
 	FullName = PlayerName;
 	Team = PlayerTeam;
-	Points = 0;
+	Points = PlayerTotalPoints;
 	Price = PlayerPrice;
 	Position = PlayerPosition;
 	Status = PlayerStatus;
-	Number = PlayerNumber;
 }
 
 string Player::getFullname() {
@@ -46,17 +45,17 @@ void Player::ResetPoints() {
 }
 
 
-float Player::getPrice() {
+int Player::getPrice() {
 	return Price;
 }
-void Player::setPrice(float PlayerPrice) {
+void Player::setPrice(int PlayerPrice) {
 	Price = PlayerPrice;
 }
 void Player::increasePrice() {
-	Price += 0.1;
+	Price += 1;
 }
 void Player::decreasePrice() {
-	Price -= 0.1;
+	Price -= 1;
 }
 
 
@@ -83,13 +82,6 @@ string Player::getStatus() {
 }
 void Player::setStatus(string PlayerStatus) {
 	Status = PlayerStatus;
-}
-
-int Player::getNumber() {
-	return Number;
-}
-void Player::setNumber(int PlayerNumber) {
-	Number = PlayerNumber;
 }
 
 
@@ -202,4 +194,24 @@ int Player::getID() {
 
 void Player::setID(int id) {
 	ID = id;
+}
+
+int Player::getSaves() {
+	return Saves;
+}
+
+void Player::setSaves(int saves) {
+	Saves = saves;
+}
+
+int Player::getTotalSaves() {
+	return TotalSaves;
+}
+
+void Player::setTotalSaves(int totalsave) {
+	TotalSaves = totalsave;
+}
+
+void Player::updateTotalSaves() {
+	TotalSaves += Saves;
 }
