@@ -15,19 +15,17 @@ private:
 	string Status;
 	int Goals;
 	int Assists;
-	bool CurrentCleanSheet;
 	int YellowCards;
 	int RedCards;
-	int Saves;
+	
 
 
 	int TotalPoints;
 	int TotalGoals;
 	int TotalAssists;
-	int TotalCleanSheets;
+	
 	int TotalYellowCards;
 	int TotalRedCards;
-	int TotalSaves;
 
 
 
