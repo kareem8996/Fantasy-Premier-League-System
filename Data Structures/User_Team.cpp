@@ -48,9 +48,9 @@ void User_Team::pickSquad() {
 				int id;
 				cout << "Enter the player ID\n";
 				cin >> id;
-				if (canAddPlayerPrice(sys.AllPlayers["Goalkeeper"][id])) {
-					if (canAddPlayerCount(sys.AllPlayers["Goalkeeper"][id])) {
-						pickPlayer(sys.AllPlayers["Goalkeeper"][id]);
+				if (canAddPlayerPrice(*sys.AllPlayers["Goalkeeper"][id])) {
+					if (canAddPlayerCount(*sys.AllPlayers["Goalkeeper"][id])) {
+						pickPlayer(*sys.AllPlayers["Goalkeeper"][id]);
 						continue;
 					}
 					else {
@@ -71,9 +71,9 @@ void User_Team::pickSquad() {
 				int id;
 				cout << "Enter the player ID\n";
 				cin >> id;
-				if (canAddPlayerPrice(sys.AllPlayers["Defender"][id])) {
-					if (canAddPlayerCount(sys.AllPlayers["Defender"][id])) {
-						pickPlayer(sys.AllPlayers["Defender"][id]);
+				if (canAddPlayerPrice(*sys.AllPlayers["Defender"][id])) {
+					if (canAddPlayerCount(*sys.AllPlayers["Defender"][id])) {
+						pickPlayer(*sys.AllPlayers["Defender"][id]);
 						continue;
 					}
 					else {
@@ -94,9 +94,9 @@ void User_Team::pickSquad() {
 				int id;
 				cout << "Enter the player ID\n";
 				cin >> id;
-				if (canAddPlayerPrice(sys.AllPlayers["Midfielder"][id])) {
-					if (canAddPlayerCount(sys.AllPlayers["Midfielder"][id])) {
-						pickPlayer(sys.AllPlayers["Midfielder"][id]);
+				if (canAddPlayerPrice(*sys.AllPlayers["Midfielder"][id])) {
+					if (canAddPlayerCount(*sys.AllPlayers["Midfielder"][id])) {
+						pickPlayer(*sys.AllPlayers["Midfielder"][id]);
 						continue;
 					}
 					else {
@@ -117,9 +117,9 @@ void User_Team::pickSquad() {
 				int id;
 				cout << "Enter the player ID\n";
 				cin >> id;
-				if (canAddPlayerPrice(sys.AllPlayers["Attacker"][id])) {
-					if (canAddPlayerCount(sys.AllPlayers["Attacker"][id])) {
-						pickPlayer(sys.AllPlayers["Attacker"][id]);
+				if (canAddPlayerPrice(*sys.AllPlayers["Attacker"][id])) {
+					if (canAddPlayerCount(*sys.AllPlayers["Attacker"][id])) {
+						pickPlayer(*sys.AllPlayers["Attacker"][id]);
 						continue;
 					}
 					else {

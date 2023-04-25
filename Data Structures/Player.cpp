@@ -18,6 +18,7 @@ Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoint
 	Price = PlayerPrice;
 	Position = PlayerPosition;
 	Status = PlayerStatus;
+	
 }
 
 string Player::getFullname() {
@@ -175,5 +176,15 @@ int Player::getID() {
 
 void Player::setID(int id) {
 	ID = id;
+}
+
+vector<gameWeek> Player::getPlayer_History()
+{
+	return Player_History;
+}
+
+void Player::updatePlayer_History(gameWeek hist)
+{
+	Player_History.push_back(hist);
 }
 

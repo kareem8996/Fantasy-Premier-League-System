@@ -26,7 +26,7 @@ public:
 	static vector<User> Allusers;
 	static vector<Admin> AllAdmins;
 	static unordered_map<string, Club> AllClub; //name,club object
-	static unordered_map < string, unordered_map<int, Player>> AllPlayers;
+	static unordered_map < string, unordered_map<int, Player *>> AllPlayers;
 	
 	//============= System Run ===========
 	static void RunSys();
@@ -61,8 +61,8 @@ public:
 
 	// ======================Player Display=======================
 	static void displayPlayers(string position);
-	static void displayPlayers(Player p, bool flag, string delim);
+	static void displayPlayers(Player *p, bool flag, string delim);
 
 	//==================File Handling:Read========================
-
+	static void readPlayers();
 };

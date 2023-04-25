@@ -131,6 +131,7 @@
     <ClCompile Include="Attacker.cpp" />
     <ClCompile Include="Club.cpp" />
     <ClCompile Include="Defender.cpp" />
+    <ClCompile Include="gameWeek.cpp" />
     <ClCompile Include="GoalKeeper.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Midfielder.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Attacker.h" />
     <ClInclude Include="Club.h" />
     <ClInclude Include="Defender.h" />
+    <ClInclude Include="gameWeek.h" />
     <ClInclude Include="GoalKeeper.h" />
     <ClInclude Include="Midfielder.h" />
     <ClInclude Include="Player.h" />

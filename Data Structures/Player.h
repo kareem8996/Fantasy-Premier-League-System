@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
-
+#include "gameWeek.h"
+#include <vector>
 using namespace std;
 
 class Player
@@ -17,6 +18,7 @@ private:
 	int Assists;
 	int YellowCards;
 	int RedCards;
+	vector<gameWeek> Player_History;
 	
 
 
@@ -100,6 +102,9 @@ public:
 	
 	int getSaves();
 	void setSaves(int save);
+	
+	vector<gameWeek> getPlayer_History();
+	void updatePlayer_History(gameWeek hist);
 	
 	int getTotalSaves();
 	void setTotalSaves(int totalsave);
