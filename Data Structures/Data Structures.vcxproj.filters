@@ -36,6 +36,18 @@
     <ClCompile Include="User_Team.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Attacker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Midfielder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Defender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalKeeper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Club.h">
@@ -54,6 +66,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="User_Team.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Attacker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Midfielder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Defender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalKeeper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

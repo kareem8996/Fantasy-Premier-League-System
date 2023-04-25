@@ -1,12 +1,18 @@
 #include "System.h"
 #include "iostream"
-
+#include <typeinfo>
 #include <Windows.h>
 #include <time.h>
 #include <conio.h>
 #include <stdio.h>   
 #include <fstream>
+#include <string>
 #include <signal.h>
+#include <sstream>  
+#include "Defender.h"
+#include "Midfielder.h"
+#include "Attacker.h"
+#include "GoalKeeper.h"
 using namespace std;
 
 string const System::choice_error = "\tPlease enter your choice here --->\t";
@@ -861,7 +867,6 @@ void System::displayPlayers(Player p, bool flag, string delim) {
         cout << "Name: " << p.getFullname() << delim;
         cout << "Position: " << p.getPosition() << delim;
         cout << "Status: " << p.getStatus() << delim;
-        cout << "Tshirt Number: " << p.getNumber() << delim;
         cout << "Current Week Goals: " << p.getGoals() << delim;
         cout << "Total Goals: " << p.getTotalGoals() << delim;
         cout << "Current Week Assists: " << p.getAssists() << delim;
@@ -870,10 +875,27 @@ void System::displayPlayers(Player p, bool flag, string delim) {
         cout << "Total Yellow Cards: " << p.getTotalYellowCards() << delim;
         cout << "Current Week Red Card: " << p.getRedCards() << delim;
         cout << "Total Red Cards: " << p.getTotalRedCards() << delim;
-
+        
         if (p.getPosition() != "Attacker") {
-            cout << "Current Week Cleensheet: " << p.getCurrentCleanSheet() << delim;
-            cout << "Current Week Cleensheet: " << p.getTotalCleanSheets() << delim;
+
+            if (typeid(Midfielder) == typeid(p)) {
+                Midfielder* defensive = (Midfielder*)&p;
+                cout << "Current Week Cleansheet: " << p.getCurrentCleanSheet() << delim;
+                cout << "Total Cleansheet: " << p.getTotalCleanSheets() << delim;
+            } 
+            else if (typeid(Defender) == typeid(p)) {
+                Defender *defensive = (Defender*)&p;
+                cout << "Current Week Cleansheet: " << defensive->getCurrentCleanSheet() << delim;
+                cout << "Total Cleansheet: " << defensive->getTotalCleanSheets() << delim;
+            }
+            else if (typeid(GoalKeeper) == typeid(p)) {
+                GoalKeeper* defensive = (GoalKeeper*)&p;
+                cout << "Current Week Saves: " << defensive->getSaves()<<delim;
+                cout << "Total Saves: " << defensive->getTotalSaves()<<delim;
+                cout << "Current Week Cleansheet: " << defensive->getCurrentCleanSheet() << delim;
+                cout << "Total Cleansheet: " << defensive->getTotalCleanSheets() << delim;
+            }
+           
         }
     }
     System::printSeprator_for_errors();
@@ -888,3 +910,4 @@ void System::displayPlayers(string position) {
         displayPlayers(it.second, true, "\t||\t");
     }
 }
+

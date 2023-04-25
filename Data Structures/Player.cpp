@@ -9,16 +9,15 @@ Player::Player() {
 	Price = 0;
 	Position = "";
 	Status = "";
-	Number = 0;
 }
-Player::Player(string PlayerName, string PlayerTeam, int PlayerTotalPoints, float PlayerPrice, string PlayerPosition, string PlayerStatus, int PlayerNumber) {
+Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus) {
+	ID = id;
 	FullName = PlayerName;
 	Team = PlayerTeam;
-	Points = 0;
+	Points = PlayerTotalPoints;
 	Price = PlayerPrice;
 	Position = PlayerPosition;
 	Status = PlayerStatus;
-	Number = PlayerNumber;
 }
 
 string Player::getFullname() {
@@ -46,17 +45,17 @@ void Player::ResetPoints() {
 }
 
 
-float Player::getPrice() {
+int Player::getPrice() {
 	return Price;
 }
-void Player::setPrice(float PlayerPrice) {
+void Player::setPrice(int PlayerPrice) {
 	Price = PlayerPrice;
 }
 void Player::increasePrice() {
-	Price += 0.1;
+	Price += 1;
 }
 void Player::decreasePrice() {
-	Price -= 0.1;
+	Price -= 1;
 }
 
 
@@ -85,13 +84,6 @@ void Player::setStatus(string PlayerStatus) {
 	Status = PlayerStatus;
 }
 
-int Player::getNumber() {
-	return Number;
-}
-void Player::setNumber(int PlayerNumber) {
-	Number = PlayerNumber;
-}
-
 
 
 void Player::setGoals(int goals) {
@@ -108,14 +100,6 @@ void Player::setAssists(int assists) {
 
 void Player::setTotalAssists(int totalAssists) {
 	TotalAssists = totalAssists;
-}
-
-void Player::setCurrentCleanSheet(bool currentCleanSheet) {
-	CurrentCleanSheet = currentCleanSheet;
-}
-
-void Player::setTotalCleanSheets(int totalCleanSheets) {
-	TotalCleanSheets = totalCleanSheets;
 }
 
 void Player::setYellowCards(int yellowCards) {
@@ -151,13 +135,6 @@ int Player::getTotalAssists() {
 	return TotalAssists;
 }
 
-bool Player::getCurrentCleanSheet() {
-	return CurrentCleanSheet;
-}
-
-int Player::getTotalCleanSheets() {
-	return TotalCleanSheets;
-}
 
 int Player::getYellowCards() {
 	return YellowCards;
@@ -183,10 +160,6 @@ void Player::updateTotalGoals() {
 	TotalGoals += Goals;
 }
 
-void Player::updateTotalCleanSheets() {
-	if (CurrentCleanSheet)
-		TotalCleanSheets++;
-}
 
 void Player::updateTotalYellowCards() {
 	TotalYellowCards += YellowCards;
@@ -203,3 +176,4 @@ int Player::getID() {
 void Player::setID(int id) {
 	ID = id;
 }
+
