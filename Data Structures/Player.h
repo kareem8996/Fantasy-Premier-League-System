@@ -10,14 +10,9 @@ private:
 	int ID;
 	string FullName;
 	string Team;
-	int Points;
 	int Price;
 	string Position;
 	string Status;
-	int Goals;
-	int Assists;
-	int YellowCards;
-	int RedCards;
 	vector<gameWeek> Player_History;
 	
 
@@ -40,9 +35,9 @@ public:
 	string getClub();
 	void setClub(string PlayerTeam);
 
-	int getPoints();
-	void setPoints(int PLayerPoints);
-	void ResetPoints();
+	//int getPoints();
+	//void setPoints(int PLayerPoints);
+	//void ResetPoints();
 
 	int getPrice();
 	void setPrice(int PlayerPrice);
@@ -59,39 +54,39 @@ public:
 	string getStatus();
 	void setStatus(string PlayerStatus);
 
-	int getNumber();
+	/*int getNumber();
 	void setNumber(int Number);
 
 	int getGoals();
-	void setGoals(int PlayerGoals);
+	void setGoals(int PlayerGoals);*/
 
 	int getTotalGoals();
 	void setTotalGoals(int PlayerGoals);
 	void updateTotalGoals();
 
-	int getAssists();
-	void setAssists(int PlayerAssists);
+	/*int getAssists();
+	void setAssists(int PlayerAssists);*/
 
 	int getTotalAssists();
 	void updateTotalAssists();
 	void setTotalAssists(int PlayerAssists);
 
-	bool getCurrentCleanSheet();
-	void setCurrentCleanSheet(bool Cleansheet);
+	/*bool getCurrentCleanSheet();
+	void setCurrentCleanSheet(bool Cleansheet);*/
 
-	int getTotalCleanSheets();
+	/*int getTotalCleanSheets();
 	void updateTotalCleanSheets();
-	void setTotalCleanSheets(int CleanSheet);
+	void setTotalCleanSheets(int CleanSheet);*/
 
-	int getYellowCards();
-	void setYellowCards(int YellowCards);
+	/*int getYellowCards();
+	void setYellowCards(int YellowCards);*/
 
 	int getTotalYellowCards();
 	void updateTotalYellowCards();
 	void setTotalYellowCards(int YellowCards);
 
-	int getRedCards();
-	void setRedCards(int RedCards);
+	/*int getRedCards();
+	void setRedCards(int RedCards);*/
 
 	int getTotalRedCards();
 	void updateTotalRedCards();
@@ -100,14 +95,14 @@ public:
 	int getID();
 	void setID(int id);
 	
-	int getSaves();
-	void setSaves(int save);
+	/*int getSaves();
+	void setSaves(int save);*/
 	
 	vector<gameWeek> getPlayer_History();
 	void updatePlayer_History(gameWeek hist);
 	
-	int getTotalSaves();
+	/*int getTotalSaves();
 	void setTotalSaves(int totalsave);
-	void updateTotalSaves();
+	void updateTotalSaves();*/
 };
 	

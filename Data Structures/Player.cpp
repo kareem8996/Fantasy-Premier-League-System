@@ -5,7 +5,7 @@ using namespace std;
 Player::Player() {
 	FullName = "";
 	Team = "";
-	Points = 0;
+	TotalPoints = 0;
 	Price = 0;
 	Position = "";
 	Status = "";
@@ -14,7 +14,7 @@ Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoint
 	ID = id;
 	FullName = PlayerName;
 	Team = PlayerTeam;
-	Points = PlayerTotalPoints;
+	TotalPoints = PlayerTotalPoints;
 	Price = PlayerPrice;
 	Position = PlayerPosition;
 	Status = PlayerStatus;
@@ -35,15 +35,15 @@ void Player::setClub(string PlayerTeam) {
 	Team = PlayerTeam;
 }
 
-int Player::getPoints() {
-	return Points;
-}
-void Player::setPoints(int PLayerPoints) {
-	Points += PLayerPoints;
-}
-void Player::ResetPoints() {
-	Points = 0;
-}
+//int Player::getPoints() {
+//	return Points;
+//}
+//void Player::setPoints(int PLayerPoints) {
+//	Points += PLayerPoints;
+//}
+//void Player::ResetPoints() {
+//	Points = 0;
+//}
 
 
 int Player::getPrice() {
@@ -68,7 +68,7 @@ void Player::setTotalPoints(int TPoints) {
 	TotalPoints = TPoints;
 }
 void Player::updateTotalPoints() {
-	TotalPoints += Points;
+	TotalPoints += Player_History.back().getTotal_points_gameweek();
 }
 
 string Player::getPosition() {
@@ -86,88 +86,88 @@ void Player::setStatus(string PlayerStatus) {
 }
 
 
-
-void Player::setGoals(int goals) {
-	Goals = goals;
-}
+//
+//void Player::setGoals(int goals) {
+//	Goals = goals;
+//}
 
 void Player::setTotalGoals(int totalGoals) {
 	TotalGoals = totalGoals;
 }
 
-void Player::setAssists(int assists) {
-	Assists = assists;
-}
+//void Player::setAssists(int assists) {
+//	Assists = assists;
+//}
 
 void Player::setTotalAssists(int totalAssists) {
 	TotalAssists = totalAssists;
 }
-
-void Player::setYellowCards(int yellowCards) {
-	YellowCards = yellowCards;
-}
+//
+//void Player::setYellowCards(int yellowCards) {
+//	YellowCards = yellowCards;
+//}
 
 void Player::setTotalYellowCards(int totalYellowCards) {
 	TotalYellowCards = totalYellowCards;
 }
-
-void Player::setRedCards(int redCards) {
-	RedCards = redCards;
-}
+//
+//void Player::setRedCards(int redCards) {
+//	RedCards = redCards;
+//}
 
 void Player::setTotalRedCards(int totalRedCards) {
 	TotalRedCards = totalRedCards;
 }
 
 // Getters
-int Player::getGoals() {
-	return Goals;
-}
+//int Player::getGoals() {
+//	return Goals;
+//}
 
 int Player::getTotalGoals() {
 	return TotalGoals;
 }
 
-int Player::getAssists() {
+/*nt Player::getAssists() {
 	return Assists;
-}
+}*/
 
 int Player::getTotalAssists() {
 	return TotalAssists;
 }
 
 
-int Player::getYellowCards() {
-	return YellowCards;
-}
+//int Player::getYellowCards() {
+//	return YellowCards;
+//}
 
 int Player::getTotalYellowCards() {
 	return TotalYellowCards;
 }
 
-int Player::getRedCards() {
-	return RedCards;
-}
+//int Player::getRedCards() {
+//	return RedCards;
+//}
 
 int Player::getTotalRedCards() {
 	return TotalRedCards;
 }
 
 void Player::updateTotalAssists() {
-	TotalAssists += Assists;
+	TotalAssists += Player_History.back().getAssists_gameweek();
 }
 
 void Player::updateTotalGoals() {
-	TotalGoals += Goals;
+	TotalGoals += Player_History.back().getGoals_scored_gameweek();
 }
 
 
 void Player::updateTotalYellowCards() {
-	TotalYellowCards += YellowCards;
+	TotalYellowCards += Player_History.back().getYellow_cards_gameweek();
 }
 
 void Player::updateTotalRedCards() {
-	TotalRedCards += RedCards;
+	TotalRedCards += Player_History.back().getRed_cards_gameweek();
 }
 
 int Player::getID() {
