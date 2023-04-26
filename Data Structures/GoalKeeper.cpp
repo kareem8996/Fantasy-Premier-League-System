@@ -2,7 +2,8 @@
 
 GoalKeeper::GoalKeeper(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus,int TotalSaves,int TotalCleanSheets) 
 	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus){
-	
+	this->TotalCleanSheets = TotalCleanSheets;
+	this->TotalSaves = TotalSaves;
 }
 
 void GoalKeeper::setCurrentCleanSheet(bool currentCleanSheet) {
