@@ -976,7 +976,6 @@ void System::readPlayers() {
                             stoi(row["value"].at(row_counter)),
                             row["position"].at(row_counter),
                             row["status"].at(row_counter),
-                            (bool)stoi(row["gameweek_clean_sheets"].at(row_counter)),
                             stoi(row["total_clean_sheets"].at(row_counter)));
 
 
