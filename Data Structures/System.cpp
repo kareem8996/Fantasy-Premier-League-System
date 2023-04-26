@@ -537,8 +537,8 @@ void System::printUserMenu() {
         << "\t\t2 - Create League\n"
         << "\t\t3 - Join League\n"
         << "\t\t4 - Change Account Info\n"
-        << "\t\t7 - To Logout\n"
-        << "\t\t8 - To Quit the System\n";
+        << "\t\t5 - To Logout\n"
+        << "\t\t6 - To Quit the System\n";
     do {
         cout << "\tPlease enter your choice here --->\t";
         cin >> menuChoice;
@@ -845,11 +845,10 @@ void System::ManageSqaudMenu(User_Team& c) {
     else {
         c.pickSquad();
     }
-    CurrUser.setSquad(c);
     
 
 }
-void System::displayPlayers(Player*p, bool flag, string delim) {
+void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     /// <summary>
     /// displays only one player
     /// </summary>
@@ -860,43 +859,42 @@ void System::displayPlayers(Player*p, bool flag, string delim) {
     cout << "ID: " << p->getID() << delim;
     cout << "Name: " << p->getFullname() << delim;
     cout << "Club: " << p->getClub() << delim;
-    cout << "Price: " << p->getPrice() << delim;
-    cout << "Current Week Points: " << p->getPoints() << delim;
+    cout << "Price: " << (float)p->getPrice()/10 << delim;
+    cout << "Current Week Points: " << p->getPlayer_History().back().getTotal_points_gameweek() << delim;
     cout << "Total Points: " << p->getTotalPoints() << delim;
     if (!flag) {
-        cout << "Name: " << p->getFullname() << delim;
         cout << "Position: " << p->getPosition() << delim;
         cout << "Status: " << p->getStatus() << delim;
-        cout << "Current Week Goals: " << p->getGoals() << delim;
+        cout << "Current Week Goals: " << p->getPlayer_History().back().getGoals_scored_gameweek() << delim;
         cout << "Total Goals: " << p->getTotalGoals() << delim;
-        cout << "Current Week Assists: " << p->getAssists() << delim;
+        cout << "Current Week Assists: " << p->getPlayer_History().back().getAssists_gameweek() << delim;
         cout << "Total Assists: " << p->getTotalAssists() << delim;
-        cout << "Current Week Yellow Cards: " << p->getYellowCards() << delim;
+        cout << "Current Week Yellow Cards: " << p->getPlayer_History().back().getYellow_cards_gameweek() << delim;
         cout << "Total Yellow Cards: " << p->getTotalYellowCards() << delim;
-        cout << "Current Week Red Card: " << p->getRedCards() << delim;
-        cout << "Total Red Cards: " << p->getTotalRedCards() << delim;
+        cout << "Current Week Red Card: " << p->getPlayer_History().back().getRed_cards_gameweek() << delim;
+        cout << "Total Red Cards: " << p->getTotalRedCards() <<endl;
         
-        if (p->getPosition() != "Attacker") {
+ 
 
-            if (typeid(Midfielder) == typeid(p)) {
-                Midfielder* defensive = (Midfielder*)&p;
-                cout << "Current Week Cleansheet: " << defensive->getCurrentCleanSheet() << delim;
-                cout << "Total Cleansheet: " << defensive->getTotalCleanSheets() << delim;
+            if (p->getPosition()=="MID") {
+                Midfielder* m = (Midfielder*)p;
+                cout << "Current Week Cleansheet: " << m->getPlayer_History().back().getClean_sheets_gameweek() << delim;
+                cout << "Total Cleansheet: " << m->getTotalCleanSheets() << delim;
             } 
-            else if (typeid(Defender) == typeid(p)) {
-                Defender *defensive = (Defender*)&p;
-                cout << "Current Week Cleansheet: " << defensive->getCurrentCleanSheet() << delim;
-                cout << "Total Cleansheet: " << defensive->getTotalCleanSheets() << delim;
+            else if (p->getPosition() == "DEF") {
+                Defender* d =(Defender*)(p);
+                cout << "Current Week Cleansheet: " << d->getPlayer_History().back().getClean_sheets_gameweek() << delim;
+                cout << "Total Cleansheet: " << d->getTotalCleanSheets() <<endl;
             }
-            else if (typeid(GoalKeeper) == typeid(p)) {
-                GoalKeeper* defensive = (GoalKeeper*)&p;
-                cout << "Current Week Saves: " << defensive->getSaves()<<delim;
-                cout << "Total Saves: " << defensive->getTotalSaves()<<delim;
-                cout << "Current Week Cleansheet: " << defensive->getCurrentCleanSheet() << delim;
-                cout << "Total Cleansheet: " << defensive->getTotalCleanSheets() << delim;
+            else if (p->getPosition() == "GKP") {
+                GoalKeeper* g =(GoalKeeper*)p;
+                cout << "Current Week Saves: " << g->getPlayer_History().back().getSaves_gameweek() << delim;
+                cout << "Total Saves: " << g->getTotalSaves()<<delim;
+                cout << "Current Week Cleansheet: " << g->getPlayer_History().back().getClean_sheets_gameweek() << delim;
+                cout << "Total Cleansheet: " <<g->getTotalCleanSheets() <<endl;
             }
             
-        }
+        
     }
     System::printSeprator_for_errors();
 }
@@ -1062,11 +1060,9 @@ void System::readPlayers() {
                 }
             }
             row_counter++;
-            if(flag)
-            cout << p->getFullname() << endl;
             flag = true;
 
         }
     }
-        cout << row_counter;
+        cout << "Reading successful\n";
 }

@@ -18,7 +18,7 @@ private:
 public:
 	User_Team();
 	static const int MAX_PLAYERS = 11;
-	static const int MAX_BUDGET = 10000000; //10 million
+	static const int MAX_BUDGET = 1000000000; //1 billion
 	static const int MAX_GOALKEEPERS = 1;
 	static const int MAX_DEFENDERS = 5;
 	static const int MAX_MIDFIELDERS = 5;

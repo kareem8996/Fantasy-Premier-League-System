@@ -6,5 +6,7 @@ int main()
     
     /*System::RunSys();*/
     System::readPlayers();
+    System::RunSys();
+    
     
 }
