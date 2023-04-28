@@ -1,7 +1,6 @@
 #include "Admin.h"
 #include "System.h"
 #include "Player.h"
-#include "string"
 using namespace std;
 
 Admin::Admin(string& name, string& email, string& Adminname, string& password, string& phoneNumber) {
@@ -103,7 +102,204 @@ string Admin::getPassword() {
 
 
 //===================== Update Player Data=========================
-void Admin::edit_player_menu() {}
+void edit_options() {
+	cout << "\t\tWhat would you like to do ??\n"
+		<< "\t\t1 - change price \n"
+		<< "\t\t2 - change team name \n"// validate  team existance
+		<< "\t\t3 - change statuts \n"// cheack a d i n s u
+		<< "\t\t4 - Change TotalPoints\n"
+		<< "\t\t5 - Change TotalGoals\n"
+		<< "\t\t6 - Change TotalAssists\n"
+		<< "\t\t7 - Change TotalYellowCards\n"
+		<< "\t\t8 - Change TotalRedCards\n";
+}
+void option_choise(int option,Player *&p) {
+	
+	switch (option) {
+	case 1:
+		cout << "do you want to increase or decrease " << p->getFullname() << " price \n";
+		int x;
+		cout << "\t\t1 - increase price \n" << "\t\t2 - decrease price \n";
+		if (x == 1)
+			p->increasePrice();
+		else if (x==2)
+			p->decreasePrice();
+		break;
+	case 2:
+	{cout << "what is the new team's name \n";
+	string team;
+	cin >> team;
+	p->setClub(team);
+	break;
+	}
+	case 3:
+	{	cout << "what is the new status";
+	string stat;
+	cin >> stat;// cheack a d i n s u
+	while (stat != "a" || stat != "d" || stat != "i" || stat != "n" || stat != "s" || stat != "u")
+	{
+		cout << "enter valid status from 'a d i n s u' ";
+		cin >> stat;
+	}
+	p->setStatus(stat);
+	break;
+	}
+	case 4:
+		int points;
+		cout << "enter total points";
+		cin >> points;
+		p->setTotalPoints(points);
+		break;
+	case 5:
+		int goals;
+		cout << "enter total goals";
+		cin >> goals;
+		p->setTotalGoals(goals);
+		break;
+	case 6:
+		int assits;
+		cout << "enter total assits";
+		cin >> assits;
+		p->setTotalAssists(assits);
+		break;
+	case 7:
+		int yellow;
+		cout << "enter total yellow cards";
+		cin >> yellow;
+		p->setTotalYellowCards(yellow);
+		break;
+	case 8:
+		int red;
+		cout << "enter total red cards";
+		cin >> red;
+		p->setTotalRedCards(red);
+		break;
+	default:
+		cout << "enter valid number";
+	}
+}
+
+//==============================================
+void Admin::edit_player_menu() 
+{
+	int option;
+
+
+
+	string position_picked;
+	System sys;
+	cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Quit\n";
+	cin >> position_picked;
+
+	if (position_picked == "1") {
+		{
+			System::displayPlayers("GKP");
+			int id;
+			cout << "Enter the player ID\n";
+			cin >> id;
+			System::displayPlayers(System::AllPlayers["GKP"][id], false, "\n");
+			// ASK what change i want make change in temp var
+
+			edit_options();
+			cin >> option;
+			//switch
+			option_choise(option, System::AllPlayers["GKP"][id]);
+			System::AllPlayers["GKP"][id];
+
+			string Player_Option;
+			cout << "Are you sure you want to pick " << System::AllPlayers["GKP"][id]->getFullname() << " ?\n";
+			cin >> Player_Option;
+			if (Player_Option == "Y" || Player_Option == "y") {
+				//assign temp var to obj
+
+			}
+		}
+
+	}
+	else if (position_picked == "2")
+	{
+		System::displayPlayers("DEF");
+		int id;
+		cout << "Enter the player ID\n";
+		cin >> id;
+		System::displayPlayers(System::AllPlayers["DEF"][id], false, "\n");
+
+		edit_options();
+		cin >> option;
+
+
+
+		string Player_Option;
+		cout << "Are you sure you want to pick " << System::AllPlayers["DEF"][id]->getFullname() << " ?\n";
+		cin >> Player_Option;
+		if (Player_Option == "Y" || Player_Option == "y") {
+
+		}
+	}
+
+	
+	
+
+//
+	else if (position_picked == "3") {
+
+		System::displayPlayers("MID");
+		int id;
+		cout << "Enter the player ID\n";
+		cin >> id;
+		System::displayPlayers(System::AllPlayers["MID"][id], false, "\n");
+
+		edit_options();
+		cin >> option;
+
+		string Player_Option;
+		cout << "Are you sure you want to pick " << System::AllPlayers["MID"][id]->getFullname() << " ?\n";
+		cin >> Player_Option;
+		if (Player_Option == "Y" || Player_Option == "y") {
+
+		}
+	}
+			else if (position_picked == "4") {
+				System::displayPlayers("FWD");
+				int id;
+				cout << "Enter the player ID\n";
+				cin >> id;
+				System::displayPlayers(System::AllPlayers["FWD"][id], false, "\n");
+
+
+				edit_options();
+				cin >> option;
+
+
+
+				string Player_Option;
+				cout << "Are you sure you want to pick " << System::AllPlayers["FWD"][id]->getFullname() << " ?\n";
+				cin >> Player_Option;
+				if (Player_Option == "Y" || Player_Option == "y") {
+
+
+
+
+				
+				}
+				else if (position_picked == "5") {
+					return;
+				}
+
+
+
+
+
+				/*
+				increase pricre
+				decrease pricre
+
+
+
+				*/
+
+			}
+}
 
 //===================== Update Team Data=========================
 void Admin::edit_team_menu() {}
