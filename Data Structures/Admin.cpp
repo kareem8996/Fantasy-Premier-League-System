@@ -183,9 +183,6 @@ void option_choise(int option,Player *&p) {
 void Admin::edit_player_menu() 
 {
 	int option;
-
-
-
 	string position_picked;
 	System sys;
 	cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Quit\n";
@@ -200,11 +197,6 @@ void Admin::edit_player_menu()
 			System::displayPlayers(System::AllPlayers["GKP"][id], false, "\n");
 			// ASK what change i want make change in temp var
 
-			edit_options();
-			cin >> option;
-			//switch
-			option_choise(option, System::AllPlayers["GKP"][id]);
-			System::AllPlayers["GKP"][id];
 
 			string Player_Option;
 			cout << "Are you sure you want to pick " << System::AllPlayers["GKP"][id]->getFullname() << " ?\n";
@@ -212,6 +204,11 @@ void Admin::edit_player_menu()
 			if (Player_Option == "Y" || Player_Option == "y") {
 				//assign temp var to obj
 
+			edit_options();
+			cin >> option;
+			//switch
+			option_choise(option, System::AllPlayers["GKP"][id]);
+		//	System::AllPlayers["GKP"][id];
 			}
 		}
 
@@ -224,23 +221,17 @@ void Admin::edit_player_menu()
 		cin >> id;
 		System::displayPlayers(System::AllPlayers["DEF"][id], false, "\n");
 
-		edit_options();
-		cin >> option;
-
-
-
 		string Player_Option;
 		cout << "Are you sure you want to pick " << System::AllPlayers["DEF"][id]->getFullname() << " ?\n";
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
-
+			edit_options();
+			cin >> option;
+			//switch
+			option_choise(option, System::AllPlayers["DEF"][id]);
+			//System::AllPlayers["DEF"][id]
 		}
 	}
-
-	
-	
-
-//
 	else if (position_picked == "3") {
 
 		System::displayPlayers("MID");
@@ -248,57 +239,43 @@ void Admin::edit_player_menu()
 		cout << "Enter the player ID\n";
 		cin >> id;
 		System::displayPlayers(System::AllPlayers["MID"][id], false, "\n");
-
-		edit_options();
-		cin >> option;
-
 		string Player_Option;
 		cout << "Are you sure you want to pick " << System::AllPlayers["MID"][id]->getFullname() << " ?\n";
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
+			edit_options();
+			cin >> option;
+			//switch
+			option_choise(option, System::AllPlayers["MID"][id]);
+			//System::AllPlayers["MID"][id];
+		}
+	}
+	else if (position_picked == "4") {
+		System::displayPlayers("FWD");
+		int id;
+		cout << "Enter the player ID\n";
+		cin >> id;
+		System::displayPlayers(System::AllPlayers["FWD"][id], false, "\n");
+
+		string Player_Option;
+		cout << "Are you sure you want to pick " << System::AllPlayers["FWD"][id]->getFullname() << " ?\n";
+		cin >> Player_Option;
+		if (Player_Option == "Y" || Player_Option == "y") {
+
+			edit_options();
+			cin >> option;
+			//switch
+			option_choise(option, System::AllPlayers["FWD"][id]);
+			//System::AllPlayers["FWD"][id];
+
+
 
 		}
 	}
-			else if (position_picked == "4") {
-				System::displayPlayers("FWD");
-				int id;
-				cout << "Enter the player ID\n";
-				cin >> id;
-				System::displayPlayers(System::AllPlayers["FWD"][id], false, "\n");
-
-
-				edit_options();
-				cin >> option;
-
-
-
-				string Player_Option;
-				cout << "Are you sure you want to pick " << System::AllPlayers["FWD"][id]->getFullname() << " ?\n";
-				cin >> Player_Option;
-				if (Player_Option == "Y" || Player_Option == "y") {
-
-
-
-
-				
-				}
-				else if (position_picked == "5") {
-					return;
-				}
-
-
-
-
-
-				/*
-				increase pricre
-				decrease pricre
-
-
-
-				*/
-
-			}
+	else if (position_picked == "5") 
+	{
+		return;//not sure what 5 does
+	}	
 }
 
 //===================== Update Team Data=========================
