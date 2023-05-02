@@ -25,7 +25,7 @@ User System::CurrUser;
 Admin System::CurrAdmin;
 vector<User> System::Allusers;
 vector<Admin> System::AllAdmins;
-unordered_map<string, Club> System::AllClub; //name,club object
+unordered_map<string, Club> System::AllClubs; //name,club object
 unordered_map < string, unordered_map<int, Player*>> System::AllPlayers;
 void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
@@ -922,7 +922,6 @@ void System::readPlayers() {
     fstream file("D:\\Uni Projects\\Data Structure\\Data\\total_players.csv", ios::in);
     int row_counter = -1;
     Player* p=nullptr;
-    bool flag = false;
     if (file.is_open())
     {
         vector<string> column_names;
@@ -937,11 +936,11 @@ void System::readPlayers() {
                     continue;
                 }
                 else {
-                    row[column_names[column_counter]].push_back(cellData);
-                }
+                        row[column_names[column_counter]].push_back(cellData);
+                    }
                 column_counter++;
             }
-            if (flag) {
+            if (row_counter>-1) {
                 if (p==nullptr||stoi(row["id_player"].at(row_counter)) != p->getID()) {//initializing
                     if (row["position"].at(row_counter) == "MID") {
                         Midfielder* m = new Midfielder(stoi(row["id_player"].at(row_counter)),
@@ -1059,8 +1058,6 @@ void System::readPlayers() {
                 }
             }
             row_counter++;
-            flag = true;
-
         }
     }
         cout << "Reading successful\n";

@@ -10,7 +10,7 @@ class Club
 {
 private:
 	string Name;
-	unordered_map<int, Player> Squad;
+	unordered_map<int, Player*> Squad;
 	string NextFixture;
 	int LeaguePoints;
 public:
