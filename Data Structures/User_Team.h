@@ -6,7 +6,7 @@
 class User_Team
 {
 private:
-	map<int, Player> Squad;//player id,player object
+	map<int, Player *> Squad;//player id,player object
 	int totalPlayers; //total number of players picked
 	int totalAttackers; //total number of attackers picked
 	int totalDefenders;//total number of defenders picked

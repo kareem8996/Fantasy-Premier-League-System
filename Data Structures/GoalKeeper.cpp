@@ -46,3 +46,14 @@ void GoalKeeper::setTotalSaves(int totalsave) {
 void GoalKeeper::updateTotalSaves() {
 	TotalSaves += Saves;
 }
+
+int GoalKeeper::CalculatePoints() {
+	int points = 0;
+	points += this->getPlayer_History().back().getGoals_scored_gameweek() * 6;
+	points += this->getPlayer_History().back().getAssists_gameweek() * 3;
+	points += this->getPlayer_History().back().getClean_sheets_gameweek() * 4;
+	points += this->getPlayer_History().back().getSaves_gameweek()/3;
+	points -= this->getPlayer_History().back().getYellow_cards_gameweek();
+	points -= this->getPlayer_History().back().getRed_cards_gameweek() * 3;
+	return points;
+}

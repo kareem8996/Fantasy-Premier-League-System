@@ -25,7 +25,7 @@ public:
 	static Admin CurrAdmin;
 	static vector<User> Allusers;
 	static vector<Admin> AllAdmins;
-	static unordered_map<string, Club> AllClub; //name,club object
+	static unordered_map<string, Club> AllClubs; //name,club object
 	static unordered_map < string, unordered_map<int, Player *>> AllPlayers;
 	
 	//============= System Run ===========

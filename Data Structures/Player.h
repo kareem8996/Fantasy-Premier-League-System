@@ -28,6 +28,8 @@ private:
 
 public:
 	Player();
+
+	int CalculatePoints();
 	Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus);
 	string getFullname();
 	void setFullname(string Fullname);

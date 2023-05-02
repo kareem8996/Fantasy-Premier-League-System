@@ -188,7 +188,7 @@ void User_Team::pickPlayer(Player p) {
 		totalAttackers++;
 	}
 	totalPlayers++;
-	Squad.insert({ p.getID(),p });
+	Squad.insert({ p.getID(),&p });
 }
 void User_Team::RemovePlayer(Player p) {
 	/// <summary>
