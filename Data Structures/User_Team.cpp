@@ -1,6 +1,17 @@
 #include "User_Team.h"
 #include "System.h"
+void User_Team::setUserTeamID()
+{
+	if (userTeam_ID == NULL) {
+		userTeam_ID = rand() + 1;
+	}
+}
+int User_Team::getUserTeamID()
+{
+	return userTeam_ID;
+}
 User_Team::User_Team() {
+	
 	totalPlayers = 0;
 	totalAttackers = 0;
 	totalDefenders = 0;

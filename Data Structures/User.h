@@ -14,8 +14,8 @@ private:
     int totalPoints;
     int currPoints;
     string teamName;
-    vector<string> leagues;
-    User_Team Squad;
+    vector<int> leagues;
+    int Sqaud_ID;
 
 public:
     // Constructor
@@ -29,7 +29,7 @@ public:
         int totalPoints,
         int currPoints,
         string& teamName,
-        vector<string>& leagues);
+        vector<int>& leagues);
 
     // Setters
     void setName(string& name);
@@ -41,7 +41,7 @@ public:
     void setTotalPoints(int totalPoints);
     void setCurrPoints(int currPoints);
     void setTeamName(string& teamName);
-    void setLeagues(vector<string>& leagues);
+    void setLeagues(vector<int>& leagues);
     void setSquad(User_Team squad);
     
     // Getters
@@ -54,8 +54,8 @@ public:
     int getTotalPoints();
     int getCurrPoints();
     string& getTeamName();
-    vector<string>& getLeagues();
-    User_Team& getSquad();
+    vector<int>& getLeagues();
+    int& getSquad();
     // Menus
 
 };
