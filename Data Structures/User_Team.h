@@ -6,6 +6,7 @@
 class User_Team
 {
 private:
+	int userTeam_ID=NULL;
 	map<int, Player *> Squad;//player id,player object
 	int totalPlayers; //total number of players picked
 	int totalAttackers; //total number of attackers picked
@@ -16,6 +17,8 @@ private:
 	map<string, int> teamCount; // this is a map to count number of player picked in each team ex: "Chelsea", 2
 	vector<int> totalPointsPerWeek; // vector containing total points collected each week 
 public:
+	void setUserTeamID();
+	int  getUserTeamID();
 	User_Team();
 	static const int MAX_PLAYERS = 11;
 	static const int MAX_BUDGET = 1000000000; //1 billion

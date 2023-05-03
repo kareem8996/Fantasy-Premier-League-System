@@ -2,7 +2,7 @@
 
 // Constructor
 User::User() {}
-User::User(string& name, string& email, string& username, string& password, string& phoneNumber, int totalPoints, int currPoints, string& teamName, vector<string>& leagues) {
+User::User(string& name, string& email, string& username, string& password, string& phoneNumber, int totalPoints, int currPoints, string& teamName, vector<int>& leagues) {
     this->name = name;
     this->email = email;
     this->username = username;
@@ -52,13 +52,13 @@ void User::setTeamName(string& teamName) {
     this->teamName = teamName;
 }
 
-void User::setLeagues(vector<string>& leagues) {
+void User::setLeagues(vector<int>& leagues) {
     this->leagues = leagues;
 }
 
 void User::setSquad(User_Team squad)
 {
-    Squad = squad;
+    Sqaud_ID = squad.getUserTeamID();
 }
 
 // Getters
@@ -97,12 +97,12 @@ int User::getCurrPoints() {
 string& User::getTeamName() {
     return teamName;
 }
-vector<string>& User::getLeagues() {
+vector<int>& User::getLeagues() {
     return leagues;
 
 }
 
-User_Team& User::getSquad()
+int& User::getSquad()
 {
-    return Squad;
+    return Sqaud_ID;
 }
