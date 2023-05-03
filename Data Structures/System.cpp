@@ -962,7 +962,12 @@ void System::readPlayers() {
                             stoi(row["gameweek_clean_sheets"].at(row_counter)),
                             stoi(row["gameweek_red_cards"].at(row_counter)),
                             stoi(row["gameweek_yellow_cards"].at(row_counter)),
-                            stoi(row["gameweek_saves"].at(row_counter))
+                            stoi(row["gameweek_saves"].at(row_counter)),
+                            stoi(row["minutes"].at(row_counter)),
+                            stoi(row["penalties_missed"].at(row_counter)),
+                            stoi(row["bonus"].at(row_counter)),
+                            stoi(row["goals_conceded"].at(row_counter)),
+                            stoi(row["own_goals"].at(row_counter))
                             });
                     
                         p = m;
@@ -987,7 +992,12 @@ void System::readPlayers() {
                             stoi(row["gameweek_clean_sheets"].at(row_counter)),
                             stoi(row["gameweek_red_cards"].at(row_counter)),
                             stoi(row["gameweek_yellow_cards"].at(row_counter)),
-                            stoi(row["gameweek_saves"].at(row_counter))
+                            stoi(row["gameweek_saves"].at(row_counter)),
+                            stoi(row["minutes"].at(row_counter)),
+                            stoi(row["penalties_missed"].at(row_counter)),
+                            stoi(row["bonus"].at(row_counter)),
+                            stoi(row["goals_conceded"].at(row_counter)),
+                            stoi(row["own_goals"].at(row_counter))
                             });
                         
                         p = d;
@@ -1009,7 +1019,12 @@ void System::readPlayers() {
                             stoi(row["gameweek_clean_sheets"].at(row_counter)),
                             stoi(row["gameweek_red_cards"].at(row_counter)),
                             stoi(row["gameweek_yellow_cards"].at(row_counter)),
-                            stoi(row["gameweek_saves"].at(row_counter))
+                            stoi(row["gameweek_saves"].at(row_counter)),
+                            stoi(row["minutes"].at(row_counter)),
+                            stoi(row["penalties_missed"].at(row_counter)),
+                            stoi(row["bonus"].at(row_counter)),
+                            stoi(row["goals_conceded"].at(row_counter)),
+                            stoi(row["own_goals"].at(row_counter))
                             });
                         p = a;
                     }
@@ -1031,7 +1046,13 @@ void System::readPlayers() {
                            stoi(row["gameweek_clean_sheets"].at(row_counter)),
                            stoi(row["gameweek_red_cards"].at(row_counter)),
                            stoi(row["gameweek_yellow_cards"].at(row_counter)),
-                           stoi(row["gameweek_saves"].at(row_counter))
+                           stoi(row["gameweek_saves"].at(row_counter)),
+                           stoi(row["minutes"].at(row_counter)),
+                           stoi(row["penalties_missed"].at(row_counter)),
+                           stoi(row["bonus"].at(row_counter)),
+                           stoi(row["goals_conceded"].at(row_counter)),
+                           stoi(row["own_goals"].at(row_counter))
+
                             });
                         p = g;
                     }
@@ -1053,7 +1074,12 @@ void System::readPlayers() {
                             stoi(row["gameweek_clean_sheets"].at(row_counter)),
                             stoi(row["gameweek_red_cards"].at(row_counter)),
                             stoi(row["gameweek_yellow_cards"].at(row_counter)),
-                            stoi(row["gameweek_saves"].at(row_counter))
+                            stoi(row["gameweek_saves"].at(row_counter)),
+                            stoi(row["minutes"].at(row_counter)),
+                            stoi(row["penalties_missed"].at(row_counter)),
+                            stoi(row["bonus"].at(row_counter)),
+                            stoi(row["goals_conceded"].at(row_counter)),
+                            stoi(row["own_goals"].at(row_counter))
                         });
                 }
             }

@@ -23,8 +23,8 @@ public:
 	int getLeaguePoints();
 	void win_UpdatePoints();
 	void draw_UpdatePoints();
-	void insertPlayer(Player playerToBeInserted);
+	void insertPlayer(Player*playerToBeInserted);
 	void deletePlayer(int playerToBeDeleted);
-	void deletePlayer(Player playerToBeDeleted);
+	void deletePlayer(Player* playerToBeDeleted);
 
 };	

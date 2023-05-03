@@ -34,12 +34,12 @@ void  Club::win_UpdatePoints()
 void  Club::draw_UpdatePoints() {
 	LeaguePoints += 1;
 }
-void  Club::insertPlayer(Player playerToBeInserted) {
-	Squad.insert({ playerToBeInserted.getID() ,& playerToBeInserted });
+void  Club::insertPlayer(Player* playerToBeInserted) {
+	Squad.insert({ playerToBeInserted->getID() , playerToBeInserted });
 }
 void  Club::deletePlayer(int playerToBeDeleted) {
 	Squad.erase(playerToBeDeleted);
 }
-void  Club::deletePlayer(Player playerToBeDeleted) {
-	Squad.erase(playerToBeDeleted.getID());
+void  Club::deletePlayer(Player* playerToBeDeleted) {
+	Squad.erase(playerToBeDeleted->getID());
 }
