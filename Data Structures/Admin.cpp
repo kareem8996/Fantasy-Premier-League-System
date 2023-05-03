@@ -102,7 +102,7 @@ string Admin::getPassword() {
 
 
 //===================== Update Player Data=========================
-void edit_options() {
+void edit_player_options() {
 	cout << "\t\tWhat would you like to do ??\n"
 		<< "\t\t1 - change price \n"
 		<< "\t\t2 - change team name \n"// validate  team existance
@@ -179,7 +179,7 @@ void option_choise(int option,Player *&p) {
 	}
 }
 
-//==============================================
+//=============
 void Admin::edit_player_menu() 
 {
 	int option;
@@ -204,7 +204,7 @@ void Admin::edit_player_menu()
 			if (Player_Option == "Y" || Player_Option == "y") {
 				//assign temp var to obj
 
-			edit_options();
+				edit_player_menu();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["GKP"][id]);
@@ -225,7 +225,7 @@ void Admin::edit_player_menu()
 		cout << "Are you sure you want to pick " << System::AllPlayers["DEF"][id]->getFullname() << " ?\n";
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
-			edit_options();
+			edit_player_menu();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["DEF"][id]);
@@ -243,7 +243,7 @@ void Admin::edit_player_menu()
 		cout << "Are you sure you want to pick " << System::AllPlayers["MID"][id]->getFullname() << " ?\n";
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
-			edit_options();
+			edit_player_menu();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["MID"][id]);
@@ -262,7 +262,7 @@ void Admin::edit_player_menu()
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
 
-			edit_options();
+			edit_player_menu();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["FWD"][id]);
@@ -279,9 +279,20 @@ void Admin::edit_player_menu()
 }
 
 //===================== Update Team Data=========================
-void Admin::edit_team_menu() {}
+void edit_club_options() {
+	cout << "\t\tWhat would you like to do ??\n"
+		<< "\t\t1 - remove palyer from club  \n"
+		<< "\t\t2 - add palyer from club \n";
+		
+}
+
+
+void Admin::edit_team_menu() {}//club
 
 //===================== Update User Account Data=========================
+
+
 void Admin::edit_account() {}
 //===================== Update League Data=========================
+
 void Admin::edit_leagues() {}
