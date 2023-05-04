@@ -2,17 +2,13 @@
 
 #include <iostream>
 using namespace std;
-Club::Club(string ClubName, string ClubNextFixture, int ClubLeaguePoints)
+Club::Club(int id,string clubname)
 {
-	Name = ClubName;
-	NextFixture = ClubNextFixture;
-	LeaguePoints = ClubLeaguePoints;
+	Name = clubname;
+	ID = id;
 }
 void Club::setName(string ClubName) {
 	Name = ClubName;
-}
-void Club::setNextFixture(string ClubNextFixture) {
-	NextFixture = ClubNextFixture;
 }
 void Club::setLeaguePoints(int ClubLeaguePoints) {
 	LeaguePoints = ClubLeaguePoints;
@@ -20,10 +16,6 @@ void Club::setLeaguePoints(int ClubLeaguePoints) {
 string Club::getName() {
 	return Name;
 }
-string Club::getNextFixture() {
-	return NextFixture;
-}
-
 int Club::getLeaguePoints() {
 	return LeaguePoints;
 }
@@ -43,3 +35,29 @@ void  Club::deletePlayer(int playerToBeDeleted) {
 void  Club::deletePlayer(Player* playerToBeDeleted) {
 	Squad.erase(playerToBeDeleted->getID());
 }
+
+void Club::setFixtures(vector<int> fix)
+{
+	Fixtures = fix;
+}
+
+vector<int> Club::getFixtures()
+{
+	return Fixtures;
+}
+
+void Club::updateFixtures(int fix)
+{
+	Fixtures.push_back(fix);
+}
+
+bool Club::isSquadEmpty() {
+	return Squad.empty();
+}
+
+unordered_map<int, Player*> Club::getSquad() {
+	return Squad;
+}
+
+
+

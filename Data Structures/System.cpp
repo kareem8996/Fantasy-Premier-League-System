@@ -25,7 +25,7 @@ User System::CurrUser;
 Admin System::CurrAdmin;
 vector<User> System::Allusers;
 vector<Admin> System::AllAdmins;
-unordered_map<string, Club> System::AllClubs; //name,club object
+unordered_map<string, Club*> System::AllClubs; //name,club object
 unordered_map < string, unordered_map<int, Player*>> System::AllPlayers;
 void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
@@ -922,6 +922,7 @@ void System::readPlayers() {
     fstream file("D:\\Uni Projects\\Data Structure\\Data\\total_players.csv", ios::in);
     int row_counter = -1;
     Player* p=nullptr;
+    int player_id;
     if (file.is_open())
     {
         vector<string> column_names;
@@ -969,7 +970,7 @@ void System::readPlayers() {
                             stoi(row["goals_conceded"].at(row_counter)),
                             stoi(row["own_goals"].at(row_counter))
                             });
-                    
+                        
                         p = m;
                     }
                     else if (row["position"].at(row_counter) == "DEF") {
@@ -1056,6 +1057,23 @@ void System::readPlayers() {
                             });
                         p = g;
                     }
+                    if (AllClubs[p->getClub()]->isSquadEmpty()) {
+                        if (stoi(row["team_h_score"].at(row_counter)) == stoi(row["team_a_score"].at(row_counter))) {
+                            AllClubs[p->getClub()]->draw_UpdatePoints();
+                        }
+                        else {
+                            if (stoi(row["team_h_score"].at(row_counter)) > stoi(row["team_a_score"].at(row_counter)) && row["was_home"].at(row_counter) == "TRUE") {
+                                AllClubs[p->getClub()]->win_UpdatePoints();
+                            }
+                            if (stoi(row["team_h_score"].at(row_counter)) < stoi(row["team_a_score"].at(row_counter)) && row["was_home"].at(row_counter) == "FALSE") {
+                                AllClubs[p->getClub()]->win_UpdatePoints();
+                            }
+                        }
+                        player_id = p->getID();
+
+                    }
+                    AllClubs[p->getClub()]->insertPlayer(p);
+                    AllClubs[p->getClub()]->updateFixtures(stoi(row["opponent_team"].at(row_counter)));
                     p->setTotalPoints(stoi(row["total_points"].at(row_counter)));
                     p->setTotalGoals(stoi(row["total_goals"].at(row_counter)));
                     p->setTotalAssists(stoi(row["total_assists"].at(row_counter)));
@@ -1065,6 +1083,20 @@ void System::readPlayers() {
                 }
                 else {//updating
 
+                AllClubs[p->getClub()]->updateFixtures(stoi(row["opponent_team"].at(row_counter)));
+                if (p->getID()==player_id) {
+                    if (stoi(row["team_h_score"].at(row_counter)) == stoi(row["team_a_score"].at(row_counter))) {
+                        AllClubs[p->getClub()]->draw_UpdatePoints();
+                    }
+                    else {
+                        if (stoi(row["team_h_score"].at(row_counter)) > stoi(row["team_a_score"].at(row_counter)) && row["was_home"].at(row_counter) == "TRUE") {
+                            AllClubs[p->getClub()]->win_UpdatePoints();
+                        }
+                        if (stoi(row["team_h_score"].at(row_counter)) < stoi(row["team_a_score"].at(row_counter)) && row["was_home"].at(row_counter) == "FALSE") {
+                            AllClubs[p->getClub()]->win_UpdatePoints();
+                        }
+                    }
+                }
                     p->updatePlayer_History({
                             row["status"].at(row_counter),
                             stoi(row["value"].at(row_counter)),
@@ -1088,3 +1120,43 @@ void System::readPlayers() {
     }
         cout << "Reading successful\n";
 }
+
+void System::readClub()
+{
+    unordered_map<string, vector<string>>row;
+    string line, cellData;
+    fstream file("D:\\Uni Projects\\Data Structure\\Data\\teams.csv", ios::in);
+    int row_counter = -1;
+    // Read the header row to find the Club_ID and Club ShortName columns
+    vector<string> column_names;
+
+    if (file.is_open())
+    {
+        while (getline(file, line))
+        {
+            stringstream str(line);
+            int column_counter = 0;
+            while (getline(str, cellData, ',')) {
+                if (row_counter == -1) {
+                    row.insert({ cellData,vector<string>{} });
+                    column_names.push_back(cellData);
+                    continue;
+                }
+                else {
+                    row[column_names[column_counter]].push_back(cellData);
+                }
+                column_counter++;
+            }
+            if (row_counter > -1) {
+                
+                Club*club = new  Club(
+                    stoi(row["id"].at(row_counter)),
+                    row["name"].at(row_counter)
+                );
+                AllClubs.insert({ club->getName(), club });
+            }
+            row_counter++;
+        }
+    }
+}
+
