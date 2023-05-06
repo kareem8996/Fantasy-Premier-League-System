@@ -4,10 +4,12 @@
 #include "Player.h"
 #include "Club.h"
 #include "User_Team.h"
+#include "League.h"
 #include <string>
 #include <vector>
 #include <map>
 #include <unordered_map>
+
 using namespace std;
 
 class System {
@@ -24,12 +26,12 @@ public:
 		menuChoice ;
 	static User CurrUser;
 	static Admin CurrAdmin;
-	static vector<User> Allusers;
-	static vector<Admin> AllAdmins;
-	static unordered_map<string, Club*> AllClubs; //name,club object
-	static unordered_map < string, unordered_map<int, Player *>> AllPlayers;
-	static unordered_map <int, User_Team*> AllUsersTeams;
-	
+	static unordered_map<int, User*> AllUsers;//User id, User object
+	static unordered_map<int, Admin*> AllAdmins;//Admin id, Admin object
+	static unordered_map<string, Club*> AllClubs; //Club name,club object
+	static unordered_map < string, unordered_map<int, Player *>> AllPlayers;//position,{player id,player object}
+	static unordered_map <int, User_Team*> AllUsersTeams;//User Team id, User Team object
+	static unordered_map<int, League*> AllLeagues; //League id, League object
 	//============= System Run ===========
 	static void RunSys();
 	//============= Menus ================
@@ -55,8 +57,8 @@ public:
 	static bool Check_Database(string username);
 	static bool Check_PhoneDatabase(string phone);
 	//============= login functions====================
-	static bool userLogin(vector<User>allusers, string attemptedUsername, string attemptedPassword);
-	static bool AdminLogin(vector<Admin>AllAdmins, string attemptedUsername, string attemptedPassword);
+	static bool userLogin( string attemptedUsername, string attemptedPassword);
+	static bool AdminLogin(string attemptedUsername, string attemptedPassword);
 	//================Extra functions=======================
 	static User_Team& getsquad(int id);
 	
@@ -74,4 +76,9 @@ public:
 	static void readPlayers();
 	static void readClub();
 
+	//===================Leagues============================================
+	void createLeague();
+	void joinLeague();
+	void manageLeagues();
+	void displayLeagues();
 };

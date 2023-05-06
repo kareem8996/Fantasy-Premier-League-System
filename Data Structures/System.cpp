@@ -14,6 +14,7 @@
 #include "Attacker.h"
 #include "GoalKeeper.h"
 #include"User_Team.h"
+
 using namespace std;
 
 string const System::choice_error = "\tPlease enter your choice here --->\t";
@@ -22,13 +23,15 @@ string  System::startchoice="",
         System:: registerChoice = "",
         System::loginChoice = "",
         System::menuChoice = "";
-User System::CurrUser;
+User System::CurrUser ;
 Admin System::CurrAdmin;
-vector<User> System::Allusers;
-vector<Admin> System::AllAdmins;
+unordered_map<int,User*> System::AllUsers;
+unordered_map<int,Admin*> System::AllAdmins;
 unordered_map<string, Club*> System::AllClubs; //name,club object
 unordered_map < string, unordered_map<int, Player*>> System::AllPlayers;
 unordered_map <int, User_Team*> System::AllUsersTeams;
+unordered_map<int, League*> System::AllLeagues; //League id, League object
+
 void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
     cout << "\033[2J\033[1;1H";
@@ -130,17 +133,15 @@ bool System::Check_Name(string& Name) {
 }
 
 bool System::Check_Database(string username) {
-    for (int i = 0; i < Allusers.size(); i++) {
+    for (auto& it : AllUsers) {
+        if (it.second->getUsername() == username)
+            return false;
 
-        if (Allusers[i].getUsername() == username) {
-            return false;
-        }
     }
-    /*for (int i = 0; i<AllAdmins.size(); i++) {
-        if (AllAdmins[i].username == username) {
+    for (auto& it : AllAdmins) {
+        if (it.second->getUsername() == username)
             return false;
-        }
-    }*/
+    }
     return true;
 }
 bool System::Check_Username(string& Username) {
@@ -194,12 +195,14 @@ bool System::Check_Password(string& Password)
 
 bool System::Check_PhoneDatabase(string phone) {
 
-    for (int i = 0; i < Allusers.size(); i++) {
-        if (Allusers[i].getPhoneNumber() == phone) {
-            cout << "This Phone already used before";
+    for (auto& it : AllUsers) {
+        if (it.second->getPhoneNumber() == phone)
+        {
+            cout << "This phone number is already used\n";
             return false;
         }
     }
+
     return true;
 }
 bool System::Check_Phone(string& Phone) {
@@ -226,11 +229,13 @@ bool System::Check_Phone(string& Phone) {
 
 
 bool System::Check_EmailDatabase(string Email) {
-    for (int i = 0; i < Allusers.size(); i++) {
-        if (Allusers[i].getEmail() == Email) {
+    for (auto& it : AllUsers) {
+        if (it.second->getEmail() == Email)
+        {
             cout << "This email is already used by another user.";
             return false;
         }
+
     }
     return true;
 }
@@ -333,25 +338,25 @@ void System::RegisterUser() {
                 cout << "Enter Phone Number: ";
                 cin >> Phone;
                 if (cin.fail())
-                    InputFaliure(Phone, "Please enter Phone Number:");
+                    InputFaliure(Phone, "Please enter Phone Number: ");
                 vPhone = Check_Phone(Phone);
             } while (!vPhone);
             // input Email
             do {
-                cout << "Enter Your email";
+                cout << "Enter Your email: ";
                 cin >> Email;
                 if (cin.fail())
                     InputFaliure(Email, "Please enter Email:");
                 vEmail = Check_Email(Email);
             } while (!vEmail);
-            cout << "Enter your team name";
+            cout << "Enter your team name: ";
             cin >> TeamName;
             if (cin.fail())
-                InputFaliure(TeamName, "Please Enter your team name");
-            User user = { Name, Email, Username, Password, Phone, 0, 0, TeamName };
-
-            Allusers.push_back(user);
-            CurrUser = Allusers.back();
+                InputFaliure(TeamName, "Please Enter your team name: ");
+            int id = AllUsers.size() + 1;
+            User user = {id, Name, Email, Username, Password, Phone, 0, 0, TeamName };
+            AllUsers.insert({id,&user});
+            CurrUser = *AllUsers[id];
         }
         else {
             cout << "this username is already taken, Please enter another username.\n";
@@ -437,9 +442,10 @@ void System::RegisterAdmin() {
                     InputFaliure(Email, "Please enter Email:");
                 vEmail = Check_Email(Email);
             } while (!vEmail);
-            Admin admin = { Name, Email, Username, Password, Phone};
-            AllAdmins.push_back(admin);
-            CurrAdmin = AllAdmins.back();
+            int id = AllAdmins.size() + 1;
+            Admin admin = {id, Name, Email, Username, Password, Phone};
+            AllAdmins.insert({ id,&admin });
+            CurrAdmin = admin;
         }
         else {
             cout << "this username is already taken, Please enter another username.\n";
@@ -451,24 +457,21 @@ void System::RegisterAdmin() {
     } while (vUsername != true);
 }
 
-bool System::userLogin(vector<User>allusers, string attemptedUsername, string attemptedPassword) {
-    for (int i = 0; i < allusers.size(); i++) {
-        if (allusers[i].getUsername() == attemptedUsername) {
-            if (allusers[i].getPassword() == attemptedPassword) {
-                CurrUser = allusers[i];
-                return true;
-            }
+bool System::userLogin( string attemptedUsername, string attemptedPassword) {
+    for (auto& it : AllUsers) {
+        if (it.second->getUsername() == attemptedPassword && it.second->getPassword()==attemptedPassword) {
+            CurrUser = *it.second;
+            return true;
         }
     }
     return false;
 }
-bool System::AdminLogin(vector<Admin>AllAdmins, string attemptedUsername, string attemptedPassword) {
-    for (int i = 0; i < AllAdmins.size(); i++) {
-        if (AllAdmins[i].getUsername() == attemptedUsername) {
-            if (AllAdmins[i].getPassword() == attemptedPassword) {
-                CurrAdmin = AllAdmins[i];
-                return true;
-            }
+
+bool System::AdminLogin( string attemptedUsername, string attemptedPassword) {
+    for (auto& it : AllAdmins) {
+        if (it.second->getUsername() == attemptedPassword && it.second->getPassword() == attemptedPassword) {
+            CurrAdmin = *it.second;
+            return true;
         }
     }
     return false;
@@ -480,11 +483,10 @@ User_Team& System::getsquad(int id)
    
 
     if (got == AllUsersTeams.end()) {
-        User_Team* newUserTeam = new User_Team();
-        AllUsersTeams.insert({ newUserTeam->getUserTeamID(), newUserTeam });
-        got = AllUsersTeams.end()--;
-        cout << got->first;
-        return *got->second;
+        User_Team* newUserTeam = new User_Team(id);
+        AllUsersTeams.insert({ id, newUserTeam });
+       
+        return *AllUsersTeams[id];
     
     }
     
@@ -525,11 +527,11 @@ void System::loginInput() {
         cout << "Enter password: \n";
         
         Pass_Encode(attemptedPassword);
-        if (userLogin(Allusers, attemptedUserName, attemptedPassword)) {
+        if (userLogin( attemptedUserName, attemptedPassword)) {
             loginChoice = '2';
             tAgain = "N";
         }
-        else if (AdminLogin(AllAdmins, attemptedUserName, attemptedPassword))
+        else if (AdminLogin( attemptedUserName, attemptedPassword))
         {
             loginChoice = '1';
             tAgain = "N";
@@ -555,7 +557,7 @@ void System::printUserMenu() {
     string Quit_choice = "";
     do{
 
-    cout << "Hello " << CurrUser.getName();
+    cout << "Hello " << CurrUser.getName()<<endl;
     cout << "\t\tWhat would you like to do ??\n"
         << "\t\t1 - Manage Squad\n"
         << "\t\t2 - Create League\n"
@@ -581,8 +583,7 @@ void System::printUserMenu() {
     {
     case '1':
         printSeprator();
-        
-        ManageSqaudMenu(getsquad(CurrUser.getSquad()));
+        ManageSqaudMenu(getsquad(CurrUser.getID()));
         printSeprator();
         break;
     case '2':
@@ -685,6 +686,7 @@ void System::printUserMenu() {
     } while (menuChoice != "5");
     
 }
+
 void System::printAdminMenu() {
     cout << "Hello " << CurrAdmin.getName();
     cin >> loginChoice;
@@ -723,7 +725,7 @@ void System::RunSys() {
         if (startchoice == "1") {
             do {
                 if (loginChoice == "") {
-                    if (Allusers.size() != 0||AllAdmins.size()!=0) {
+                    if (AllUsers.size() != 0||AllAdmins.size()!=0) {
                         /*
                         LoginInput is the function that the user enter his username and password
                         ==========================================================================
@@ -873,11 +875,12 @@ void System::ManageSqaudMenu(User_Team& c) {
     
 
 }
+
 void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     /// <summary>
     /// displays only one player
     /// </summary>
-    /// <param name="p">player obkect</param>
+    /// <param name="p">player object</param>
     /// <param name="flag">This is used so we can use the same code twice</param>
     /// <param name="delim"> the delimiter can either be enter or tab</param>
     System::printSeprator_for_errors();
@@ -923,6 +926,7 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     }
     System::printSeprator_for_errors();
 }
+
 void System::displayPlayers(string position) {
 
     /// <summary>
@@ -1185,3 +1189,118 @@ void System::readClub()
     }
 }
 
+void System::createLeague() {
+    string League_Name;
+    int id = AllLeagues.size() + 1;
+    string public_option;
+    bool isPublic;
+
+    cout << "Enter League Name: ";
+    cin >> League_Name;
+    cout << "Will the league be public?\n";
+    cin >> public_option;
+
+    if (public_option == "y" || public_option == "Y") {
+        isPublic = true;
+    }
+    else {
+        isPublic = false;
+    }
+    League* NL = new League(id, League_Name,&CurrUser ,isPublic);
+    AllLeagues.insert({ id,NL });
+}
+
+void System::joinLeague(){
+    string code;
+    cout << "Enter Invitation Code you received";
+    cin >> code;
+    for (auto& t : AllLeagues) {
+        if (t.second->getcode() == stoi(code)) {
+            if (!t.second->userExists(&CurrUser))
+
+                t.second->insertUser(&CurrUser);
+
+            else
+                cout << "You are already a member of this league\n";
+
+            break;
+       }
+    }
+}
+
+void System::manageLeagues() {
+    string League_option;
+    string User_option;
+
+    //Display Personal Leagues
+    vector<int> personalLeagues = CurrUser.getLeagues();
+    for (int i = 0; i < personalLeagues.size(); i++) {
+        League* currentLeague = AllLeagues[personalLeagues[i]];
+        cout << currentLeague->getId() << " - " << currentLeague->getName() << endl;
+    }
+
+    cout << "Choose League ID\n";
+    cin >> League_option;
+    
+
+
+    cout << "\t\tWhat would you like to do ??\n"
+        << "\t\t1 - View Leaderboard\n";
+
+
+    if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser.getID()) {
+        cout<< "\t\t2 - Invite managers to your league\n";
+    }
+    else {
+        cout << "\t\t2 - Leave League\n";
+    }
+
+
+    League* currentLeague = AllLeagues[stoi(League_option)];
+    switch (stoi(League_option))
+    {
+    case 1:
+        currentLeague->displayLeaderboard();
+        cout << "Choose Manager you want to view\n";
+        cin >> User_option;
+        currentLeague->displayUser(stoi(User_option) - 1);
+        cout << "\n\n\n";
+        AllUsersTeams[CurrUser.getID()]->displaySquad();
+        break;
+
+    case 2:
+        if (currentLeague->getLeagueCreatorID() == CurrUser.getID()) {
+            //Invite
+            MailKit::SmtpClient^ client = gcnew MailKit::SmtpClient();
+            client->ServerCertificateValidationCallback = gcnew System::Net::Security::RemoteCertificateValidationCallback([](Object^ sender, System::Security::Cryptography::X509Certificates::X509Certificate^ certificate, System::Security::Cryptography::X509Certificates::X509Chain^ chain, System::Net::Security::SslPolicyErrors sslPolicyErrors) -> bool { return true; });
+            client->Connect("smtp.gmail.com", 587, MailKit::MailKitSecureSocketOptions::StartTls);
+            client->Authenticate("your_email@gmail.com", "your_password");
+            MailKit::MailboxAddress^ from = gcnew MailKit::MailboxAddress("Your Name", "your_email@gmail.com");
+            MailKit::MailboxAddress to = gcnew MailKit::MailboxAddress("Recipient Name", "recipient_email@example.com");
+            MailKit::Mime::Message^ message = gcnew MailKit::Mime::Message();
+            message->From->Add(from);
+            message->To->Add(to);
+            message->Subject = "Test Email";
+            message->Body = gcnew MailKit::Text::TextPart("plain");
+            message->Body->Text = "This is a test email.";
+            client->Send(message);
+            client->Disconnect(true);
+
+        }
+        else {
+            //Leave
+            currentLeague->removeUser(CurrUser.getID());
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+void System::displayLeagues() {
+    for (auto& t : AllLeagues) {
+        if(t.second->IsPublic())
+        cout << t.second->getId() << " - " << t.second->getName() << endl;
+    }
+}

@@ -7,13 +7,15 @@ class Admin {
 private:
 	
 	string phoneNumber, name, password, email, userName;
+	int id;
 public:
 
-	Admin(string& name,
-		string& email,
-		string& userName,
-		string& password,
-		string& phoneNumber);
+	Admin(int id,
+		string name,
+		string email,
+		string userName,
+		string password,
+		string phoneNumber);
 	Admin();
 	//===================== Update Admin Data=========================
 
@@ -33,7 +35,9 @@ public:
 	string getPassword();
 	string getPhoneNumber();
 
+	void setID(int id);
 
+	int getID();
 	//===================== Update Player Data=========================
 	void edit_player_menu();
 
