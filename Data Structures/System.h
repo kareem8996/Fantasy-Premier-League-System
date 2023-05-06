@@ -3,6 +3,7 @@
 #include "Admin.h"
 #include "Player.h"
 #include "Club.h"
+#include "User_Team.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -27,6 +28,7 @@ public:
 	static vector<Admin> AllAdmins;
 	static unordered_map<string, Club*> AllClubs; //name,club object
 	static unordered_map < string, unordered_map<int, Player *>> AllPlayers;
+	static unordered_map <int, User_Team*> AllUsersTeams;
 	
 	//============= System Run ===========
 	static void RunSys();
@@ -55,6 +57,11 @@ public:
 	//============= login functions====================
 	static bool userLogin(vector<User>allusers, string attemptedUsername, string attemptedPassword);
 	static bool AdminLogin(vector<Admin>AllAdmins, string attemptedUsername, string attemptedPassword);
+	//================Extra functions=======================
+	static User_Team& getsquad(int id);
+	
+	
+	
 	//================User Menus=======================
 	static void ManageSqaudMenu(User_Team& c);
 

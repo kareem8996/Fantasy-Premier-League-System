@@ -115,10 +115,10 @@ void edit_player_options() {
 }
 void option_choise(int option,Player *&p) {
 	
+	int x = -1;
 	switch (option) {
 	case 1:
 		cout << "do you want to increase or decrease " << p->getFullname() << " price \n";
-		int x;
 		cout << "\t\t1 - increase price \n" << "\t\t2 - decrease price \n";
 		if (x == 1)
 			p->increasePrice();
@@ -184,7 +184,6 @@ void Admin::edit_player_menu()
 {
 	int option;
 	string position_picked;
-	System sys;
 	cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Quit\n";
 	cin >> position_picked;
 
