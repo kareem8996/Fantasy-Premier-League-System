@@ -1271,20 +1271,6 @@ void System::manageLeagues() {
     case 2:
         if (currentLeague->getLeagueCreatorID() == CurrUser.getID()) {
             //Invite
-            MailKit::SmtpClient^ client = gcnew MailKit::SmtpClient();
-            client->ServerCertificateValidationCallback = gcnew System::Net::Security::RemoteCertificateValidationCallback([](Object^ sender, System::Security::Cryptography::X509Certificates::X509Certificate^ certificate, System::Security::Cryptography::X509Certificates::X509Chain^ chain, System::Net::Security::SslPolicyErrors sslPolicyErrors) -> bool { return true; });
-            client->Connect("smtp.gmail.com", 587, MailKit::MailKitSecureSocketOptions::StartTls);
-            client->Authenticate("your_email@gmail.com", "your_password");
-            MailKit::MailboxAddress^ from = gcnew MailKit::MailboxAddress("Your Name", "your_email@gmail.com");
-            MailKit::MailboxAddress to = gcnew MailKit::MailboxAddress("Recipient Name", "recipient_email@example.com");
-            MailKit::Mime::Message^ message = gcnew MailKit::Mime::Message();
-            message->From->Add(from);
-            message->To->Add(to);
-            message->Subject = "Test Email";
-            message->Body = gcnew MailKit::Text::TextPart("plain");
-            message->Body->Text = "This is a test email.";
-            client->Send(message);
-            client->Disconnect(true);
 
         }
         else {

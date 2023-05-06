@@ -17,7 +17,7 @@ private:
     priority_queue<pair<int, pair<int, User*>>> leaderBoard; // score,userid,user object
 public:
     League();
-    League(int id, string name, User* u, bool IsPublic,int= League::generateCode());
+    League(int id, string name, User* u, bool IsPublic,int=generateCode());
     void setname(string n);
     string getName();
     int getId();

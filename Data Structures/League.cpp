@@ -5,7 +5,7 @@ League::League()
 {
 }
 
-League::League(int id, string name, User* u, bool IsPublic,int code= League::generateCode())
+League::League(int id, string name, User* u, bool IsPublic,int code)
 {
 	this->id = id;
 	this->name = name;
@@ -14,6 +14,7 @@ League::League(int id, string name, User* u, bool IsPublic,int code= League::gen
 	this->isPublic = IsPublic;
 	this->leaderBoard.push({ 0, { u->getID(),u}});
 }
+
 void League::setname(string n)
 {
 	name = n;
@@ -60,6 +61,7 @@ void League::displayUser(int userchoice)
 
 void League::removeUser(int id)
 {
+	//O(logn)
 	priority_queue<pair<int, pair<int, User*>>> newLeaderBoard;
 	const pair<int, pair<int, User*>>* p;
 
