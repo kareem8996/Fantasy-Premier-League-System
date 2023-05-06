@@ -11,7 +11,7 @@ int User_Team::getUserTeamID()
 	return userTeam_ID;
 }
 User_Team::User_Team() {
-	
+	userTeam_ID = rand() + 5012;
 	totalPlayers = 0;
 	totalAttackers = 0;
 	totalDefenders = 0;

@@ -2,7 +2,7 @@
 
 // Constructor
 User::User() {}
-User::User(string& name, string& email, string& username, string& password, string& phoneNumber, int totalPoints, int currPoints, string& teamName, vector<int>& leagues) {
+User::User(string& name,string& email,string& username,string& password,string& phoneNumber,int totalPoints,int currPoints,string& teamName,vector<int> leagues) {
     this->name = name;
     this->email = email;
     this->username = username;
@@ -105,4 +105,16 @@ vector<int>& User::getLeagues() {
 int& User::getSquad()
 {
     return Sqaud_ID;
+}
+
+void User::displaydata()
+{
+    cout<<getName() << endl;
+    cout<<getEmail()<<endl;
+    cout<<getUsername()<<endl;
+    cout<<getPhoneNumber()<<endl;
+    cout<<getBirthdate()<<endl;
+    cout<<getTotalPoints()<<endl;
+    cout<<getCurrPoints()<<endl;
+    cout<<getTeamName()<<endl;
 }

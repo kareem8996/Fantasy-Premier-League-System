@@ -13,6 +13,7 @@
 #include "Midfielder.h"
 #include "Attacker.h"
 #include "GoalKeeper.h"
+#include"User_Team.h"
 using namespace std;
 
 string const System::choice_error = "\tPlease enter your choice here --->\t";
@@ -27,6 +28,7 @@ vector<User> System::Allusers;
 vector<Admin> System::AllAdmins;
 unordered_map<string, Club*> System::AllClubs; //name,club object
 unordered_map < string, unordered_map<int, Player*>> System::AllPlayers;
+unordered_map <int, User_Team*> System::AllUsersTeams;
 void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
     cout << "\033[2J\033[1;1H";
@@ -346,7 +348,8 @@ void System::RegisterUser() {
             cin >> TeamName;
             if (cin.fail())
                 InputFaliure(TeamName, "Please Enter your team name");
-            User user = { Name, Email, Username, Password, Phone, 0, 0, TeamName, leagues };
+            User user = { Name, Email, Username, Password, Phone, 0, 0, TeamName };
+
             Allusers.push_back(user);
             CurrUser = Allusers.back();
         }
@@ -471,6 +474,27 @@ bool System::AdminLogin(vector<Admin>AllAdmins, string attemptedUsername, string
     return false;
 }
 
+User_Team& System::getsquad(int id)
+{    
+    unordered_map <int, User_Team*> ::const_iterator got = AllUsersTeams.find(id);
+   
+
+    if (got == AllUsersTeams.end()) {
+        User_Team* newUserTeam = new User_Team();
+        AllUsersTeams.insert({ newUserTeam->getUserTeamID(), newUserTeam });
+        got = AllUsersTeams.end()--;
+        cout << got->first;
+        return *got->second;
+    
+    }
+    
+        
+    else
+        return *got->second;
+    
+
+}
+
 void System::Pass_Encode(string& pass) {
     char input = '0';
     while (input != '\r') {
@@ -557,7 +581,8 @@ void System::printUserMenu() {
     {
     case '1':
         printSeprator();
-        ManageSqaudMenu(CurrUser.getSquad());
+        
+        ManageSqaudMenu(getsquad(CurrUser.getSquad()));
         printSeprator();
         break;
     case '2':

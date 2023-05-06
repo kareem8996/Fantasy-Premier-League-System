@@ -5,6 +5,7 @@
 using namespace std;
 class User {
 private:
+    
     string name;
     string username;
     string password;
@@ -29,9 +30,10 @@ public:
         int totalPoints,
         int currPoints,
         string& teamName,
-        vector<int>& leagues);
+        vector<int> leagues = {});
 
     // Setters
+
     void setName(string& name);
     void setEmail(string& email);
     void setUsername(string& username);
@@ -57,5 +59,6 @@ public:
     vector<int>& getLeagues();
     int& getSquad();
     // Menus
+    void static displaydata();
 
 };
