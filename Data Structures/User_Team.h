@@ -8,7 +8,7 @@ class User_Team
 {
 private:
 	int userTeam_ID=NULL;
-	map<int, Player *> Squad;//player id,player object
+	unordered_map<string, unordered_map<int, Player*>> Squad;//position, player id,player object
 	int totalPlayers; //total number of players picked
 	int totalAttackers; //total number of attackers picked
 	int totalDefenders;//total number of defenders picked
@@ -17,16 +17,19 @@ private:
 	int totalBudget;
 	map<string, int> teamCount; // this is a map to count number of player picked in each team ex: "Chelsea", 2
 	vector<int> totalPointsPerWeek; // vector containing total points collected each week 
+
+
 public:
-	void setUserTeamID();
+	void setUserTeamID(int);
 	int  getUserTeamID();
-	User_Team();
+	User_Team(int id);
 	static const int MAX_PLAYERS = 11;
-	static const int MAX_BUDGET = 1000000000; //1 billion
+	static const int MAX_BUDGET = 1000; //1 billion
 	static const int MAX_GOALKEEPERS = 1;
 	static const int MAX_DEFENDERS = 5;
 	static const int MAX_MIDFIELDERS = 5;
 	static const int MAX_ATTACKERS = 4;
+	bool Player_Exist(int);
 	void pickSquad();
 	void pickPlayer(Player*p);
 	void RemovePlayer(Player*p);
@@ -60,5 +63,7 @@ public:
 	vector<int> getTotalPointsPerWeek();
 	void setTotalPointsPerWeek(vector<int>);
 	void updateTotalPointsPerWeek(int);
+
+	void displaySquad();
 };
 

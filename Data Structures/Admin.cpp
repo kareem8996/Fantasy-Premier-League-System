@@ -3,8 +3,8 @@
 #include "Player.h"
 using namespace std;
 
-Admin::Admin(string& name, string& email, string& Adminname, string& password, string& phoneNumber) {
-
+Admin::Admin(int id,string name, string email, string Adminname, string password, string phoneNumber) {
+	this->id = id;
 	this-> name = name;
 	this->phoneNumber = phoneNumber;
 	this->email = email;
@@ -14,7 +14,13 @@ Admin::Admin(string& name, string& email, string& Adminname, string& password, s
 }
 Admin::Admin() {}
 
+void Admin::setID(int id) {
+	this->id = id;
+}
 
+int Admin::getID() {
+	return id;
+}
 
 bool Admin::setPhoneNumber(string phone_number) {
 	bool vPhone;

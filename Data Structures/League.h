@@ -13,19 +13,24 @@ private:
     string name;
     bool isPublic;
     int code =NULL;
-    User* league_creator; /// int user created legaue
-    priority_queue<pair<int, pair<int, User*>>> leaderBoard; //// score,userid,user object
+    User* league_creator; // int user created legaue
+    priority_queue<pair<int, pair<int, User*>>> leaderBoard; // score,userid,user object
 public:
     League();
-    League(int id, string name, User* u, bool IsPublic = false);
+    League(int id, string name, User* u, bool IsPublic,int= League::generateCode());
     void setname(string n);
     string getName();
-    int getId(int id);
+    int getId();
     int getcode();
     bool IsPublic();
     void displayLeaderboard();
-    void displayUser(string userchoice);
-    void removeUser(string user);
+    void displayUser(int userchoice);
+    void removeUser(int id);
     int static generateCode();
+    void insertUser(User*);
+
+    bool userExists(User* u);
+
+    int getLeagueCreatorID();
 };
 
