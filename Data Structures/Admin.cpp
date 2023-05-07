@@ -282,17 +282,57 @@ void Admin::edit_player_menu()
 void edit_club_options() {
 	cout << "\t\tWhat would you like to do ??\n"
 		<< "\t\t1 - remove palyer from club  \n"
-		<< "\t\t2 - add palyer from club \n";
+		<< "\t\t2 - add palyer to club \n";
+
 		
 }
 
 
-void Admin::edit_team_menu() {}//club
+void Admin::edit_team_menu() {
+	int option;
+	cout << "\t\tWhat would you like to do ??\n"
+		<< "\t\t1 - remove palyer from club  \n"
+		<< "\t\t2 - add palyer to club \n";
+	cin >> option;
+	switch (option) {
+	case 1:
+		int id;
+		string PlayerName;
+		string PlayerTeam;
+		int PlayerTotalPoints;
+		int PlayerPrice;
+		string PlayerPosition;
+		string PlayerStatus;
+		 
+		cout << "enter players id";
+		cin >> id;
+		cout << "enter players name";
+		cin >> PlayerName;
+		cout << "enter players total points";
+		cin >> PlayerTotalPoints;
+		cout << "enter players price";
+		cin >> PlayerPrice;
+		cout << "enter players position";
+		cin >> PlayerPosition;
+		cout << "enter players status";
+		cin >> PlayerStatus;
+
+		
+		break;
+	case 2:
+	
+	break;
+	default:
+		cout << "enter valid number";
+	}
+	
+
+}//club
 
 //===================== Update User Account Data=========================
 
 
-void Admin::edit_account() {}
+void Admin::edit_user() {}
 //===================== Update League Data=========================
 
 void Admin::edit_leagues() {}

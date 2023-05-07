@@ -41,7 +41,7 @@ public:
 	void edit_team_menu();
 
 	//===================== Update User Account Data=========================
-	void edit_account();
+	void edit_user();
 	//===================== Update League Data=========================
 	void edit_leagues();
 
