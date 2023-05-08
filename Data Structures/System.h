@@ -68,6 +68,7 @@ public:
 	
 	//================User Menus=======================
 	static void ManageSqaudMenu(User_Team& c);
+	static void ChangeAccountSettings();
 
 
 	// ======================Player Display=======================
