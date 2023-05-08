@@ -51,6 +51,8 @@ public:
 	static bool Check_Email(string& Email);
 	static bool Check_EmailDatabase(string Email);
 	static void Pass_Encode(string& pass);
+	static bool isNumber(string s);
+		
 	//============= Registeration functions ================
 	static void RegisterUser();
 	static void RegisterAdmin();
@@ -77,8 +79,8 @@ public:
 	static void readClub();
 
 	//===================Leagues============================================
-	void createLeague();
-	void joinLeague();
-	void manageLeagues();
-	void displayLeagues();
+	static void createLeague();
+	static void joinLeague();
+	static void manageLeagues();
+	static void displayLeagues();
 };

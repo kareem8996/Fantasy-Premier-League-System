@@ -587,12 +587,12 @@ void System::printUserMenu() {
         printSeprator();
         break;
     case '2':
-
+        createLeague();
         Sleep(5000);
         printSeprator();
         break;
     case '3':
-
+        joinLeague();
         Sleep(5000);
         printSeprator();
         break;
@@ -1197,8 +1197,12 @@ void System::createLeague() {
 
     cout << "Enter League Name: ";
     cin >> League_Name;
-    cout << "Will the league be public?\n";
+    if (cin.fail())
+        InputFaliure(League_Name, "Enter League Name");
+    cout << "Will the league be public? (Y/N)\n";
     cin >> public_option;
+    if (cin.fail())
+        InputFaliure(public_option, "Write Y or N");
 
     if (public_option == "y" || public_option == "Y") {
         isPublic = true;
@@ -1213,7 +1217,21 @@ void System::createLeague() {
 void System::joinLeague(){
     string code;
     cout << "Enter Invitation Code you received";
-    cin >> code;
+    while (true) {
+        cin >> code;
+        if (cin.fail())
+            InputFaliure(menuChoice, "write a suitable code consisting of only numbers");
+        if (isNumber(code)) {
+            break;
+        }
+        else {
+            cout << "Please write a code consisting of only numbers\n";
+        }
+    }
+    
+    bool found = false;
+    if (cin.fail())
+        InputFaliure(code, "Invalid Code please write a valid code");
     for (auto& t : AllLeagues) {
         if (t.second->getcode() == stoi(code)) {
             if (!t.second->userExists(&CurrUser))
@@ -1222,15 +1240,19 @@ void System::joinLeague(){
 
             else
                 cout << "You are already a member of this league\n";
-
+            found = true;
             break;
        }
     }
+    if (!found) {
+        cout << "No league found with the code you wrote\n";
+   }
 }
 
 void System::manageLeagues() {
     string League_option;
     string User_option;
+
 
     //Display Personal Leagues
     vector<int> personalLeagues = CurrUser.getLeagues();
@@ -1239,11 +1261,28 @@ void System::manageLeagues() {
         cout << currentLeague->getId() << " - " << currentLeague->getName() << endl;
     }
 
-    cout << "Choose League ID\n";
-    cin >> League_option;
-    
+    cout << "Choose League ID or 0 to go back\n";
+    while (true) {
+        cin >> League_option;
+        if (cin.fail())
+            InputFaliure(League_option, "Please write a valid league id");
 
+        if (isNumber(League_option)) {
+            if (count(CurrUser.getLeagues().begin(), CurrUser.getLeagues().end(), stoi(League_option))) {
+                break;
+            }
+            else {
+                cout << "You do not have access to the league you have written its code\n";
+            }
+            if (stoi(League_option) == 0) return;
+        }
+        else {
+            cout << "Please write a code that consists of numbers only\n";
+        }
+        
+    }
 
+    cout << AllLeagues[stoi(League_option)]->getName()<<endl;
     cout << "\t\tWhat would you like to do ??\n"
         << "\t\t1 - View Leaderboard\n";
 
@@ -1254,10 +1293,28 @@ void System::manageLeagues() {
     else {
         cout << "\t\t2 - Leave League\n";
     }
+    cout << "\t\t3 - Back\n";
+    while (true) {
+        cin >> User_option;
+        if (cin.fail())
+            InputFaliure(User_option, "Please write a suitable option");
 
+        if (isNumber(User_option)) {
+            if (stoi(User_option) == 1 || stoi(User_option) == 2|| stoi(User_option) == 3) {
+                break;
+          }
+            else {
+                cout << "Please write a suitable option";
+            }
+        }
+        else {
+            cout << "Please write a number\n";
+        }
+
+    }
 
     League* currentLeague = AllLeagues[stoi(League_option)];
-    switch (stoi(League_option))
+    switch (stoi(User_option))
     {
     case 1:
         currentLeague->displayLeaderboard();
@@ -1278,6 +1335,9 @@ void System::manageLeagues() {
             currentLeague->removeUser(CurrUser.getID());
         }
         break;
+    case 3:
+        manageLeagues(); //return to start of manageLeagues
+        break;
 
     default:
         break;
@@ -1289,4 +1349,13 @@ void System::displayLeagues() {
         if(t.second->IsPublic())
         cout << t.second->getId() << " - " << t.second->getName() << endl;
     }
+}
+
+bool System::isNumber(string s)
+{
+    for (char & ch : s) {
+        if (isdigit(ch) == 0)
+            return false;
+    }
+    return true;
 }
