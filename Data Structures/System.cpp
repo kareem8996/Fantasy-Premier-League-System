@@ -232,7 +232,6 @@ bool System::Check_EmailDatabase(string Email) {
     for (auto& it : AllUsers) {
         if (it.second->getEmail() == Email)
         {
-            cout << "This email is already used by another user.";
             return false;
         }
 
@@ -339,8 +338,12 @@ void System::RegisterUser() {
                 cin >> Phone;
                 if (cin.fail())
                     InputFaliure(Phone, "Please enter Phone Number: ");
-                vPhone = Check_Phone(Phone);
-            } while (!vPhone);
+
+                if (!Check_PhoneDatabase(Phone)) {
+                    cout << "this phone already exists\n";
+                }
+
+            } while (!Check_Phone(Phone)&& !Check_PhoneDatabase(Phone));
             // input Email
             do {
                 cout << "Enter Your email: ";
@@ -348,7 +351,10 @@ void System::RegisterUser() {
                 if (cin.fail())
                     InputFaliure(Email, "Please enter Email:");
                 vEmail = Check_Email(Email);
-            } while (!vEmail);
+                if (!Check_EmailDatabase(Email)) {
+                    cout << "This email is used by another user. Please enter another email\n";
+                }
+            } while (!vEmail && !Check_EmailDatabase(Email));
             cout << "Enter your team name: ";
             cin >> TeamName;
             if (cin.fail())
@@ -597,10 +603,11 @@ void System::printUserMenu() {
         printSeprator();
         break;
     case '4':
-
+        ChangeAccountSettings();
         Sleep(3000);
         printSeprator();
         break;
+
     case '5':
 
         do {
@@ -1358,4 +1365,125 @@ bool System::isNumber(string s)
             return false;
     }
     return true;
+}
+
+void System::ChangeAccountSettings() {
+    string option;
+    string changing;
+    string reenter_password;
+        CurrUser.displaydata();
+        cout << "\n\t\tWhat would you like to change ??\n"
+            << "\t\t1 - Name\n"
+            << "\t\t2 - Username\n"
+            << "\t\t3 - Password\n"
+            << "\t\t4 - Email\n"
+            << "\t\t5 - Phone number\n"
+            << "\t\t6 - Team name\n"
+            << "\t\t7 - Go back\n";
+        
+        do {
+            cout << "\tPlease enter your choice here --->\t";
+            cin >> option;
+            if (cin.fail())
+                InputFaliure(option, choice_error);
+            if (option.size() == 1 && isdigit(option[0])) {
+                break;
+            }
+            else {
+                printSeprator_for_errors();
+                cout << "\t\t\tPlease enter a digit\n";
+                printSeprator_for_errors();
+            }
+        } while (true);
+
+
+        switch (stoi(option))
+        {
+
+        case 1:
+            do {
+                cout << "Write new name\n";
+                cin >> changing;
+                if (cin.fail())
+                    InputFaliure(changing, "Please enter new name");
+            } while (!Check_Name(changing));
+            CurrUser.setName(changing);
+
+                break;
+        case 2:
+            do {
+                cout << "Write new username\n";
+                cin >> changing;
+                if (cin.fail())
+                    InputFaliure(changing, "Please enter new username");
+                
+                if (!Check_Database(changing)) {
+                    cout << "this username already exists\n";
+                }
+            } while (!Check_Username(changing)&&!Check_Database(changing));
+            CurrUser.setUsername(changing);
+            break;
+
+        case 3:
+            do {
+                cout << "Write new password\n";
+                cin >> changing;
+                if (cin.fail())
+                    InputFaliure(changing, "Please enter your Password:");
+                if (changing != CurrUser.getUsername()) {       
+                    break;
+                }
+                else
+                    cout << "The password is the same as your username\nPlease enter another password:";
+            } while (true);
+            do {
+                cout << "Renter password: ";
+                cin >> reenter_password;
+                if (cin.fail())
+                    InputFaliure(reenter_password, "Please renter password: ");
+                if (reenter_password == changing)
+                    break;
+                else
+                    cout << "Password doesn't match\nPlease enter the password again\n";
+            } while (true);
+            CurrUser.setPassword(changing);
+            break;
+
+        case 4:
+            do {
+                cout << "Enter Your email: ";
+                cin >> changing;
+                if (cin.fail())
+                    InputFaliure(changing, "Please enter Email:");
+            } while (!Check_Email(changing));
+            CurrUser.setEmail(changing);
+            break;
+
+        case 5:
+            do {
+                cout << "Enter Phone Number: ";
+                cin >> changing;
+
+                if (cin.fail())
+                    InputFaliure(changing, "Please enter Phone Number: ");
+
+                if (!Check_PhoneDatabase(changing)) {
+                    cout << "this phone already exists\n";
+                }
+            } while (!Check_Phone(changing) && ! Check_PhoneDatabase(changing));
+            CurrUser.setPhoneNumber(changing);
+            break;
+
+        case 6:
+            cout << "Enter your team name: ";
+            cin >> changing;
+            CurrUser.setTeamName(changing);
+            break;
+        case 7:
+            return;
+        default:
+            cout << "invalid input\n";
+            break;
+        }
+        ChangeAccountSettings();
 }
