@@ -9,22 +9,32 @@ using namespace std;
 class Club
 {
 private:
+	int ID;
 	string Name;
-	unordered_map<int, Player> Squad;
-	string NextFixture;
+	unordered_map<int, Player*> Squad;
 	int LeaguePoints;
+	vector<int> Fixtures;
 public:
-	Club(string ClubName, string ClubNextFixture, int ClubLeaguePoints);
+	Club(int,string);
 	void setName(string Name);
-	void setNextFixture(string NextFixture);
 	void setLeaguePoints(int LeaguePoints);
 	string getName();
-	string getNextFixture();
+	
 	int getLeaguePoints();
 	void win_UpdatePoints();
 	void draw_UpdatePoints();
-	void insertPlayer(Player playerToBeInserted);
+	
+	void insertPlayer(Player*playerToBeInserted);
 	void deletePlayer(int playerToBeDeleted);
-	void deletePlayer(Player playerToBeDeleted);
+	void deletePlayer(Player* playerToBeDeleted);
+	
+	void setFixtures(vector<int>);
+	vector<int> getFixtures();
+	void updateFixtures(int);
 
+	bool isSquadEmpty();
+
+	unordered_map<int, Player*> getSquad();
+
+	
 };	

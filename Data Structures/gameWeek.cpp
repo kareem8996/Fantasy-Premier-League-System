@@ -13,7 +13,22 @@ gameWeek::gameWeek()
 	this->saves_gameweek = 0;
 }
 
-gameWeek::gameWeek(string status, int value, int total_points_gameweek, int goals_scored_gameweek, int assists_gameweek, int clean_sheets_gameweek, int red_cards_gameweek, int yellow_cards_gameweek, int saves_gameweek)
+gameWeek::gameWeek(
+	string status, 
+	int value,
+	int total_points_gameweek,
+	int goals_scored_gameweek,
+	int assists_gameweek, 
+	int clean_sheets_gameweek,
+	int red_cards_gameweek,
+	int yellow_cards_gameweek,
+	int saves_gameweek,
+	int minutes_played,
+	int penalties_missed,
+	int bonus,
+	int goals_conceded,
+	int own_goals
+	)
 {
 	this->status = status;
 	this->value = value;
@@ -24,6 +39,11 @@ gameWeek::gameWeek(string status, int value, int total_points_gameweek, int goal
 	this->red_cards_gameweek = red_cards_gameweek;
 	this->yellow_cards_gameweek = yellow_cards_gameweek;
 	this->saves_gameweek = saves_gameweek;
+	this->minutes_played = minutes_played;
+	this->penalties_missed = penalties_missed;
+	this->bonus = bonus;
+	this->goals_conceded = goals_conceded;
+	this->own_goals = own_goals;
 }
 
 void gameWeek::setStatus(string s)
@@ -114,4 +134,54 @@ int gameWeek::getYellow_cards_gameweek()
 int gameWeek::getSaves_gameweek()
 {
 	return saves_gameweek;
+}
+
+// Getter for minutes_played
+int gameWeek::getMinutesPlayed(){
+	return minutes_played;
+}
+
+// Setter for minutes_played
+void gameWeek::setMinutesPlayed(int minutes) {
+	minutes_played = minutes;
+}
+
+// Getter for penalties_missed
+int gameWeek::getPenaltiesMissed() {
+	return penalties_missed;
+}
+
+// Setter for penalties_missed
+void gameWeek::setPenaltiesMissed(int penalties) {
+	penalties_missed = penalties;
+}
+
+// Getter for bonus
+int gameWeek::getBonus() {
+	return bonus;
+}
+
+// Setter for bonus
+void gameWeek::setBonus(int bonus_value) {
+	bonus = bonus_value;
+}
+
+// Getter for goals_conceded
+int gameWeek::getGoalsConceded() {
+	return goals_conceded;
+}
+
+// Setter for goals_conceded
+void gameWeek::setGoalsConceded(int goals) {
+	goals_conceded = goals;
+}
+
+// Getter for own_goals
+int gameWeek::getOwnGoals() {
+	return own_goals;
+}
+
+// Setter for own_goals
+void gameWeek::setOwnGoals(int own) {
+	own_goals = own;
 }

@@ -13,7 +13,14 @@ private:
 		clean_sheets_gameweek,
 		red_cards_gameweek,
 		yellow_cards_gameweek,
-		saves_gameweek;
+		saves_gameweek,
+
+
+		minutes_played,
+		penalties_missed,
+		bonus,
+		goals_conceded,
+		own_goals;
 public:
 	gameWeek();
 	gameWeek(string status,
@@ -24,7 +31,12 @@ public:
 		int clean_sheets_gameweek,
 		int red_cards_gameweek,
 		int yellow_cards_gameweek,
-		int saves_gameweek);
+		int saves_gameweek,
+		int minutes_played,
+		int penalties_missed,
+		int bonus,
+		int goals_conceded,
+		int own_goals);
 
 	void setStatus(string s);
 	void setValue(int n);
@@ -45,6 +57,26 @@ public:
 	int getRed_cards_gameweek();
 	int getYellow_cards_gameweek();
 	int getSaves_gameweek();
+
+	// Getter and setter for minutes_played
+	int getMinutesPlayed();
+	void setMinutesPlayed(int minutes);
+
+	// Getter and setter for penalties_missed
+	int getPenaltiesMissed();
+	void setPenaltiesMissed(int penalties);
+
+	// Getter and setter for bonus
+	int getBonus();
+	void setBonus(int bonus_value);
+
+	// Getter and setter for goals_conceded
+	int getGoalsConceded();
+	void setGoalsConceded(int goals);
+
+	// Getter and setter for own_goals
+	int getOwnGoals();
+	void setOwnGoals(int own);
 
 };
 
