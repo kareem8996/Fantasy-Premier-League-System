@@ -1,6 +1,11 @@
 #include "Admin.h"
 #include "System.h"
 #include "Player.h"
+#include "Defender.h"
+#include "Attacker.h"
+#include "Midfielder.h"
+#include "GoalKeeper.h"
+
 using namespace std;
 
 Admin::Admin(int id,string name, string email, string Adminname, string password, string phoneNumber) {
@@ -296,19 +301,22 @@ void edit_club_options() {
 void Admin::edit_team_menu() {
 	int option;
 	cout << "\t\tWhat would you like to do ??\n"
-		<< "\t\t1 - remove palyer from club  \n"
-		<< "\t\t2 - add palyer to club \n";
+		<< "\t\t1 - add palyer to club \n"
+		<< "\t\t2 - remove palyer from club \n";
 	cin >> option;
 	switch (option) {
-	case 1:
+	case 1: {
 		int id;
 		string PlayerName;
 		string PlayerTeam;
 		int PlayerTotalPoints;
 		int PlayerPrice;
-		string PlayerPosition;
+		string  PlayerPosition;
+
+		int PlayerPositionoption;
 		string PlayerStatus;
-		 
+		int TotalCleanSheets;
+		int TotalSaves;
 		cout << "enter players id";
 		cin >> id;
 		cout << "enter players name";
@@ -317,16 +325,57 @@ void Admin::edit_team_menu() {
 		cin >> PlayerTotalPoints;
 		cout << "enter players price";
 		cin >> PlayerPrice;
-		cout << "enter players position";
+		cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n";
 		cin >> PlayerPosition;
 		cout << "enter players status";
 		cin >> PlayerStatus;
+		cout << "enter players Total Clean Sheets";
+		cin >> TotalCleanSheets;
 
-		
+
+
+
+
+
+	validate:
+		switch (PlayerPositionoption)//add the temp to the file
+		{
+		case 1: {
+			cout << "enter goalkeeper's total saves";
+			cin >> TotalSaves;
+			GoalKeeper golytemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalSaves, TotalCleanSheets);
+			break; }
+		case 2: {
+			Defender deftemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
+			break;
+		}
+		case 3: {
+
+			Midfielder midtemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
+			break;
+		}
+		case 4: {
+
+			Attacker atktemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus);
+			break;
+		}
+		default:
+			cout << "enter valid number";
+			cin >> PlayerPositionoption;
+			goto validate;
+			break;
+		}
+
 		break;
+	}
+
 	case 2:
 	
 	break;
+
+
+
+
 	default:
 		cout << "enter valid number";
 	}
