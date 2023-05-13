@@ -20,6 +20,7 @@ private:
 
 
 public:
+	User_Team();
 	void setUserTeamID(int);
 	int  getUserTeamID();
 	User_Team(int id);
@@ -60,10 +61,14 @@ public:
 	int getTotalBudget();
 	void setTotalBudget(int budget);
 
+	
+
 	vector<int> getTotalPointsPerWeek();
 	void setTotalPointsPerWeek(vector<int>);
 	void updateTotalPointsPerWeek(int);
 
+	map<string, int> getTeamCount();
+	void setTeamCount(map<string, int>);
 	void displaySquad();
 };
 

@@ -63,5 +63,6 @@ int GoalKeeper::CalculatePoints() {
 	points += this->getPlayer_History().back().getBonus();
 	points -= this->getPlayer_History().back().getOwnGoals() * 2;
 	points += this->getPlayer_History().back().getGoalsConceded() / 2;
+	points += this->getPlayer_History().back().getPenaltiesSaved() * 5;
 	return points;
 }
