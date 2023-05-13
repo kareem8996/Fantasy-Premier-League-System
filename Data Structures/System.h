@@ -24,6 +24,7 @@ public:
 		registerChoice ,
 		loginChoice ,
 		menuChoice ;
+	static int CurrGameWeek;
 	static User CurrUser;
 	static Admin CurrAdmin;
 	static unordered_map<int, User*> AllUsers;//User id, User object
@@ -63,13 +64,12 @@ public:
 	static bool AdminLogin(string attemptedUsername, string attemptedPassword);
 	//================Extra functions=======================
 	static User_Team& getsquad(int id);
-	
-	
-	
+	static User* getUser(int id);
+	static string space2underscore(string text);
+	static string underscore2space(string text);
 	//================User Menus=======================
 	static void ManageSqaudMenu(User_Team& c);
 	static void ChangeAccountSettings();
-
 
 	// ======================Player Display=======================
 	static void displayPlayers(string position);
@@ -78,7 +78,15 @@ public:
 	//==================File Handling:Read========================
 	static void readPlayers();
 	static void readClub();
-
+	static void readUsers();
+	static void readAdmins();
+	static void readUserTeams();
+	static void readLeagues();
+	//==================File Handling:Write========================
+	static void writeUsers();
+	static void writeAdmins();
+	static void writeUserTeams();
+	static void writeLeagues();
 	//===================Leagues============================================
 	static void createLeague();
 	static void joinLeague();

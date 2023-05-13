@@ -1,5 +1,8 @@
 #include "User_Team.h"
 #include "System.h"
+User_Team::User_Team()
+{
+}
 void User_Team::setUserTeamID(int id)
 {
 	userTeam_ID = id;
@@ -360,6 +363,16 @@ void User_Team::setTotalPointsPerWeek(vector<int> t) {
 }
 void User_Team::updateTotalPointsPerWeek(int points) {
 	totalPointsPerWeek.push_back(points);
+}
+
+map<string, int> User_Team::getTeamCount()
+{
+	return teamCount;
+}
+
+void User_Team::setTeamCount(map<string, int>teams)
+{
+	teamCount = teams;
 }
 
 void User_Team::displaySquad()

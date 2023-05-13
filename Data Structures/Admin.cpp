@@ -295,19 +295,19 @@ void edit_club_options() {
 
 void Admin::edit_team_menu() {
 	int option;
+	int id;
+	string PlayerName;
+	string PlayerTeam;
+	int PlayerTotalPoints;
+	int PlayerPrice;
+	string PlayerPosition;
+	string PlayerStatus;
 	cout << "\t\tWhat would you like to do ??\n"
 		<< "\t\t1 - remove palyer from club  \n"
 		<< "\t\t2 - add palyer to club \n";
 	cin >> option;
 	switch (option) {
 	case 1:
-		int id;
-		string PlayerName;
-		string PlayerTeam;
-		int PlayerTotalPoints;
-		int PlayerPrice;
-		string PlayerPosition;
-		string PlayerStatus;
 		 
 		cout << "enter players id";
 		cin >> id;

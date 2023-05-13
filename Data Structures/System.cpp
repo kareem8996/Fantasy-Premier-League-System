@@ -25,6 +25,7 @@ string  System::startchoice="",
         System::menuChoice = "";
 User System::CurrUser ;
 Admin System::CurrAdmin;
+int System::CurrGameWeek = 0;
 unordered_map<int,User*> System::AllUsers;
 unordered_map<int,Admin*> System::AllAdmins;
 unordered_map<string, Club*> System::AllClubs; //name,club object
@@ -202,6 +203,13 @@ bool System::Check_PhoneDatabase(string phone) {
             return false;
         }
     }
+    for (auto& it : AllAdmins) {
+        if (it.second->getPhoneNumber() == phone)
+        {
+            cout << "This phone number is already used\n";
+            return false;
+        }
+    }
 
     return true;
 }
@@ -226,15 +234,18 @@ bool System::Check_Phone(string& Phone) {
 
 }
 
-
-
 bool System::Check_EmailDatabase(string Email) {
     for (auto& it : AllUsers) {
         if (it.second->getEmail() == Email)
         {
             return false;
         }
-
+    }
+    for (auto& it : AllAdmins) {
+        if (it.second->getEmail() == Email)
+        {
+            return false;
+        }
     }
     return true;
 }
@@ -465,7 +476,7 @@ void System::RegisterAdmin() {
 
 bool System::userLogin( string attemptedUsername, string attemptedPassword) {
     for (auto& it : AllUsers) {
-        if (it.second->getUsername() == attemptedPassword && it.second->getPassword()==attemptedPassword) {
+        if (it.second->getUsername() == attemptedUsername && it.second->getPassword()==attemptedPassword) {
             CurrUser = *it.second;
             return true;
         }
@@ -475,7 +486,7 @@ bool System::userLogin( string attemptedUsername, string attemptedPassword) {
 
 bool System::AdminLogin( string attemptedUsername, string attemptedPassword) {
     for (auto& it : AllAdmins) {
-        if (it.second->getUsername() == attemptedPassword && it.second->getPassword() == attemptedPassword) {
+        if (it.second->getUsername() == attemptedUsername && it.second->getPassword() == attemptedPassword) {
             CurrAdmin = *it.second;
             return true;
         }
@@ -501,6 +512,11 @@ User_Team& System::getsquad(int id)
         return *got->second;
     
 
+}
+
+User* System::getUser(int id)
+{
+    return AllUsers[id];
 }
 
 void System::Pass_Encode(string& pass) {
@@ -701,6 +717,7 @@ void System::printAdminMenu() {
 
 
 void System::RunSys() {
+    printSeprator();
     do {
         /*
         Start Menu
@@ -955,7 +972,7 @@ void System::readPlayers() {
     /// </summary>
     unordered_map<string, vector<string>>row;
     string line, cellData;
-    fstream file("D:\\Uni Projects\\Data Structure\\Data\\total_players.csv", ios::in);
+    fstream file("total_players.csv", ios::in);
     int row_counter = -1;
     Player* p=nullptr;
     int player_id;
@@ -1004,7 +1021,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                             });
                         
                         p = m;
@@ -1034,7 +1052,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                             });
                         
                         p = d;
@@ -1061,7 +1080,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                             });
                         p = a;
                     }
@@ -1088,8 +1108,8 @@ void System::readPlayers() {
                            stoi(row["penalties_missed"].at(row_counter)),
                            stoi(row["bonus"].at(row_counter)),
                            stoi(row["goals_conceded"].at(row_counter)),
-                           stoi(row["own_goals"].at(row_counter))
-
+                           stoi(row["own_goals"].at(row_counter)),
+                           stoi(row["penalties_saved"].at(row_counter)),
                             });
                         p = g;
                     }
@@ -1147,7 +1167,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                         });
                 }
             }
@@ -1161,7 +1182,7 @@ void System::readClub()
 {
     unordered_map<string, vector<string>>row;
     string line, cellData;
-    fstream file("D:\\Uni Projects\\Data Structure\\Data\\teams.csv", ios::in);
+    fstream file("teams.csv", ios::in);
     int row_counter = -1;
     // Read the header row to find the Club_ID and Club ShortName columns
     vector<string> column_names;
@@ -1194,6 +1215,327 @@ void System::readClub()
             row_counter++;
         }
     }
+}
+string System::space2underscore(string text) {
+    for (int i = 0; i < text.size(); i++) {
+        if (text[i] == ' ')
+            text[i] = '_';
+    }
+    return text;
+
+}
+
+string System::underscore2space(string text) {
+    for (int i = 0; i < text.size(); i++) {
+        if (text[i] == '_')
+            text[i] = ' ';
+    }
+    return text;
+}
+
+void System::readUsers()
+{
+    fstream UsersFile;
+    UsersFile.open("Users.txt", ios::in);
+
+    if (UsersFile.is_open())
+    {
+        string DataLine;
+        while (UsersFile >> DataLine)
+        {
+            User* user = new User();
+            user->setID(stoi(DataLine));
+            UsersFile >> DataLine;
+            user->setName(underscore2space(DataLine));
+            UsersFile >> DataLine;
+            user->setUsername(DataLine);
+            UsersFile >> DataLine;
+            user->setPassword(DataLine);
+            UsersFile >> DataLine;
+            user->setPhoneNumber(DataLine);
+            UsersFile >> DataLine;
+            user->setEmail(DataLine);
+            UsersFile >> DataLine;
+            user->setTotalPoints(stoi(DataLine));
+            UsersFile >> DataLine;
+            user->setCurrPoints(stoi(DataLine));
+            UsersFile >> DataLine;
+            user->setTeamName(underscore2space(DataLine));
+            
+            // user->setBirthdate(DataLine);
+            AllUsers.insert(make_pair(user->getID(), user));
+        }
+        UsersFile.close();
+    }
+}
+
+void System::readAdmins()
+{
+    fstream AdminsFile;
+    AdminsFile.open("Admins.txt", ios::in);
+
+    if (AdminsFile.is_open())
+    {
+        string DataLine;
+        while (AdminsFile >> DataLine)
+        {
+            Admin* admin = new Admin();
+            admin->setID(stoi(DataLine));
+            admin->setName(underscore2space(DataLine));
+            admin->setUsername(DataLine);
+            admin->setPassword(DataLine);
+            admin->setEmail(DataLine);
+            admin->setPhoneNumber(DataLine);
+            AllAdmins.insert(make_pair(admin->getID(), admin));
+        }
+        AdminsFile.close();
+    }
+}
+
+
+void System::readUserTeams()
+{
+    fstream UserTeamsFile;
+    string line, cellData;
+
+    UserTeamsFile.open("UserTeams.txt", ios::in);
+
+    if (UserTeamsFile.is_open())
+    {
+        string DataLine;
+        while (UserTeamsFile >> DataLine)
+        {
+            int UserID = stoi(DataLine);
+            User_Team* team = new User_Team();
+            UserTeamsFile >> DataLine;
+            team->setTotalPlayers(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalAttackers(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalDefenders(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalMidfielders(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setIsGoalKeeper(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalBudget(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            UserTeamsFile >> DataLine;
+            map<string, int> teamCount;
+            /*teamCount.insert*/
+            while (DataLine != "==========Gameweeks==============") {
+                int count = 0;
+                string team_name;
+                stringstream str(DataLine);
+                while (getline(str, cellData, ':')) {
+                    if (count == 0) {
+                        team_name = cellData;
+                        count++;
+                    }
+                    else {
+                        teamCount.insert({ team_name,stoi(cellData) });
+                    }
+                }
+                UserTeamsFile >> DataLine;
+            }
+
+            vector<int>points;
+
+            while (DataLine != "==========EndUser==============") {
+                int count = 0;
+
+                string _;
+                stringstream str2(DataLine);
+                while (getline(str2, cellData, ':')) {
+                    if (count == 0) {
+                        _ = cellData;
+                        count++;
+                    }
+                    else {
+                        points.push_back(stoi(cellData));
+                    }
+                }
+                UserTeamsFile >> DataLine;
+            }
+                team->setTeamCount(teamCount);
+                team->setTotalPointsPerWeek(points);
+                DataLine;
+                AllUsersTeams.insert({ UserID, team });
+        }
+            UserTeamsFile.close();
+    }
+}
+
+
+
+void System::readLeagues()
+{
+    fstream UserTeamsFile;
+    string line, cellData;
+
+    UserTeamsFile.open("Leagues.txt", ios::in);
+
+    if (UserTeamsFile.is_open())
+    {
+        string DataLine;
+        while (UserTeamsFile >> DataLine)
+        {
+            League* league = new League();
+            league->setId(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            league->setname(System::underscore2space(DataLine));
+            UserTeamsFile >> DataLine;
+            league->setIsPublic((bool)stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            league->setCode(stoi(DataLine));
+            UserTeamsFile >> DataLine;//==========LeaderBoard==============
+            league->setLeagueCreator(System::getUser(stoi(DataLine)));
+            UserTeamsFile >> DataLine;
+
+            UserTeamsFile >> DataLine;//==========LeaderBoard============== skip
+
+            while (DataLine != "==========EndLeague==============") {
+                int count = 0;
+                int score;
+                stringstream str(DataLine);
+                while (getline(str, cellData, ',')) {
+                    if (count == 0) {
+                        score = stoi(cellData);
+                        count++;
+                    }
+                    else {
+                        User* u = new User();
+                        u = System::getUser(stoi(cellData));
+
+                        league->insertUser(score, u);
+                    }
+
+                }
+
+                UserTeamsFile >> DataLine;
+            }
+            AllLeagues.insert({ league->getId(),league });
+        }
+    }
+    UserTeamsFile.close();
+
+}
+
+void System::writeUsers()
+{
+    fstream UsersFile;
+    UsersFile.open("Users.txt", ios::out);
+
+    if (UsersFile.is_open())
+    {
+        unordered_map<int, User*>::iterator it;
+        it = AllUsers.begin();
+        while (it != AllUsers.end())
+        {
+            UsersFile << it->second->getID() << endl;
+            UsersFile << space2underscore(it->second->getName()) << endl;
+            UsersFile << it->second->getUsername() << endl;
+            UsersFile << it->second->getPassword() << endl;
+            UsersFile << it->second->getPhoneNumber() << endl;
+            UsersFile << it->second->getEmail() << endl;
+            UsersFile << it->second->getTotalPoints() << endl;
+            UsersFile << it->second->getCurrPoints() << endl;
+            UsersFile << it->second->getTeamName() << endl;
+            it++;
+        }
+
+
+    }
+
+    UsersFile.close();
+}
+
+void System::writeAdmins()
+{
+
+    fstream adminsFile;
+    adminsFile.open("Admins.txt", ios::out);
+
+    if (adminsFile.is_open())
+    {
+
+        unordered_map<int, Admin*>::iterator it;
+        it = AllAdmins.begin();
+        while (it != AllAdmins.end())
+        {
+            adminsFile << it->second->getID() << endl;
+            adminsFile << space2underscore(it->second->getName()) << endl;
+            adminsFile << it->second->getUsername() << endl;
+            adminsFile << it->second->getPassword() << endl;
+            adminsFile << it->second->getEmail() << endl;
+            adminsFile << it->second->getPhoneNumber() << endl;
+            it++;
+        }
+    }
+    adminsFile.close();
+}
+
+void System::writeUserTeams()
+{
+    fstream UserTeams;
+    UserTeams.open("UserTeams.txt", ios::out); //write data
+    if (UserTeams.is_open()) {
+        for (auto team = AllUsersTeams.begin(); team != AllUsersTeams.end(); team++) {
+            UserTeams << team->first<<endl; // User ID
+            UserTeams << team->second->getTotalPlayers() << endl;
+            UserTeams << team->second->getTotalAttackers() << endl;
+            UserTeams << team->second->getTotalDefenders() << endl;
+            UserTeams << team->second->getTotalMidfielders() << endl;
+            UserTeams << team->second->getIsGoalKeeper() << endl;
+            UserTeams << team->second->getTotalBudget() << endl;
+            map<string, int> teamCount = team->second->getTeamCount();
+            UserTeams << "==========UserTeamClubsCount=============="<<endl;
+            for (auto PlayersTeam = teamCount.begin(); PlayersTeam != teamCount.end(); PlayersTeam++) {
+                UserTeams << PlayersTeam->first << ":" << PlayersTeam->second<<endl;
+            }
+            UserTeams << "==========Gameweeks=============="<<endl;
+            vector<int> gameweeksPoints = team->second->getTotalPointsPerWeek();
+            for (int i =0; i <gameweeksPoints.size(); i++) {
+                UserTeams <<"GameWeek"<<CurrGameWeek-gameweeksPoints.size()+1 +   i<<":"<< gameweeksPoints[i]<< endl;
+            }
+            UserTeams << "==========EndUser=============="<<endl;
+
+
+        }
+    }
+    UserTeams.close();
+
+}
+
+void System::writeLeagues()
+{
+    fstream Leagues;
+    Leagues.open("Leagues.txt", ios::out); //write data
+    if (Leagues.is_open()) {
+        for (auto league = AllLeagues.begin(); league != AllLeagues.end(); league++) {
+            Leagues << league->first << endl; // League ID
+            Leagues << System::space2underscore(league->second->getName()) << endl;
+            Leagues << league->second->IsPublic() << endl;
+            Leagues << league->second->getcode() << endl;
+            Leagues << league->second->getLeagueCreatorID() << endl;
+            priority_queue<pair<int, pair<int, User*>>> playersLeaderBoard;
+            Leagues << "==========LeaderBoard==============\n";
+            playersLeaderBoard = league->second->getLeaderBoard();
+            int Leaderboard_count = playersLeaderBoard.size();
+            /// Score,UserID
+            for (int i = 0; i < Leaderboard_count; i++)
+            {
+                Leagues << playersLeaderBoard.top().first << "," << playersLeaderBoard.top().second.first << endl;
+                playersLeaderBoard.pop();
+
+            }
+            Leagues << "==========EndLeague==============\n";
+
+
+        }
+    }
+    Leagues.close();
+
 }
 
 void System::createLeague() {
