@@ -38,5 +38,6 @@ public:
 
     int getLeagueCreatorID();
     priority_queue<pair<int, pair<int, User*>>> getLeaderBoard();
+    void setLeaderBoard(priority_queue<pair<int, pair<int, User*>>>);
 };
 

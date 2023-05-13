@@ -119,3 +119,8 @@ void User::setID(int id) {
 int User::getID() {
     return id;
 }
+
+void User::updateLeagues(int leagueID)
+{
+    this->leagues.push_back(leagueID);
+}

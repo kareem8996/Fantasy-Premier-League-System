@@ -311,74 +311,75 @@ void Admin::edit_team_menu() {
 		<< "\t\t1 - add palyer to club \n"
 		<< "\t\t2 - remove palyer from club \n";
 	cin >> option;
-	switch (option) {
+	//switch (option) {
 
-	case 1: {
-		cout << "enter players id";
-		cin >> id;
-		cout << "enter players name";
-		cin >> PlayerName;
-		cout << "enter players total points";
-		cin >> PlayerTotalPoints;
-		cout << "enter players price";
-		cin >> PlayerPrice;
-		cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n";
-		cin >> PlayerPosition;
-		cout << "enter players status";
-		cin >> PlayerStatus;
-		cout << "enter players Total Clean Sheets";
-		cin >> TotalCleanSheets;
-
-
+	//case 1: 
+	//	cout << "enter players id";
+	//	cin >> id;
+	//	cout << "enter players name";
+	//	cin >> PlayerName;
+	//	cout << "enter players total points";
+	//	cin >> PlayerTotalPoints;
+	//	cout << "enter players price";
+	//	cin >> PlayerPrice;
+	//	cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n";
+	//	cin >> PlayerPosition;
+	//	cout << "enter players status";
+	//	cin >> PlayerStatus;
+	//	cout << "enter players Total Clean Sheets";
+	//	//cin >> TotalCleanSheets;
 
 
 
 
-	validate:
-		switch (PlayerPositionoption)//add the temp to the file
-		{
-		case 1: {
-			cout << "enter goalkeeper's total saves";
-			cin >> TotalSaves;
-			GoalKeeper golytemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalSaves, TotalCleanSheets);
-			break; }
-		case 2: {
-			Defender deftemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
-			break;
-		}
-		case 3: {
-
-			Midfielder midtemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
-			break;
-		}
-		case 4: {
-
-			Attacker atktemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus);
-			break;
-		}
-		default:
-			cout << "enter valid number";
-			cin >> PlayerPositionoption;
-			goto validate;
-			break;
-		}
-
-		break;
-	}
-
-	case 2:
-	
-	break;
 
 
+	//	//	switch (PlayerPositionoption)//add the temp to the file
+	//	//	{
+	//	//	case 1: {
+	//	//		cout << "enter goalkeeper's total saves";
+	//	//		cin >> TotalSaves;
+	//	//		GoalKeeper golytemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalSaves, TotalCleanSheets);
+	//	//		break; }
+	//	//	case 2: {
+	//	//		Defender deftemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
+	//	//		break;
+	//	//	}
+	//	//	case 3: {
+
+	//	//		Midfielder midtemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
+	//	//		break;
+	//	//	}
+	//	//	case 4: {
+
+	//	//		Attacker atktemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus);
+	//	//		break;
+	//	//	}
+	//	//	default:
+	//	//		cout << "enter valid number";
+	//	//		cin >> PlayerPositionoption;
+	//	//		goto validate;
+	//	//		break;
+	//	//	}
+
+	//	//	break;
+	//	//}
+
+	//	//case 2:
+	//	//
+	//	//break;
 
 
-	default:
-		cout << "enter valid number";
-	}
-	
 
-}//club
+
+	//	//default:
+	//	//	cout << "enter valid number";
+	//	//}
+	//	//
+
+	//}//club
+	//
+}
 
 //===================== Update User Account Data=========================
 

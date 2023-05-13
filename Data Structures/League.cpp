@@ -62,7 +62,7 @@ void League::displayLeaderboard()
 	const pair<int, pair<int, User*>>* p;
 	p = &leaderBoard.top();
 
-	cout << "Position\tManager\tPoints";
+	cout << "Position\tManager\tPoints\n";
 	for (int i = 0; i < leaderBoard.size(); i++) {
 		cout <<i+1<<"\t" << (p + i)->second.second->getName() <<"\t"<< (p + i)->first<<endl;
 	}
@@ -131,6 +131,11 @@ int League::getLeagueCreatorID()
 priority_queue<pair<int, pair<int, User*>>> League::getLeaderBoard()
 {
 	return leaderBoard;
+}
+
+void League::setLeaderBoard(priority_queue<pair<int, pair<int, User*>>> leaderboard)
+{
+	this->leaderBoard = leaderboard;
 }
 
 

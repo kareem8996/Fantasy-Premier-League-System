@@ -1,5 +1,6 @@
 #include "System.h"
 #include "iostream"
+#include <algorithm>
 #include <typeinfo>
 #include <Windows.h>
 #include <time.h>
@@ -584,9 +585,10 @@ void System::printUserMenu() {
         << "\t\t1 - Manage Squad\n"
         << "\t\t2 - Create League\n"
         << "\t\t3 - Join League\n"
-        << "\t\t4 - Change Account Info\n"
-        << "\t\t5 - To Logout\n"
-        << "\t\t6 - To Quit the System\n";
+        << "\t\t4 - Manage League\n"
+        << "\t\t5 - Change Account Info\n"
+        << "\t\t6 - To Logout\n"
+        << "\t\t7 - To Quit the System\n";
     do {
         cout << "\tPlease enter your choice here --->\t";
         cin >> menuChoice;
@@ -609,24 +611,34 @@ void System::printUserMenu() {
         printSeprator();
         break;
     case '2':
+        printSeprator();
         createLeague();
         Sleep(5000);
         printSeprator();
         break;
     case '3':
+        printSeprator();
         joinLeague();
         Sleep(5000);
         printSeprator();
         break;
     case '4':
+        printSeprator();
+        manageLeagues();
+        Sleep(5000);
+        printSeprator();
+        break;
+    case '5':
+        printSeprator();
         ChangeAccountSettings();
         Sleep(3000);
         printSeprator();
         break;
 
-    case '5':
-
+    case '6':
+            
         do {
+            cout << "Are you sure you want to logout? (Y/N)\n";
             cin >> Logout_choice;
             if (Logout_choice.size() == 1 && isalpha(Logout_choice[0])) {
                 if (Logout_choice[0] == 'Y' || Logout_choice[0] == 'y') {
@@ -660,7 +672,7 @@ void System::printUserMenu() {
 
         } while (Logout_choice[0] != 'Y' || Logout_choice[0] != 'y' || Logout_choice[0] == 'N' || Logout_choice[0] == 'n');
         break;
-    case '6':
+    case '7':
         cout << "Are you Sure you want to Quit?\n";
         do {
             cin >> Quit_choice;
@@ -972,7 +984,7 @@ void System::readPlayers() {
     /// </summary>
     unordered_map<string, vector<string>>row;
     string line, cellData;
-    fstream file("total_players.csv", ios::in);
+    fstream file("D:\\Uni Projects\\Data Structure\\Data\\total_players.csv", ios::in);
     int row_counter = -1;
     Player* p=nullptr;
     int player_id;
@@ -1182,7 +1194,7 @@ void System::readClub()
 {
     unordered_map<string, vector<string>>row;
     string line, cellData;
-    fstream file("teams.csv", ios::in);
+    fstream file("D:\\Uni Projects\\Data Structure\\Data\\teams.csv", ios::in);
     int row_counter = -1;
     // Read the header row to find the Club_ID and Club ShortName columns
     vector<string> column_names;
@@ -1561,6 +1573,9 @@ void System::createLeague() {
     }
     League* NL = new League(id, League_Name,&CurrUser ,isPublic);
     AllLeagues.insert({ id,NL });
+    CurrUser.updateLeagues(id);
+    cout << "League created\n";
+
 }
 
 void System::joinLeague(){
@@ -1602,94 +1617,120 @@ void System::manageLeagues() {
     string League_option;
     string User_option;
 
-
     //Display Personal Leagues
     vector<int> personalLeagues = CurrUser.getLeagues();
-    for (int i = 0; i < personalLeagues.size(); i++) {
-        League* currentLeague = AllLeagues[personalLeagues[i]];
-        cout << currentLeague->getId() << " - " << currentLeague->getName() << endl;
-    }
+    if (personalLeagues.size() != 0) {
+        for (int i = 0; i < personalLeagues.size(); i++) {
+            League* currentLeague = AllLeagues[personalLeagues[i]];
+            cout << currentLeague->getId() << " - " << currentLeague->getName() << endl;
+        }
 
-    cout << "Choose League ID or 0 to go back\n";
-    while (true) {
-        cin >> League_option;
-        if (cin.fail())
-            InputFaliure(League_option, "Please write a valid league id");
+        cout << "Choose League ID or 0 to go back\n";
+        while (true) {
+            cin >> League_option;
+            if (cin.fail())
+                InputFaliure(League_option, "Please write a valid league id");
 
-        if (isNumber(League_option)) {
-            if (count(CurrUser.getLeagues().begin(), CurrUser.getLeagues().end(), stoi(League_option))) {
-                break;
+            if (isNumber(League_option)) {
+                if (find(personalLeagues.begin(), personalLeagues.end(),stoi( League_option)) != personalLeagues.end()) {
+                    break;
+                }
+                else {
+                    cout << "You do not have access to the league you have written its code\nWrite League ID";
+                }
+                if (stoi(League_option) == 0) return;
             }
             else {
-                cout << "You do not have access to the league you have written its code\n";
+                cout << "Please write a code that consists of numbers only\n";
             }
-            if (stoi(League_option) == 0) return;
+
+        }
+
+        cout << AllLeagues[stoi(League_option)]->getName() << endl;
+        cout << "\t\tWhat would you like to do ??\n"
+            << "\t\t1 - View Leaderboard\n";
+
+
+        if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser.getID()) {
+            cout << "\t\t2 - Invite managers to your league\n";
         }
         else {
-            cout << "Please write a code that consists of numbers only\n";
+            cout << "\t\t2 - Leave League\n";
         }
+        cout << "\t\t3 - Back\n";
+        cout << "Invitation Code is: " << AllLeagues[stoi(League_option)]->getcode() << endl;
+        while (true) {
+            cin >> User_option;
+            if (cin.fail())
+                InputFaliure(User_option, "Please write a suitable option");
+
+            if (isNumber(User_option)) {
+                if (stoi(User_option) == 1 || stoi(User_option) == 2 || stoi(User_option) == 3) {
+                    break;
+                }
+                else {
+                    cout << "Please write a suitable option";
+                }
+            }
+            else {
+                cout << "Please write a number\n";
+            }
+
+        }
+
+        League* currentLeague = AllLeagues[stoi(League_option)];
+        switch (stoi(User_option))
+        {
+        case 1:
+            currentLeague->displayLeaderboard();
+            cout << "Choose Manager you want to view or 0 to go back\n";
+            while (true) {
+                cin >> User_option;
+                if (cin.fail())
+                    InputFaliure(User_option, "Please write a suitable option");
+
+                if (isNumber(User_option)) {
+                    if (stoi(User_option) == 0) {
+                        manageLeagues();
+                    }
+                     else if (currentLeague->getLeaderBoard().size() >= stoi(User_option)) {
+                        break;
+                    }
+                    else {
+                        cout << "Please write a suitable option";
+                    }
+                }
+                else {
+                    cout << "Please write a number\n";
+                }
+
+            }
         
-    }
+            currentLeague->displayUser(stoi(User_option) - 1);
+            cout << "\n\n\n";
+            AllUsersTeams[CurrUser.getID()]->displaySquad();
+            break;
 
-    cout << AllLeagues[stoi(League_option)]->getName()<<endl;
-    cout << "\t\tWhat would you like to do ??\n"
-        << "\t\t1 - View Leaderboard\n";
+        case 2:
+            if (currentLeague->getLeagueCreatorID() == CurrUser.getID()) {
+                //Invite
 
+            }
+            else {
+                //Leave
+                currentLeague->removeUser(CurrUser.getID());
+            }
+            break;
+        case 3:
+            manageLeagues(); //return to start of manageLeagues
+            break;
 
-    if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser.getID()) {
-        cout<< "\t\t2 - Invite managers to your league\n";
+        default:
+            break;
+        }
     }
     else {
-        cout << "\t\t2 - Leave League\n";
-    }
-    cout << "\t\t3 - Back\n";
-    while (true) {
-        cin >> User_option;
-        if (cin.fail())
-            InputFaliure(User_option, "Please write a suitable option");
-
-        if (isNumber(User_option)) {
-            if (stoi(User_option) == 1 || stoi(User_option) == 2|| stoi(User_option) == 3) {
-                break;
-          }
-            else {
-                cout << "Please write a suitable option";
-            }
-        }
-        else {
-            cout << "Please write a number\n";
-        }
-
-    }
-
-    League* currentLeague = AllLeagues[stoi(League_option)];
-    switch (stoi(User_option))
-    {
-    case 1:
-        currentLeague->displayLeaderboard();
-        cout << "Choose Manager you want to view\n";
-        cin >> User_option;
-        currentLeague->displayUser(stoi(User_option) - 1);
-        cout << "\n\n\n";
-        AllUsersTeams[CurrUser.getID()]->displaySquad();
-        break;
-
-    case 2:
-        if (currentLeague->getLeagueCreatorID() == CurrUser.getID()) {
-            //Invite
-
-        }
-        else {
-            //Leave
-            currentLeague->removeUser(CurrUser.getID());
-        }
-        break;
-    case 3:
-        manageLeagues(); //return to start of manageLeagues
-        break;
-
-    default:
-        break;
+        cout << "You are not a member in any of the leagues\n";
     }
 }
 
