@@ -894,23 +894,6 @@ void System::RunSys() {
 
 }
 
-void System::ManageSqaudMenu(User_Team& c) {
-    
-    if (c.getTotalPlayers() != 0) {
-        cout << "\t\tWhat would you like to do ??\n"
-            << "\t\t1 - Manage Squad\n"
-            << "\t\t2 - Create League\n"
-            << "\t\t3 - Join League\n"
-            << "\t\t4 - Change Account Info\n"
-            << "\t\t7 - To Logout\n"
-            << "\t\t8 - To Quit the System\n";
-    }
-    else {
-        c.pickSquad();
-    }
-    
-
-}
 
 void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     /// <summary>
@@ -1869,4 +1852,195 @@ void System::ChangeAccountSettings() {
             break;
         }
         ChangeAccountSettings();
+}
+
+void System::Transfers() {
+    User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
+    Current_Team->displaySquadPrice();
+
+    int totalBudget = (float)Current_Team->getTotalBudget()/10;
+    int Transfers_left = Current_Team->getTransfers();
+    cout << "Budget: " << totalBudget << endl;
+    cout << "Remaining Transfers: " << Transfers_left << endl << endl;
+    cout << "Please write id of the player you want to replace:\n";
+    string user_option;
+    string position;
+    bool flag = false;
+    while (true) {
+        cin >> user_option;
+        if (cin.fail())
+            System::InputFaliure(user_option, "write a suitable number ");
+        if (System::isNumber(user_option)) {
+            for (auto& s : Current_Team->getSquad()) {
+                for (auto& x : s.second) {
+                    if (x.second->getID() == stoi(user_option)) {
+                        if (Transfers_left == 0) {
+                            string option;
+                            cout << "Are you sure you want to replace player, you will lose 4 points. (Y/N)\n";
+                            cin >> option;
+                            if ((option != "Y" || option != "y")) {
+                                flag = true;
+                                break;
+                            }
+                            
+                        }
+                            Current_Team->RemovePlayer(x.second);
+                            position = x.second->getPosition();
+                            Current_Team->decreaseTransfers();
+                            flag = true;
+                            break;
+                        
+                        
+                    }
+
+                }
+                if (flag) break;
+            }
+            if (flag) break;
+            else "Invalid Choice please choose someone in your team\n";
+        }
+        else {
+            cout << "Please choose a suitable option\n";
+        }
+    }
+    while (true) {
+        displayPlayers(position);
+        cout << "Budget: " << (float)Current_Team->getTotalBudget() / 10 << endl;
+        cout << "Remaining Transfers: " << Current_Team->getTransfers() << endl<<endl;
+        cout << "Choose Player Id: ";
+        string id;
+        while (true) {
+            cin >> id;
+            if (cin.fail())
+                System::InputFaliure(id, "write a suitable number ");
+            if (System::isNumber(id)) {
+                if (System::AllPlayers[position].find(stoi(id)) != System::AllPlayers[position].end()) {
+                    break;
+                }
+                else {
+                    cout << "Player does not exist\n";
+                }
+            }
+            else {
+                cout << "Please write a code consisting of only numbers\n";
+            }
+        }
+        if (!Current_Team->Player_Exist(stoi(id))) {
+
+            System::displayPlayers(System::AllPlayers[position][stoi(id)], false, "\n");
+            string Player_Option;
+            cout << "Are you sure you want to pick " << System::AllPlayers[position][stoi(id)]->getFullname() << " ?\n";
+            cin >> Player_Option;
+
+            if (Player_Option == "Y" || Player_Option == "y") {
+
+                if (Current_Team->canAddPlayerPrice(AllPlayers[position][stoi(id)])) {
+
+                    if (Current_Team->canAddPlayerCount(AllPlayers[position][stoi(id)])) {
+
+                        Current_Team->pickPlayer(AllPlayers[position][stoi(id)]);
+                        return;
+                    }
+                    else {
+                        cout << "Players limit from the same team exceeded\n";
+                    }
+                }
+                else {
+                    cout << "Player Price exceeds budget\n";
+                }
+            }
+        }
+        else {
+            cout << "You already chose this player\n";
+        }
+        Sleep(3000);
+    }
+}
+
+void System::ManageSqaudMenu(User_Team& c) {
+
+    if (c.getTotalPlayers() != 11) {
+        while (true) {
+            cout << "\t\tWhat would you like to do ??\n"
+                << "\t\t1 - Transfers \n"
+                << "\t\t2 - Veiw Players \n"
+                << "\t\t3 - Back \n";
+            string user_option;
+            int User_option;
+            while (true) {
+                cin >> user_option;
+                if (cin.fail())
+                    System::InputFaliure(user_option, "write a suitable number ");
+                if (System::isNumber(user_option)) {
+                    User_option = stoi(user_option);
+                    if (User_option == 0) {
+                        return;
+                    }
+                    else if (User_option <= 3) {
+                        break;
+                    }
+                }
+                else {
+                    cout << "Please write a suitable option\n";
+                }
+            }
+            if (User_option == 1) {
+                Transfers();
+            }
+            else if (User_option == 2) {
+                ViewPlayers();
+            }
+            else if (User_option == 3) return;
+
+            else {
+                cout << "Invalid Option\n\n";
+            }
+        }
+
+    }
+    else {
+        c.pickSquad();
+    }
+
+
+
+}
+
+void System::ViewPlayers() {
+    User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
+    while (true) {
+        Current_Team->displaySquad();
+        string id,user_option;
+        bool flag = false;
+        while (true) {
+        cout << "Choose Player to view or press 0 to go back: ";
+            cin >> id;
+            if (cin.fail())
+                System::InputFaliure(id, "write a suitable number ");
+            if (System::isNumber(id)) {
+                int ID = stoi(id);
+                if (ID == 0) return;
+                for (auto& s : AllPlayers) {
+                    for (auto& x : s.second) {
+                        if (x.first == ID) {
+                            displayPlayers(x.second);
+                            cout << "Press anything to go back\n";
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) break;
+                }
+
+                if (!flag)
+                    cout << "Player does not exist\n";
+                else break;
+            }
+            else {
+                cout << "Please write a code consisting of only numbers\n";
+            }
+        }
+        cin >> user_option;
+    }
+    
 }
