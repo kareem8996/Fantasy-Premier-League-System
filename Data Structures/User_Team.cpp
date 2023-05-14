@@ -19,6 +19,7 @@ User_Team::User_Team(int id) {
 	totalMidfielders = 0;
 	isGoalKeeper = false;
 	totalBudget = MAX_BUDGET;
+	Transfers_left = 0;
 }
 bool User_Team::canAddPlayerPosition(string pos) {
 	if (pos == "GKP" && !isGoalKeeper) {
@@ -58,186 +59,88 @@ void User_Team::pickSquad() {
 	int current_totalPlayers = totalPlayers;
 	string position_picked;
 	System sys;
-	while(totalPlayers!=MAX_PLAYERS) {
+	while (totalPlayers != MAX_PLAYERS) {
 		cout << "\nPick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Quit\n";
-		cin >> position_picked;
+		while (true) {
+			cin >> position_picked;
+			if (cin.fail())
+				System::InputFaliure(position_picked, "write a suitable number ");
+			if (System::isNumber(position_picked)) {
+				if (stoi(position_picked) < 6) {
+					if (stoi(position_picked) == 1) position_picked = "GKP";
+					else if (stoi(position_picked) == 2) position_picked = "DEF";
+					else if (stoi(position_picked) == 3) position_picked = "MID";
+					else if (stoi(position_picked) == 4) position_picked = "FWD";
+					else return;
+					break;
+				}
+				else {
+					cout << "Invalid Choice\n Please choose again\n";
+				}
+
+			}
+			else {
+				cout << "Invalid Choice\n Please choose again\n";
+			}
+		}
+			if (canAddPlayerPosition(position_picked)) {
+
+				System::displayPlayers(position_picked);
+				cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
+				string id;
+				cout << "Enter the player ID\n";
+				while (true) {
+					cin >> id;
+					if (cin.fail())
+						System::InputFaliure(id, "write a suitable number ");
+					if (System::isNumber(id)) {
+						if (System::AllPlayers[position_picked].find(stoi(id)) != System::AllPlayers[position_picked].end()) {
+							break;
+						}
+						else {
+							cout << "Player does not exist\n";
+						}
+
+					}
+					else {
+						cout << "Please write a code consisting of only numbers\n";
+					}
+				}
+				if (!Player_Exist(stoi(id))) {
+
+					System::displayPlayers(System::AllPlayers[position_picked][stoi(id)], false, "\n");
+					string Player_Option;
+					cout << "Are you sure you want to pick " << System::AllPlayers[position_picked][stoi(id)]->getFullname() << " ?\n";
+					cin >> Player_Option;
+
+					if (Player_Option == "Y" || Player_Option == "y") {
+
+						if (canAddPlayerPrice(sys.AllPlayers[position_picked][stoi(id)])) {
+
+							if (canAddPlayerCount(sys.AllPlayers[position_picked][stoi(id)])) {
+
+								pickPlayer(sys.AllPlayers[position_picked][stoi(id)]);
+								
+							}
+							else {
+								cout << "Players limit from the same team exceeded\n";
+							}
+						}
+						else {
+							cout << "Player Price exceeds budget\n";
+						}
+					}
+				}
+				else {
+					cout << "You already chose this player\n";
+				}
+			}
+			else {
+				cout << "You have reached the maximum number of players from this position to choose from\n";
+			}
 		
-		if (position_picked == "1") {
-
-			if (canAddPlayerPosition("GKP")) {
-
-				System::displayPlayers("GKP");
-				cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
-				int id;
-				cout << "Enter the player ID\n";
-				cin >> id;
-				if (!Player_Exist(id)) {
-
-					System::displayPlayers(System::AllPlayers["GKP"][id], false, "\n");
-					string Player_Option;
-					cout << "Are you sure you want to pick " << System::AllPlayers["GKP"][id]->getFullname() << " ?\n";
-					cin >> Player_Option;
-
-					if (Player_Option == "Y" || Player_Option == "y") {
-
-						if (canAddPlayerPrice(sys.AllPlayers["GKP"][id])) {
-
-							if (canAddPlayerCount(sys.AllPlayers["GKP"][id])) {
-
-								pickPlayer(sys.AllPlayers["GKP"][id]);
-								continue;
-							}
-							else {
-								cout << "Players limit from the same team exceeded\n";
-							}
-						}
-						else {
-							cout << "Player Price exceeds budget\n";
-						}
-					}
-				}
-				else {
-					cout << "You already chose this player\n";
-				}
-			}
-			else {
-				cout << "You have reached the maximum number of GoalKeepers to choose from\n";
-			}
-
-		}
-		else if (position_picked == "2") {
-			if (canAddPlayerPosition("DEF")) {
-
-
-				System::displayPlayers("DEF");
-				cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
-				int id;
-				cout << "Enter the player ID\n";
-				cin >> id;
-				if (!Player_Exist(id)) {
-
-					System::displayPlayers(System::AllPlayers["DEF"][id], false, "\n");
-					string Player_Option;
-					cout << "Are you sure you want to pick " << System::AllPlayers["DEF"][id]->getFullname() << " ?\n";
-					cin >> Player_Option;
-
-					if (Player_Option == "Y" || Player_Option == "y") {
-
-						if (canAddPlayerPrice(sys.AllPlayers["DEF"][id])) {
-
-							if (canAddPlayerCount(sys.AllPlayers["DEF"][id])) {
-
-								pickPlayer(sys.AllPlayers["DEF"][id]);
-								continue;
-							}
-							else {
-								cout << "Players limit from the same team exceeded\n";
-							}
-						}
-						else {
-							cout << "Player Price exceeds budget\n";
-						}
-					}
-				}
-				else {
-					cout << "You already chose this player\n";
-				}
-			}
-			else {
-				cout << "You have reached the maximum number of Defenders to choose from\n";
-			}
-		}
-		else if (position_picked == "3") {
-
-			if (canAddPlayerPosition("MID")) {
-
-				System::displayPlayers("MID");
-				cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
-				int id;
-				cout << "Enter the player ID\n";
-				cin >> id;
-
-				if (!Player_Exist(id)) {
-
-					System::displayPlayers(System::AllPlayers["MID"][id], false, "\n");
-					string Player_Option;
-					cout << "Are you sure you want to pick " << System::AllPlayers["MID"][id]->getFullname() << " ?\n";
-					cin >> Player_Option;
-
-					if (Player_Option == "Y" || Player_Option == "y") {
-
-						if (canAddPlayerPrice(sys.AllPlayers["MID"][id])) {
-
-							if (canAddPlayerCount(sys.AllPlayers["MID"][id])) {
-
-								pickPlayer(sys.AllPlayers["MID"][id]);
-								continue;
-							}
-							else {
-								cout << "Players limit from the same team exceeded\n";
-							}
-						}
-						else {
-							cout << "Player Price exceeds budget\n";
-						}
-					}
-				}
-				else {
-					cout << "You already chose this player\n";
-				}
-			}
-			else {
-				cout << "You have reached the maximum number of Midfielders to choose from\n";
-			}
-		}
-		else if (position_picked == "4") {
-
-			if (canAddPlayerPosition("FWD")) {
-
-				System::displayPlayers("FWD");
-				cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
-				int id;
-				cout << "Enter the player ID\n";
-				cin >> id;
-				if (!Player_Exist(id)) {
-
-					System::displayPlayers(System::AllPlayers["FWD"][id], false, "\n");
-					string Player_Option;
-					cout << "Are you sure you want to pick " << System::AllPlayers["FWD"][id]->getFullname() << " ?\n";
-					cin >> Player_Option;
-
-					if (Player_Option == "Y" || Player_Option == "y") {
-
-						if (canAddPlayerPrice(sys.AllPlayers["FWD"][id])) {
-
-							if (canAddPlayerCount(sys.AllPlayers["FWD"][id])) {
-
-								pickPlayer(sys.AllPlayers["FWD"][id]);
-								continue;
-							}
-							else {
-								cout << "Players limit from the same team exceeded\n";
-							}
-						}
-						else {
-							cout << "Player Price exceeds budget\n";
-						}
-					}
-				}
-				else {
-					cout << "You already chose this player\n";
-				}
-			}
-			else {
-				cout << "You have reached the maximum number of Attackers to choose from\n";
-			}
-		}
-		else if(position_picked=="5") {
-			break;
-		}
 	}
 }
-
 void User_Team::pickPlayer(Player*p) {
 	/// <summary>
 	/// this function updates all User_Team variables
@@ -377,14 +280,53 @@ void User_Team::setTeamCount(map<string, int>teams)
 
 void User_Team::displaySquad()
 {
-	int points = totalPointsPerWeek.back();
+	int points;
+	if (totalPointsPerWeek.size() != 0)
+		points = totalPointsPerWeek.back();
+	else points = 0;
 
 	cout << "Total Points: " << points << endl<<endl;
 	for (auto& t : Squad) {
 		cout << "----- " << t.first << " ------" << endl;
 
 		for (auto& p : t.second) {
-			cout << p.second->getFullname() << "\t" << p.second->getPlayer_History().back().getTotal_points_gameweek()<<" Points\n";
+			if (points != 0)
+			cout <<p.first<<" - "<< p.second->getFullname() << "\t" << p.second->getPlayer_History().back().getTotal_points_gameweek() << " Points\n";
+			else {
+				cout << p.first << " - " << p.second->getFullname() << "\t 0 Points\n";
+
+			}
 		}
 	}
+}
+void User_Team::displaySquadPrice()
+{
+	cout << "Remaining Budget: " << (float)totalBudget/10 << endl<<endl;
+
+	for (auto& t : Squad) {
+		cout << "----- " << t.first << " ------" << endl;
+		for (auto& p : t.second) {
+			cout << p.second->getID()<<" - "<< p.second->getFullname() << "\t" << (float)p.second->getPrice()/10 << " Price\n";
+		}
+	}
+}
+
+int User_Team::getTransfers() {
+	return Transfers_left;
+}
+
+void User_Team::setTransfers(int t) {
+	Transfers_left = t;	
+}
+
+void User_Team::increaseTransfers() {
+	Transfers_left++;
+}
+void User_Team::decreaseTransfers() {
+	Transfers_left--;
+}
+
+unordered_map<string, unordered_map<int, Player*>> User_Team::getSquad()
+{
+	return Squad;
 }

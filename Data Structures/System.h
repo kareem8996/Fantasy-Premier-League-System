@@ -70,7 +70,8 @@ public:
 	//================User Menus=======================
 	static void ManageSqaudMenu(User_Team& c);
 	static void ChangeAccountSettings();
-
+	static void Transfers();
+	static void ViewPlayers();
 	// ======================Player Display=======================
 	static void displayPlayers(string position);
 	static void displayPlayers(Player *p, bool flag, string delim);
