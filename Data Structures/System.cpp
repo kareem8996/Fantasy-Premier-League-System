@@ -239,12 +239,14 @@ bool System::Check_EmailDatabase(string Email) {
     for (auto& it : AllUsers) {
         if (it.second->getEmail() == Email)
         {
+            cout << "this email exists\n";
             return false;
         }
     }
     for (auto& it : AllAdmins) {
         if (it.second->getEmail() == Email)
         {
+            cout << "this email exists\n";
             return false;
         }
     }
@@ -349,28 +351,17 @@ void System::RegisterUser() {
                 cout << "Enter Phone Number: ";
                 cin >> Phone;
                 if (cin.fail())
-                    InputFaliure(Phone, "Please enter Phone Number: ");
-
-                if (!Check_PhoneDatabase(Phone)) {
-                    cout << "this phone already exists\n";
-                }
-
-            } while (!Check_Phone(Phone)&& !Check_PhoneDatabase(Phone));
+                    InputFaliure(Phone, "Please enter Phone Number:");
+                vPhone = Check_Phone(Phone);
+            } while (!vPhone);
             // input Email
             do {
-                cout << "Enter Your email: ";
+                cout << "Enter Your email";
                 cin >> Email;
                 if (cin.fail())
                     InputFaliure(Email, "Please enter Email:");
                 vEmail = Check_Email(Email);
-                if (!Check_EmailDatabase(Email)) {
-                    cout << "This email is used by another user. Please enter another email\n";
-                }
-            } while (!vEmail && !Check_EmailDatabase(Email));
-            cout << "Enter your team name: ";
-            cin >> TeamName;
-            if (cin.fail())
-                InputFaliure(TeamName, "Please Enter your team name: ");
+            } while (!vEmail);
             int id = AllUsers.size() + 1;
             User user = {id, Name, Email, Username, Password, Phone, 0, 0, TeamName };
             AllUsers.insert({id,&user});
