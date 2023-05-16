@@ -75,6 +75,7 @@ public:
 	void setTransfers(int t);
 	void increaseTransfers();
 	void decreaseTransfers();
+	void PunishTransfers();
 	unordered_map<string, unordered_map<int, Player*>> getSquad();
 
 };

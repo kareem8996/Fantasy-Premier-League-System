@@ -58,7 +58,6 @@ void User_Team::pickSquad() {
 	/// </summary>
 	int current_totalPlayers = totalPlayers;
 	string position_picked;
-	System sys;
 	while (totalPlayers != MAX_PLAYERS) {
 		cout << "\nPick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Quit\n";
 		while (true) {
@@ -115,11 +114,11 @@ void User_Team::pickSquad() {
 
 					if (Player_Option == "Y" || Player_Option == "y") {
 
-						if (canAddPlayerPrice(sys.AllPlayers[position_picked][stoi(id)])) {
+						if (canAddPlayerPrice(System::AllPlayers[position_picked][stoi(id)])) {
 
-							if (canAddPlayerCount(sys.AllPlayers[position_picked][stoi(id)])) {
+							if (canAddPlayerCount(System::AllPlayers[position_picked][stoi(id)])) {
 
-								pickPlayer(sys.AllPlayers[position_picked][stoi(id)]);
+								pickPlayer(System::AllPlayers[position_picked][stoi(id)]);
 								
 							}
 							else {
@@ -324,6 +323,12 @@ void User_Team::increaseTransfers() {
 }
 void User_Team::decreaseTransfers() {
 	Transfers_left--;
+}
+
+void User_Team::PunishTransfers()
+{
+	if (totalPointsPerWeek.size() == 0) updateTotalPointsPerWeek(-4);
+	else totalPointsPerWeek.back() -= 4;
 }
 
 unordered_map<string, unordered_map<int, Player*>> User_Team::getSquad()

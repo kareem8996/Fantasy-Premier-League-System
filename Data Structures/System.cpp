@@ -134,15 +134,29 @@ bool System::Check_Name(string& Name) {
     return true;
 }
 
-bool System::Check_Database(string username) {
-    for (auto& it : AllUsers) {
-        if (it.second->getUsername() == username)
-            return false;
-
+bool System::Check_Database(string&username) {
+    string org2 = "";
+    for (int j = 0; j < username.size(); j++) {
+        if (isalpha(username[j]))
+            org2 += char(tolower(username[j]));
+        else {
+            org2 += username[j];
+        }
     }
-    for (auto& it : AllAdmins) {
-        if (it.second->getUsername() == username)
+    username = org2;
+
+    //lowering user or admin email and comparing
+    for (auto& x : AllUsers) {
+        if (x.second->getUsername() == org2) {
+            cout << "Username Exists\n";
             return false;
+        }
+    }
+    for (auto& x : AllAdmins) {
+        if (x.second->getUsername() == org2) {
+            cout << "Username Exists\n";
+            return false;
+        }
     }
     return true;
 }
@@ -235,24 +249,37 @@ bool System::Check_Phone(string& Phone) {
 
 }
 
-bool System::Check_EmailDatabase(string Email) {
-    for (auto& it : AllUsers) {
-        if (it.second->getEmail() == Email)
-        {
-            cout << "this email exists\n";
+bool System::Check_EmailDatabase(string &Email) {
+    
+
+    //lowering user or admin email and comparing
+    for (auto & x: AllUsers) {
+        if (x.second->getEmail() == Email) {
+            cout << "Email Exists\n";
             return false;
         }
     }
-    for (auto& it : AllAdmins) {
-        if (it.second->getEmail() == Email)
-        {
-            cout << "this email exists\n";
+    for (auto& x : AllAdmins) { 
+        if (x.second->getEmail() == Email) {
+            cout << "Email Exists\n";
             return false;
         }
     }
     return true;
 }
 bool System::Check_Email(string& Email) {
+
+    //Lowering Email written by user or admin
+    string org2 = "";
+    for (int j = 0; j < Email.size(); j++) {
+        if (isalpha(Email[j]))
+            org2 += char(tolower(Email[j]));
+        else {
+            org2 += Email[j];
+        }
+    }
+    Email = org2;
+
     int at_index = 0;
     at_index = Email.find("@");
 
@@ -356,12 +383,14 @@ void System::RegisterUser() {
             } while (!vPhone);
             // input Email
             do {
-                cout << "Enter Your email";
+                cout << "Enter Your email: ";
                 cin >> Email;
                 if (cin.fail())
                     InputFaliure(Email, "Please enter Email:");
                 vEmail = Check_Email(Email);
             } while (!vEmail);
+            cout << "Enter Team Name: ";
+            cin >> TeamName;
             int id = AllUsers.size() + 1;
             User user = {id, Name, Email, Username, Password, Phone, 0, 0, TeamName };
             AllUsers.insert({id,&user});
@@ -1870,16 +1899,22 @@ void System::Transfers() {
                             cout << "Are you sure you want to replace player, you will lose 4 points. (Y/N)\n";
                             cin >> option;
                             if ((option != "Y" || option != "y")) {
+                                Current_Team->RemovePlayer(x.second);
+                                position = x.second->getPosition();
+                                // Reduce Points
+                                Current_Team->PunishTransfers();
                                 flag = true;
-                                break;
                             }
+                                break;
                             
                         }
+                        else {
                             Current_Team->RemovePlayer(x.second);
                             position = x.second->getPosition();
                             Current_Team->decreaseTransfers();
                             flag = true;
                             break;
+                        }
                         
                         
                     }
@@ -1950,7 +1985,7 @@ void System::Transfers() {
 
 void System::ManageSqaudMenu(User_Team& c) {
 
-    if (c.getTotalPlayers() != 11) {
+    if (c.getTotalPlayers() == 11) {
         while (true) {
             cout << "\t\tWhat would you like to do ??\n"
                 << "\t\t1 - Transfers \n"
@@ -2011,7 +2046,7 @@ void System::ViewPlayers() {
             if (System::isNumber(id)) {
                 int ID = stoi(id);
                 if (ID == 0) return;
-                for (auto& s : AllPlayers) {
+                for (auto& s : Current_Team->getSquad()) {
                     for (auto& x : s.second) {
                         if (x.first == ID) {
                             displayPlayers(x.second);

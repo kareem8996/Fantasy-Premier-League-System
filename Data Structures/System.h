@@ -50,14 +50,14 @@ public:
 	static bool Check_Username(string& Username);
 	static bool Check_Password(string& Password);
 	static bool Check_Email(string& Email);
-	static bool Check_EmailDatabase(string Email);
+	static bool Check_EmailDatabase(string&Email);
 	static void Pass_Encode(string& pass);
 	static bool isNumber(string s);
 		
 	//============= Registeration functions ================
 	static void RegisterUser();
 	static void RegisterAdmin();
-	static bool Check_Database(string username);
+	static bool Check_Database(string&username);
 	static bool Check_PhoneDatabase(string phone);
 	//============= login functions====================
 	static bool userLogin( string attemptedUsername, string attemptedPassword);
