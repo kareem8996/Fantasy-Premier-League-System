@@ -1,5 +1,6 @@
 #include "System.h"
 #include "iostream"
+#include <algorithm>
 #include <typeinfo>
 #include <Windows.h>
 #include <time.h>
@@ -25,6 +26,7 @@ string  System::startchoice="",
         System::menuChoice = "";
 User System::CurrUser ;
 Admin System::CurrAdmin;
+int System::CurrGameWeek = 0;
 unordered_map<int,User*> System::AllUsers;
 unordered_map<int,Admin*> System::AllAdmins;
 unordered_map<string, Club*> System::AllClubs; //name,club object
@@ -132,15 +134,29 @@ bool System::Check_Name(string& Name) {
     return true;
 }
 
-bool System::Check_Database(string username) {
-    for (auto& it : AllUsers) {
-        if (it.second->getUsername() == username)
-            return false;
-
+bool System::Check_Database(string&username) {
+    string org2 = "";
+    for (int j = 0; j < username.size(); j++) {
+        if (isalpha(username[j]))
+            org2 += char(tolower(username[j]));
+        else {
+            org2 += username[j];
+        }
     }
-    for (auto& it : AllAdmins) {
-        if (it.second->getUsername() == username)
+    username = org2;
+
+    //lowering user or admin email and comparing
+    for (auto& x : AllUsers) {
+        if (x.second->getUsername() == org2) {
+            cout << "Username Exists\n";
             return false;
+        }
+    }
+    for (auto& x : AllAdmins) {
+        if (x.second->getUsername() == org2) {
+            cout << "Username Exists\n";
+            return false;
+        }
     }
     return true;
 }
@@ -202,6 +218,13 @@ bool System::Check_PhoneDatabase(string phone) {
             return false;
         }
     }
+    for (auto& it : AllAdmins) {
+        if (it.second->getPhoneNumber() == phone)
+        {
+            cout << "This phone number is already used\n";
+            return false;
+        }
+    }
 
     return true;
 }
@@ -226,19 +249,37 @@ bool System::Check_Phone(string& Phone) {
 
 }
 
+bool System::Check_EmailDatabase(string &Email) {
+    
 
-
-bool System::Check_EmailDatabase(string Email) {
-    for (auto& it : AllUsers) {
-        if (it.second->getEmail() == Email)
-        {
+    //lowering user or admin email and comparing
+    for (auto & x: AllUsers) {
+        if (x.second->getEmail() == Email) {
+            cout << "Email Exists\n";
             return false;
         }
-
+    }
+    for (auto& x : AllAdmins) { 
+        if (x.second->getEmail() == Email) {
+            cout << "Email Exists\n";
+            return false;
+        }
     }
     return true;
 }
 bool System::Check_Email(string& Email) {
+
+    //Lowering Email written by user or admin
+    string org2 = "";
+    for (int j = 0; j < Email.size(); j++) {
+        if (isalpha(Email[j]))
+            org2 += char(tolower(Email[j]));
+        else {
+            org2 += Email[j];
+        }
+    }
+    Email = org2;
+
     int at_index = 0;
     at_index = Email.find("@");
 
@@ -337,13 +378,9 @@ void System::RegisterUser() {
                 cout << "Enter Phone Number: ";
                 cin >> Phone;
                 if (cin.fail())
-                    InputFaliure(Phone, "Please enter Phone Number: ");
-
-                if (!Check_PhoneDatabase(Phone)) {
-                    cout << "this phone already exists\n";
-                }
-
-            } while (!Check_Phone(Phone)&& !Check_PhoneDatabase(Phone));
+                    InputFaliure(Phone, "Please enter Phone Number:");
+                vPhone = Check_Phone(Phone);
+            } while (!vPhone);
             // input Email
             do {
                 cout << "Enter Your email: ";
@@ -351,14 +388,9 @@ void System::RegisterUser() {
                 if (cin.fail())
                     InputFaliure(Email, "Please enter Email:");
                 vEmail = Check_Email(Email);
-                if (!Check_EmailDatabase(Email)) {
-                    cout << "This email is used by another user. Please enter another email\n";
-                }
-            } while (!vEmail && !Check_EmailDatabase(Email));
-            cout << "Enter your team name: ";
+            } while (!vEmail);
+            cout << "Enter Team Name: ";
             cin >> TeamName;
-            if (cin.fail())
-                InputFaliure(TeamName, "Please Enter your team name: ");
             int id = AllUsers.size() + 1;
             User user = {id, Name, Email, Username, Password, Phone, 0, 0, TeamName };
             AllUsers.insert({id,&user});
@@ -465,7 +497,7 @@ void System::RegisterAdmin() {
 
 bool System::userLogin( string attemptedUsername, string attemptedPassword) {
     for (auto& it : AllUsers) {
-        if (it.second->getUsername() == attemptedPassword && it.second->getPassword()==attemptedPassword) {
+        if (it.second->getUsername() == attemptedUsername && it.second->getPassword()==attemptedPassword) {
             CurrUser = *it.second;
             return true;
         }
@@ -475,7 +507,7 @@ bool System::userLogin( string attemptedUsername, string attemptedPassword) {
 
 bool System::AdminLogin( string attemptedUsername, string attemptedPassword) {
     for (auto& it : AllAdmins) {
-        if (it.second->getUsername() == attemptedPassword && it.second->getPassword() == attemptedPassword) {
+        if (it.second->getUsername() == attemptedUsername && it.second->getPassword() == attemptedPassword) {
             CurrAdmin = *it.second;
             return true;
         }
@@ -501,6 +533,11 @@ User_Team& System::getsquad(int id)
         return *got->second;
     
 
+}
+
+User* System::getUser(int id)
+{
+    return AllUsers[id];
 }
 
 void System::Pass_Encode(string& pass) {
@@ -568,9 +605,10 @@ void System::printUserMenu() {
         << "\t\t1 - Manage Squad\n"
         << "\t\t2 - Create League\n"
         << "\t\t3 - Join League\n"
-        << "\t\t4 - Change Account Info\n"
-        << "\t\t5 - To Logout\n"
-        << "\t\t6 - To Quit the System\n";
+        << "\t\t4 - Manage League\n"
+        << "\t\t5 - Change Account Info\n"
+        << "\t\t6 - To Logout\n"
+        << "\t\t7 - To Quit the System\n";
     do {
         cout << "\tPlease enter your choice here --->\t";
         cin >> menuChoice;
@@ -593,24 +631,34 @@ void System::printUserMenu() {
         printSeprator();
         break;
     case '2':
+        printSeprator();
         createLeague();
         Sleep(5000);
         printSeprator();
         break;
     case '3':
+        printSeprator();
         joinLeague();
         Sleep(5000);
         printSeprator();
         break;
     case '4':
+        printSeprator();
+        manageLeagues();
+        Sleep(5000);
+        printSeprator();
+        break;
+    case '5':
+        printSeprator();
         ChangeAccountSettings();
         Sleep(3000);
         printSeprator();
         break;
 
-    case '5':
-
+    case '6':
+            
         do {
+            cout << "Are you sure you want to logout? (Y/N)\n";
             cin >> Logout_choice;
             if (Logout_choice.size() == 1 && isalpha(Logout_choice[0])) {
                 if (Logout_choice[0] == 'Y' || Logout_choice[0] == 'y') {
@@ -644,7 +692,7 @@ void System::printUserMenu() {
 
         } while (Logout_choice[0] != 'Y' || Logout_choice[0] != 'y' || Logout_choice[0] == 'N' || Logout_choice[0] == 'n');
         break;
-    case '6':
+    case '7':
         cout << "Are you Sure you want to Quit?\n";
         do {
             cin >> Quit_choice;
@@ -701,6 +749,7 @@ void System::printAdminMenu() {
 
 
 void System::RunSys() {
+    printSeprator();
     do {
         /*
         Start Menu
@@ -865,23 +914,6 @@ void System::RunSys() {
 
 }
 
-void System::ManageSqaudMenu(User_Team& c) {
-    
-    if (c.getTotalPlayers() != 0) {
-        cout << "\t\tWhat would you like to do ??\n"
-            << "\t\t1 - Manage Squad\n"
-            << "\t\t2 - Create League\n"
-            << "\t\t3 - Join League\n"
-            << "\t\t4 - Change Account Info\n"
-            << "\t\t7 - To Logout\n"
-            << "\t\t8 - To Quit the System\n";
-    }
-    else {
-        c.pickSquad();
-    }
-    
-
-}
 
 void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     /// <summary>
@@ -1004,7 +1036,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                             });
                         
                         p = m;
@@ -1034,7 +1067,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                             });
                         
                         p = d;
@@ -1061,7 +1095,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                             });
                         p = a;
                     }
@@ -1088,8 +1123,8 @@ void System::readPlayers() {
                            stoi(row["penalties_missed"].at(row_counter)),
                            stoi(row["bonus"].at(row_counter)),
                            stoi(row["goals_conceded"].at(row_counter)),
-                           stoi(row["own_goals"].at(row_counter))
-
+                           stoi(row["own_goals"].at(row_counter)),
+                           stoi(row["penalties_saved"].at(row_counter)),
                             });
                         p = g;
                     }
@@ -1147,7 +1182,8 @@ void System::readPlayers() {
                             stoi(row["penalties_missed"].at(row_counter)),
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
-                            stoi(row["own_goals"].at(row_counter))
+                            stoi(row["own_goals"].at(row_counter)),
+                            stoi(row["penalties_saved"].at(row_counter))
                         });
                 }
             }
@@ -1195,6 +1231,327 @@ void System::readClub()
         }
     }
 }
+string System::space2underscore(string text) {
+    for (int i = 0; i < text.size(); i++) {
+        if (text[i] == ' ')
+            text[i] = '_';
+    }
+    return text;
+
+}
+
+string System::underscore2space(string text) {
+    for (int i = 0; i < text.size(); i++) {
+        if (text[i] == '_')
+            text[i] = ' ';
+    }
+    return text;
+}
+
+void System::readUsers()
+{
+    fstream UsersFile;
+    UsersFile.open("Users.txt", ios::in);
+
+    if (UsersFile.is_open())
+    {
+        string DataLine;
+        while (UsersFile >> DataLine)
+        {
+            User* user = new User();
+            user->setID(stoi(DataLine));
+            UsersFile >> DataLine;
+            user->setName(underscore2space(DataLine));
+            UsersFile >> DataLine;
+            user->setUsername(DataLine);
+            UsersFile >> DataLine;
+            user->setPassword(DataLine);
+            UsersFile >> DataLine;
+            user->setPhoneNumber(DataLine);
+            UsersFile >> DataLine;
+            user->setEmail(DataLine);
+            UsersFile >> DataLine;
+            user->setTotalPoints(stoi(DataLine));
+            UsersFile >> DataLine;
+            user->setCurrPoints(stoi(DataLine));
+            UsersFile >> DataLine;
+            user->setTeamName(underscore2space(DataLine));
+            
+            // user->setBirthdate(DataLine);
+            AllUsers.insert(make_pair(user->getID(), user));
+        }
+        UsersFile.close();
+    }
+}
+
+void System::readAdmins()
+{
+    fstream AdminsFile;
+    AdminsFile.open("Admins.txt", ios::in);
+
+    if (AdminsFile.is_open())
+    {
+        string DataLine;
+        while (AdminsFile >> DataLine)
+        {
+            Admin* admin = new Admin();
+            admin->setID(stoi(DataLine));
+            admin->setName(underscore2space(DataLine));
+            admin->setUsername(DataLine);
+            admin->setPassword(DataLine);
+            admin->setEmail(DataLine);
+            admin->setPhoneNumber(DataLine);
+            AllAdmins.insert(make_pair(admin->getID(), admin));
+        }
+        AdminsFile.close();
+    }
+}
+
+
+void System::readUserTeams()
+{
+    fstream UserTeamsFile;
+    string line, cellData;
+
+    UserTeamsFile.open("UserTeams.txt", ios::in);
+
+    if (UserTeamsFile.is_open())
+    {
+        string DataLine;
+        while (UserTeamsFile >> DataLine)
+        {
+            int UserID = stoi(DataLine);
+            User_Team* team = new User_Team();
+            UserTeamsFile >> DataLine;
+            team->setTotalPlayers(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalAttackers(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalDefenders(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalMidfielders(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setIsGoalKeeper(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            team->setTotalBudget(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            UserTeamsFile >> DataLine;
+            map<string, int> teamCount;
+            /*teamCount.insert*/
+            while (DataLine != "==========Gameweeks==============") {
+                int count = 0;
+                string team_name;
+                stringstream str(DataLine);
+                while (getline(str, cellData, ':')) {
+                    if (count == 0) {
+                        team_name = cellData;
+                        count++;
+                    }
+                    else {
+                        teamCount.insert({ team_name,stoi(cellData) });
+                    }
+                }
+                UserTeamsFile >> DataLine;
+            }
+
+            vector<int>points;
+
+            while (DataLine != "==========EndUser==============") {
+                int count = 0;
+
+                string _;
+                stringstream str2(DataLine);
+                while (getline(str2, cellData, ':')) {
+                    if (count == 0) {
+                        _ = cellData;
+                        count++;
+                    }
+                    else {
+                        points.push_back(stoi(cellData));
+                    }
+                }
+                UserTeamsFile >> DataLine;
+            }
+                team->setTeamCount(teamCount);
+                team->setTotalPointsPerWeek(points);
+                DataLine;
+                AllUsersTeams.insert({ UserID, team });
+        }
+            UserTeamsFile.close();
+    }
+}
+
+
+
+void System::readLeagues()
+{
+    fstream UserTeamsFile;
+    string line, cellData;
+
+    UserTeamsFile.open("Leagues.txt", ios::in);
+
+    if (UserTeamsFile.is_open())
+    {
+        string DataLine;
+        while (UserTeamsFile >> DataLine)
+        {
+            League* league = new League();
+            league->setId(stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            league->setname(System::underscore2space(DataLine));
+            UserTeamsFile >> DataLine;
+            league->setIsPublic((bool)stoi(DataLine));
+            UserTeamsFile >> DataLine;
+            league->setCode(stoi(DataLine));
+            UserTeamsFile >> DataLine;//==========LeaderBoard==============
+            league->setLeagueCreator(System::getUser(stoi(DataLine)));
+            UserTeamsFile >> DataLine;
+
+            UserTeamsFile >> DataLine;//==========LeaderBoard============== skip
+
+            while (DataLine != "==========EndLeague==============") {
+                int count = 0;
+                int score;
+                stringstream str(DataLine);
+                while (getline(str, cellData, ',')) {
+                    if (count == 0) {
+                        score = stoi(cellData);
+                        count++;
+                    }
+                    else {
+                        User* u = new User();
+                        u = System::getUser(stoi(cellData));
+
+                        league->insertUser(score, u);
+                    }
+
+                }
+
+                UserTeamsFile >> DataLine;
+            }
+            AllLeagues.insert({ league->getId(),league });
+        }
+    }
+    UserTeamsFile.close();
+
+}
+
+void System::writeUsers()
+{
+    fstream UsersFile;
+    UsersFile.open("Users.txt", ios::out);
+
+    if (UsersFile.is_open())
+    {
+        unordered_map<int, User*>::iterator it;
+        it = AllUsers.begin();
+        while (it != AllUsers.end())
+        {
+            UsersFile << it->second->getID() << endl;
+            UsersFile << space2underscore(it->second->getName()) << endl;
+            UsersFile << it->second->getUsername() << endl;
+            UsersFile << it->second->getPassword() << endl;
+            UsersFile << it->second->getPhoneNumber() << endl;
+            UsersFile << it->second->getEmail() << endl;
+            UsersFile << it->second->getTotalPoints() << endl;
+            UsersFile << it->second->getCurrPoints() << endl;
+            UsersFile << it->second->getTeamName() << endl;
+            it++;
+        }
+
+
+    }
+
+    UsersFile.close();
+}
+
+void System::writeAdmins()
+{
+
+    fstream adminsFile;
+    adminsFile.open("Admins.txt", ios::out);
+
+    if (adminsFile.is_open())
+    {
+
+        unordered_map<int, Admin*>::iterator it;
+        it = AllAdmins.begin();
+        while (it != AllAdmins.end())
+        {
+            adminsFile << it->second->getID() << endl;
+            adminsFile << space2underscore(it->second->getName()) << endl;
+            adminsFile << it->second->getUsername() << endl;
+            adminsFile << it->second->getPassword() << endl;
+            adminsFile << it->second->getEmail() << endl;
+            adminsFile << it->second->getPhoneNumber() << endl;
+            it++;
+        }
+    }
+    adminsFile.close();
+}
+
+void System::writeUserTeams()
+{
+    fstream UserTeams;
+    UserTeams.open("UserTeams.txt", ios::out); //write data
+    if (UserTeams.is_open()) {
+        for (auto team = AllUsersTeams.begin(); team != AllUsersTeams.end(); team++) {
+            UserTeams << team->first<<endl; // User ID
+            UserTeams << team->second->getTotalPlayers() << endl;
+            UserTeams << team->second->getTotalAttackers() << endl;
+            UserTeams << team->second->getTotalDefenders() << endl;
+            UserTeams << team->second->getTotalMidfielders() << endl;
+            UserTeams << team->second->getIsGoalKeeper() << endl;
+            UserTeams << team->second->getTotalBudget() << endl;
+            map<string, int> teamCount = team->second->getTeamCount();
+            UserTeams << "==========UserTeamClubsCount=============="<<endl;
+            for (auto PlayersTeam = teamCount.begin(); PlayersTeam != teamCount.end(); PlayersTeam++) {
+                UserTeams << PlayersTeam->first << ":" << PlayersTeam->second<<endl;
+            }
+            UserTeams << "==========Gameweeks=============="<<endl;
+            vector<int> gameweeksPoints = team->second->getTotalPointsPerWeek();
+            for (int i =0; i <gameweeksPoints.size(); i++) {
+                UserTeams <<"GameWeek"<<CurrGameWeek-gameweeksPoints.size()+1 +   i<<":"<< gameweeksPoints[i]<< endl;
+            }
+            UserTeams << "==========EndUser=============="<<endl;
+
+
+        }
+    }
+    UserTeams.close();
+
+}
+
+void System::writeLeagues()
+{
+    fstream Leagues;
+    Leagues.open("Leagues.txt", ios::out); //write data
+    if (Leagues.is_open()) {
+        for (auto league = AllLeagues.begin(); league != AllLeagues.end(); league++) {
+            Leagues << league->first << endl; // League ID
+            Leagues << System::space2underscore(league->second->getName()) << endl;
+            Leagues << league->second->IsPublic() << endl;
+            Leagues << league->second->getcode() << endl;
+            Leagues << league->second->getLeagueCreatorID() << endl;
+            priority_queue<pair<int, pair<int, User*>>> playersLeaderBoard;
+            Leagues << "==========LeaderBoard==============\n";
+            playersLeaderBoard = league->second->getLeaderBoard();
+            int Leaderboard_count = playersLeaderBoard.size();
+            /// Score,UserID
+            for (int i = 0; i < Leaderboard_count; i++)
+            {
+                Leagues << playersLeaderBoard.top().first << "," << playersLeaderBoard.top().second.first << endl;
+                playersLeaderBoard.pop();
+
+            }
+            Leagues << "==========EndLeague==============\n";
+
+
+        }
+    }
+    Leagues.close();
+
+}
 
 void System::createLeague() {
     string League_Name;
@@ -1219,6 +1576,9 @@ void System::createLeague() {
     }
     League* NL = new League(id, League_Name,&CurrUser ,isPublic);
     AllLeagues.insert({ id,NL });
+    CurrUser.updateLeagues(id);
+    cout << "League created\n";
+
 }
 
 void System::joinLeague(){
@@ -1260,94 +1620,120 @@ void System::manageLeagues() {
     string League_option;
     string User_option;
 
-
     //Display Personal Leagues
     vector<int> personalLeagues = CurrUser.getLeagues();
-    for (int i = 0; i < personalLeagues.size(); i++) {
-        League* currentLeague = AllLeagues[personalLeagues[i]];
-        cout << currentLeague->getId() << " - " << currentLeague->getName() << endl;
-    }
+    if (personalLeagues.size() != 0) {
+        for (int i = 0; i < personalLeagues.size(); i++) {
+            League* currentLeague = AllLeagues[personalLeagues[i]];
+            cout << currentLeague->getId() << " - " << currentLeague->getName() << endl;
+        }
 
-    cout << "Choose League ID or 0 to go back\n";
-    while (true) {
-        cin >> League_option;
-        if (cin.fail())
-            InputFaliure(League_option, "Please write a valid league id");
+        cout << "Choose League ID or 0 to go back\n";
+        while (true) {
+            cin >> League_option;
+            if (cin.fail())
+                InputFaliure(League_option, "Please write a valid league id");
 
-        if (isNumber(League_option)) {
-            if (count(CurrUser.getLeagues().begin(), CurrUser.getLeagues().end(), stoi(League_option))) {
-                break;
+            if (isNumber(League_option)) {
+                if (find(personalLeagues.begin(), personalLeagues.end(),stoi( League_option)) != personalLeagues.end()) {
+                    break;
+                }
+                else {
+                    cout << "You do not have access to the league you have written its code\nWrite League ID";
+                }
+                if (stoi(League_option) == 0) return;
             }
             else {
-                cout << "You do not have access to the league you have written its code\n";
+                cout << "Please write a code that consists of numbers only\n";
             }
-            if (stoi(League_option) == 0) return;
+
+        }
+
+        cout << AllLeagues[stoi(League_option)]->getName() << endl;
+        cout << "\t\tWhat would you like to do ??\n"
+            << "\t\t1 - View Leaderboard\n";
+
+
+        if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser.getID()) {
+            cout << "\t\t2 - Invite managers to your league\n";
         }
         else {
-            cout << "Please write a code that consists of numbers only\n";
+            cout << "\t\t2 - Leave League\n";
         }
+        cout << "\t\t3 - Back\n";
+        cout << "Invitation Code is: " << AllLeagues[stoi(League_option)]->getcode() << endl;
+        while (true) {
+            cin >> User_option;
+            if (cin.fail())
+                InputFaliure(User_option, "Please write a suitable option");
+
+            if (isNumber(User_option)) {
+                if (stoi(User_option) == 1 || stoi(User_option) == 2 || stoi(User_option) == 3) {
+                    break;
+                }
+                else {
+                    cout << "Please write a suitable option";
+                }
+            }
+            else {
+                cout << "Please write a number\n";
+            }
+
+        }
+
+        League* currentLeague = AllLeagues[stoi(League_option)];
+        switch (stoi(User_option))
+        {
+        case 1:
+            currentLeague->displayLeaderboard();
+            cout << "Choose Manager you want to view or 0 to go back\n";
+            while (true) {
+                cin >> User_option;
+                if (cin.fail())
+                    InputFaliure(User_option, "Please write a suitable option");
+
+                if (isNumber(User_option)) {
+                    if (stoi(User_option) == 0) {
+                        manageLeagues();
+                    }
+                     else if (currentLeague->getLeaderBoard().size() >= stoi(User_option)) {
+                        break;
+                    }
+                    else {
+                        cout << "Please write a suitable option";
+                    }
+                }
+                else {
+                    cout << "Please write a number\n";
+                }
+
+            }
         
-    }
+            currentLeague->displayUser(stoi(User_option) - 1);
+            cout << "\n\n\n";
+            AllUsersTeams[CurrUser.getID()]->displaySquad();
+            break;
 
-    cout << AllLeagues[stoi(League_option)]->getName()<<endl;
-    cout << "\t\tWhat would you like to do ??\n"
-        << "\t\t1 - View Leaderboard\n";
+        case 2:
+            if (currentLeague->getLeagueCreatorID() == CurrUser.getID()) {
+                //Invite
 
+            }
+            else {
+                //Leave
+                currentLeague->removeUser(CurrUser.getID());
+            }
+            break;
+        case 3:
+            manageLeagues(); //return to start of manageLeagues
+            break;
 
-    if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser.getID()) {
-        cout<< "\t\t2 - Invite managers to your league\n";
+        default:
+            break;
+        }
     }
     else {
-        cout << "\t\t2 - Leave League\n";
-    }
-    cout << "\t\t3 - Back\n";
-    while (true) {
-        cin >> User_option;
-        if (cin.fail())
-            InputFaliure(User_option, "Please write a suitable option");
-
-        if (isNumber(User_option)) {
-            if (stoi(User_option) == 1 || stoi(User_option) == 2|| stoi(User_option) == 3) {
-                break;
-          }
-            else {
-                cout << "Please write a suitable option";
-            }
-        }
-        else {
-            cout << "Please write a number\n";
-        }
-
-    }
-
-    League* currentLeague = AllLeagues[stoi(League_option)];
-    switch (stoi(User_option))
-    {
-    case 1:
-        currentLeague->displayLeaderboard();
-        cout << "Choose Manager you want to view\n";
-        cin >> User_option;
-        currentLeague->displayUser(stoi(User_option) - 1);
-        cout << "\n\n\n";
-        AllUsersTeams[CurrUser.getID()]->displaySquad();
-        break;
-
-    case 2:
-        if (currentLeague->getLeagueCreatorID() == CurrUser.getID()) {
-            //Invite
-
-        }
-        else {
-            //Leave
-            currentLeague->removeUser(CurrUser.getID());
-        }
-        break;
-    case 3:
-        manageLeagues(); //return to start of manageLeagues
-        break;
-
-    default:
-        break;
+        cout << "You are not a member in any of the leagues\n";
     }
 }
 
@@ -1486,4 +1872,201 @@ void System::ChangeAccountSettings() {
             break;
         }
         ChangeAccountSettings();
+}
+
+void System::Transfers() {
+    User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
+    Current_Team->displaySquadPrice();
+
+    int totalBudget = (float)Current_Team->getTotalBudget()/10;
+    int Transfers_left = Current_Team->getTransfers();
+    cout << "Budget: " << totalBudget << endl;
+    cout << "Remaining Transfers: " << Transfers_left << endl << endl;
+    cout << "Please write id of the player you want to replace:\n";
+    string user_option;
+    string position;
+    bool flag = false;
+    while (true) {
+        cin >> user_option;
+        if (cin.fail())
+            System::InputFaliure(user_option, "write a suitable number ");
+        if (System::isNumber(user_option)) {
+            for (auto& s : Current_Team->getSquad()) {
+                for (auto& x : s.second) {
+                    if (x.second->getID() == stoi(user_option)) {
+                        if (Transfers_left == 0) {
+                            string option;
+                            cout << "Are you sure you want to replace player, you will lose 4 points. (Y/N)\n";
+                            cin >> option;
+                            if ((option != "Y" || option != "y")) {
+                                Current_Team->RemovePlayer(x.second);
+                                position = x.second->getPosition();
+                                // Reduce Points
+                                Current_Team->PunishTransfers();
+                                flag = true;
+                            }
+                                break;
+                            
+                        }
+                        else {
+                            Current_Team->RemovePlayer(x.second);
+                            position = x.second->getPosition();
+                            Current_Team->decreaseTransfers();
+                            flag = true;
+                            break;
+                        }
+                        
+                        
+                    }
+
+                }
+                if (flag) break;
+            }
+            if (flag) break;
+            else "Invalid Choice please choose someone in your team\n";
+        }
+        else {
+            cout << "Please choose a suitable option\n";
+        }
+    }
+    while (true) {
+        displayPlayers(position);
+        cout << "Budget: " << (float)Current_Team->getTotalBudget() / 10 << endl;
+        cout << "Remaining Transfers: " << Current_Team->getTransfers() << endl<<endl;
+        cout << "Choose Player Id: ";
+        string id;
+        while (true) {
+            cin >> id;
+            if (cin.fail())
+                System::InputFaliure(id, "write a suitable number ");
+            if (System::isNumber(id)) {
+                if (System::AllPlayers[position].find(stoi(id)) != System::AllPlayers[position].end()) {
+                    break;
+                }
+                else {
+                    cout << "Player does not exist\n";
+                }
+            }
+            else {
+                cout << "Please write a code consisting of only numbers\n";
+            }
+        }
+        if (!Current_Team->Player_Exist(stoi(id))) {
+
+            System::displayPlayers(System::AllPlayers[position][stoi(id)], false, "\n");
+            string Player_Option;
+            cout << "Are you sure you want to pick " << System::AllPlayers[position][stoi(id)]->getFullname() << " ?\n";
+            cin >> Player_Option;
+
+            if (Player_Option == "Y" || Player_Option == "y") {
+
+                if (Current_Team->canAddPlayerPrice(AllPlayers[position][stoi(id)])) {
+
+                    if (Current_Team->canAddPlayerCount(AllPlayers[position][stoi(id)])) {
+
+                        Current_Team->pickPlayer(AllPlayers[position][stoi(id)]);
+                        return;
+                    }
+                    else {
+                        cout << "Players limit from the same team exceeded\n";
+                    }
+                }
+                else {
+                    cout << "Player Price exceeds budget\n";
+                }
+            }
+        }
+        else {
+            cout << "You already chose this player\n";
+        }
+        Sleep(3000);
+    }
+}
+
+void System::ManageSqaudMenu(User_Team& c) {
+
+    if (c.getTotalPlayers() == 11) {
+        while (true) {
+            cout << "\t\tWhat would you like to do ??\n"
+                << "\t\t1 - Transfers \n"
+                << "\t\t2 - Veiw Players \n"
+                << "\t\t3 - Back \n";
+            string user_option;
+            int User_option;
+            while (true) {
+                cin >> user_option;
+                if (cin.fail())
+                    System::InputFaliure(user_option, "write a suitable number ");
+                if (System::isNumber(user_option)) {
+                    User_option = stoi(user_option);
+                    if (User_option == 0) {
+                        return;
+                    }
+                    else if (User_option <= 3) {
+                        break;
+                    }
+                }
+                else {
+                    cout << "Please write a suitable option\n";
+                }
+            }
+            if (User_option == 1) {
+                Transfers();
+            }
+            else if (User_option == 2) {
+                ViewPlayers();
+            }
+            else if (User_option == 3) return;
+
+            else {
+                cout << "Invalid Option\n\n";
+            }
+        }
+
+    }
+    else {
+        c.pickSquad();
+    }
+
+
+
+}
+
+void System::ViewPlayers() {
+    User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
+    while (true) {
+        Current_Team->displaySquad();
+        string id,user_option;
+        bool flag = false;
+        while (true) {
+        cout << "Choose Player to view or press 0 to go back: ";
+            cin >> id;
+            if (cin.fail())
+                System::InputFaliure(id, "write a suitable number ");
+            if (System::isNumber(id)) {
+                int ID = stoi(id);
+                if (ID == 0) return;
+                for (auto& s : Current_Team->getSquad()) {
+                    for (auto& x : s.second) {
+                        if (x.first == ID) {
+                            displayPlayers(x.second);
+                            cout << "Press anything to go back\n";
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) break;
+                }
+
+                if (!flag)
+                    cout << "Player does not exist\n";
+                else break;
+            }
+            else {
+                cout << "Please write a code consisting of only numbers\n";
+            }
+        }
+        cin >> user_option;
+    }
+    
 }

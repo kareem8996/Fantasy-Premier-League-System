@@ -24,6 +24,7 @@ public:
 		registerChoice ,
 		loginChoice ,
 		menuChoice ;
+	static int CurrGameWeek;
 	static User CurrUser;
 	static Admin CurrAdmin;
 	static unordered_map<int, User*> AllUsers;//User id, User object
@@ -49,28 +50,28 @@ public:
 	static bool Check_Username(string& Username);
 	static bool Check_Password(string& Password);
 	static bool Check_Email(string& Email);
-	static bool Check_EmailDatabase(string Email);
+	static bool Check_EmailDatabase(string&Email);
 	static void Pass_Encode(string& pass);
 	static bool isNumber(string s);
 		
 	//============= Registeration functions ================
 	static void RegisterUser();
 	static void RegisterAdmin();
-	static bool Check_Database(string username);
+	static bool Check_Database(string&username);
 	static bool Check_PhoneDatabase(string phone);
 	//============= login functions====================
 	static bool userLogin( string attemptedUsername, string attemptedPassword);
 	static bool AdminLogin(string attemptedUsername, string attemptedPassword);
 	//================Extra functions=======================
 	static User_Team& getsquad(int id);
-	
-	
-	
+	static User* getUser(int id);
+	static string space2underscore(string text);
+	static string underscore2space(string text);
 	//================User Menus=======================
 	static void ManageSqaudMenu(User_Team& c);
 	static void ChangeAccountSettings();
-
-
+	static void Transfers();
+	static void ViewPlayers();
 	// ======================Player Display=======================
 	static void displayPlayers(string position);
 	static void displayPlayers(Player *p, bool flag, string delim);
@@ -78,7 +79,15 @@ public:
 	//==================File Handling:Read========================
 	static void readPlayers();
 	static void readClub();
-
+	static void readUsers();
+	static void readAdmins();
+	static void readUserTeams();
+	static void readLeagues();
+	//==================File Handling:Write========================
+	static void writeUsers();
+	static void writeAdmins();
+	static void writeUserTeams();
+	static void writeLeagues();
 	//===================Leagues============================================
 	static void createLeague();
 	static void joinLeague();

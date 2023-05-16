@@ -4,9 +4,13 @@ int main()
 {
 
     
-    /*System::RunSys();*/
+    
     System::readClub();
     System::readPlayers();
+    System::readUsers();
+    System::readAdmins();
+    System::readLeagues();
+    System::readUserTeams();
     System::RunSys();
     
 }

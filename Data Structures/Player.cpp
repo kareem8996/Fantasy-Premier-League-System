@@ -9,6 +9,7 @@ Player::Player() {
 	Price = 0;
 	Position = "";
 	Status = "";
+
 }
 Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus) {
 	ID = id;
@@ -18,7 +19,11 @@ Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoint
 	Price = PlayerPrice;
 	Position = PlayerPosition;
 	Status = PlayerStatus;
-	
+
+	TotalGoals = 0;
+	TotalAssists = 0;
+	TotalYellowCards = 0;
+	TotalRedCards = 0;
 }
 
 string Player::getFullname() {

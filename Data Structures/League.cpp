@@ -23,7 +23,24 @@ void League::setname(string n)
 string League::getName()
 {
     return name;
-};
+}
+void League::setId(int id)
+{
+	this->id = id;
+}
+void League::setIsPublic(bool is)
+{
+	isPublic = is;
+}
+void League::setCode(int code)
+{
+	this->code = code;
+}
+void League::setLeagueCreator(User*u)
+{
+	this->league_creator = u;
+}
+;
 
 int League::getId()
 {
@@ -45,7 +62,7 @@ void League::displayLeaderboard()
 	const pair<int, pair<int, User*>>* p;
 	p = &leaderBoard.top();
 
-	cout << "Position\tManager\tPoints";
+	cout << "Position\tManager\tPoints\n";
 	for (int i = 0; i < leaderBoard.size(); i++) {
 		cout <<i+1<<"\t" << (p + i)->second.second->getName() <<"\t"<< (p + i)->first<<endl;
 	}
@@ -89,6 +106,11 @@ void League::insertUser(User* u) {
 	this->leaderBoard.push({ 0, { u->getID(),u} });
 }
 
+void League::insertUser(int score, User*u)
+{
+	this->leaderBoard.push({ score, { u->getID(),u} });
+}
+
 bool League::userExists(User* u) {
 
 	const pair<int, pair<int, User*>>* p = &leaderBoard.top();
@@ -104,6 +126,16 @@ bool League::userExists(User* u) {
 int League::getLeagueCreatorID()
 {
 	return league_creator->getID();
+}
+
+priority_queue<pair<int, pair<int, User*>>> League::getLeaderBoard()
+{
+	return leaderBoard;
+}
+
+void League::setLeaderBoard(priority_queue<pair<int, pair<int, User*>>> leaderboard)
+{
+	this->leaderBoard = leaderboard;
 }
 
 

@@ -20,6 +20,10 @@ public:
     League(int id, string name, User* u, bool IsPublic,int=generateCode());
     void setname(string n);
     string getName();
+    void setId(int id);
+    void setIsPublic(bool is);
+    void setCode(int code);
+    void setLeagueCreator(User*u);
     int getId();
     int getcode();
     bool IsPublic();
@@ -28,9 +32,12 @@ public:
     void removeUser(int id);
     int static generateCode();
     void insertUser(User*);
+    void insertUser(int score,User*);
 
     bool userExists(User* u);
 
     int getLeagueCreatorID();
+    priority_queue<pair<int, pair<int, User*>>> getLeaderBoard();
+    void setLeaderBoard(priority_queue<pair<int, pair<int, User*>>>);
 };
 

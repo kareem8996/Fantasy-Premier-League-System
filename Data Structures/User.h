@@ -65,4 +65,5 @@ public:
     int getID();
 
 
+    void updateLeagues(int);
 };

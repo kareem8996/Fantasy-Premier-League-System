@@ -20,7 +20,8 @@ private:
 		penalties_missed,
 		bonus,
 		goals_conceded,
-		own_goals;
+		own_goals,
+		penalties_saved;
 public:
 	gameWeek();
 	gameWeek(string status,
@@ -36,7 +37,8 @@ public:
 		int penalties_missed,
 		int bonus,
 		int goals_conceded,
-		int own_goals);
+		int own_goals,
+		int penalties_saved);
 
 	void setStatus(string s);
 	void setValue(int n);
@@ -77,6 +79,9 @@ public:
 	// Getter and setter for own_goals
 	int getOwnGoals();
 	void setOwnGoals(int own);
+
+	int getPenaltiesSaved();
+	void getPenaltiesSaved(int saved);
 
 };
 

@@ -102,14 +102,14 @@ vector<int> User::getLeagues() {
 
 void User::displaydata()
 {
-    cout<<getName() << endl;
-    cout<<getEmail()<<endl;
-    cout<<getUsername()<<endl;
-    cout<<getPhoneNumber()<<endl;
-    cout<<getBirthdate()<<endl;
-    cout<<getTotalPoints()<<endl;
-    cout<<getCurrPoints()<<endl;
-    cout<<getTeamName()<<endl;
+    cout<<"Name: "<<getName() << endl;
+    cout<<"Email: "<<getEmail() << endl;
+    cout<<"Username: "<<getUsername() << endl;
+    cout<<"Phone Number: " << getPhoneNumber() << endl;
+    //cout<<"Birthdate" << getBirthdate() << endl;
+    cout<<"Total Points: " << getTotalPoints() << endl;
+    cout<<"Current Gameweek Points: " << getCurrPoints() << endl;
+    cout<<"Team Name: " << getTeamName() << endl;
 }
 
 void User::setID(int id) {
@@ -118,4 +118,9 @@ void User::setID(int id) {
 
 int User::getID() {
     return id;
+}
+
+void User::updateLeagues(int leagueID)
+{
+    this->leagues.push_back(leagueID);
 }

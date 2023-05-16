@@ -11,6 +11,12 @@ gameWeek::gameWeek()
 	this->red_cards_gameweek = 0;
 	this->yellow_cards_gameweek = 0;
 	this->saves_gameweek = 0;
+	this->minutes_played = 0;
+	this->penalties_missed = 0;
+	this->bonus = 0;
+	this->goals_conceded = 0;
+	this->own_goals = 0;
+	this->penalties_saved = 0;
 }
 
 gameWeek::gameWeek(
@@ -27,7 +33,8 @@ gameWeek::gameWeek(
 	int penalties_missed,
 	int bonus,
 	int goals_conceded,
-	int own_goals
+	int own_goals,
+	int penalties_saved
 	)
 {
 	this->status = status;
@@ -44,6 +51,7 @@ gameWeek::gameWeek(
 	this->bonus = bonus;
 	this->goals_conceded = goals_conceded;
 	this->own_goals = own_goals;
+	this->penalties_saved = penalties_saved;
 }
 
 void gameWeek::setStatus(string s)
@@ -184,4 +192,13 @@ int gameWeek::getOwnGoals() {
 // Setter for own_goals
 void gameWeek::setOwnGoals(int own) {
 	own_goals = own;
+}
+
+int gameWeek::getPenaltiesSaved() {
+	return penalties_saved;
+}
+
+// Setter for own_goals
+void gameWeek::getPenaltiesSaved(int saved) {
+	penalties_saved = saved;
 }

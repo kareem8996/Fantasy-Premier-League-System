@@ -17,9 +17,10 @@ private:
 	int totalBudget;
 	map<string, int> teamCount; // this is a map to count number of player picked in each team ex: "Chelsea", 2
 	vector<int> totalPointsPerWeek; // vector containing total points collected each week 
-
+	int Transfers_left;
 
 public:
+	User_Team();
 	void setUserTeamID(int);
 	int  getUserTeamID();
 	User_Team(int id);
@@ -60,10 +61,22 @@ public:
 	int getTotalBudget();
 	void setTotalBudget(int budget);
 
+	
+
 	vector<int> getTotalPointsPerWeek();
 	void setTotalPointsPerWeek(vector<int>);
 	void updateTotalPointsPerWeek(int);
 
+	map<string, int> getTeamCount();
+	void setTeamCount(map<string, int>);
 	void displaySquad();
+	void displaySquadPrice();
+	int getTransfers();
+	void setTransfers(int t);
+	void increaseTransfers();
+	void decreaseTransfers();
+	void PunishTransfers();
+	unordered_map<string, unordered_map<int, Player*>> getSquad();
+
 };
 
