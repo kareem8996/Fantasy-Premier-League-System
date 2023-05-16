@@ -59,5 +59,16 @@ unordered_map<int, Player*> Club::getSquad() {
 	return Squad;
 }
 
+void Club::DisplaySquad()
+{
+	int c = 1;
+	for (auto player : Squad) {
+
+		cout<< c << "\t" << player.first << "\t" << player.second->getFullname()<<endl;
+		c++;
+
+	}
+}
+
 
 
