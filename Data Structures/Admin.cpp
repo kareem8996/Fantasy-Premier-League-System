@@ -376,20 +376,31 @@ void Admin::edit_team_menu() {
 
 
 
-		validate1:
-		for (auto club : System::AllClubs) {
-			cout << club.first << endl;
-		}
+	DisplayClubs:
+
+		System::displayClubs();
 
 		cout << "enter club name";
 		cin >> club_name ; 
+
 		if (System::AllClubs.find(club_name) == System::AllClubs.end())
-			goto validate1;
+			goto DisplayClubs;
 
+	Display_squad:
 
-		//System::AllClubs[club_name]->deletePlayer()
-		
-		
+		System::AllClubs[club_name]->DisplaySquad();
+		string player_id;
+
+		cout << "Please enter Player ID";
+		cin >> player_id;
+
+		unordered_map<int, Player*> squad = System::AllClubs[club_name]->getSquad();
+
+		if (squad.find(stoi(player_id)) == squad.end())
+			goto Display_squad;
+
+		System::AllClubs[club_name]->deletePlayer(stoi(player_id));
+
 		break;
 
 

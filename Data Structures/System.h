@@ -75,7 +75,7 @@ public:
 	// ======================Player Display=======================
 	static void displayPlayers(string position);
 	static void displayPlayers(Player *p, bool flag, string delim);
-
+	static void displayClubs();
 	//==================File Handling:Read========================
 	static void readPlayers();
 	static void readClub();

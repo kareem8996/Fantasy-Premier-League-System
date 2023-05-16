@@ -966,6 +966,15 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     System::printSeprator_for_errors();
 }
 
+void System::displayClubs()
+{
+
+    for (auto club : System::AllClubs) {
+        cout << club.first << endl;
+    }
+
+}
+
 void System::displayPlayers(string position) {
 
     /// <summary>
