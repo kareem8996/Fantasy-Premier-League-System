@@ -367,15 +367,34 @@ void Admin::edit_team_menu() {
 
 		break;
 	}
+	
 
 
-		  /*case 2:
-
-		  break;*/
-
-
+	case 2: {
+		
+		string club_name;
 
 
+
+		validate1:
+		for (auto club : System::AllClubs) {
+			cout << club.first << endl;
+		}
+
+		cout << "enter club name";
+		cin >> club_name ; 
+		if (System::AllClubs.find(club_name) == System::AllClubs.end())
+			goto validate1;
+
+
+		//System::AllClubs[club_name]->deletePlayer()
+		
+		
+		break;
+
+
+
+	}
 	default:
 		cout << "enter valid number";
 	}
