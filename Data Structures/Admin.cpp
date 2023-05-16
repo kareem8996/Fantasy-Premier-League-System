@@ -314,8 +314,13 @@ void Admin::edit_team_menu() {
 		<< "\t\t1 - add palyer to club \n"
 		<< "\t\t2 - remove palyer from club \n";
 	cin >> option;
-	switch (option) {
+	do
+	{
+		cin >> option;
 
+	} while (option != 1 || option != 1);
+	switch (option) {
+		
 	case 1: {
 		cout << "enter players id";
 		cin >> id;
@@ -391,16 +396,17 @@ void Admin::edit_team_menu() {
 		System::AllClubs[club_name]->DisplaySquad();
 		string player_id;
 
-		cout << "Please enter Player ID";
+		cout << "Please enter Player ID (or -1 to go back)";
 		cin >> player_id;
 
 		unordered_map<int, Player*> squad = System::AllClubs[club_name]->getSquad();
 
 		if (squad.find(stoi(player_id)) == squad.end())
 			goto Display_squad;
-
+		else if (player_id == "-1")
+			break;
 		System::AllClubs[club_name]->deletePlayer(stoi(player_id));
-
+		
 		break;
 
 
