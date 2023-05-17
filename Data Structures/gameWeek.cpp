@@ -202,3 +202,11 @@ int gameWeek::getPenaltiesSaved() {
 void gameWeek::getPenaltiesSaved(int saved) {
 	penalties_saved = saved;
 }
+
+
+void gameWeek::increaseValue() {
+	value += 1;
+}
+void gameWeek::decreaseValue() {
+	value -= 1;
+}

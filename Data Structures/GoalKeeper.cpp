@@ -1,7 +1,7 @@
 #include "GoalKeeper.h"
 
-GoalKeeper::GoalKeeper(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus,int TotalSaves,int TotalCleanSheets) 
-	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus){
+GoalKeeper::GoalKeeper(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints,string PlayerPosition, string PlayerStatus,int TotalSaves,int TotalCleanSheets) 
+	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, PlayerStatus){
 	this->TotalCleanSheets = TotalCleanSheets;
 	this->TotalSaves = TotalSaves;
 }

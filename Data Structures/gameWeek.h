@@ -83,5 +83,9 @@ public:
 	int getPenaltiesSaved();
 	void getPenaltiesSaved(int saved);
 
+	void increaseValue();
+
+	void decreaseValue();
+
 };
 

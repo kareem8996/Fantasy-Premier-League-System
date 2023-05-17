@@ -152,10 +152,10 @@ void option_choise(int option,Player *&p) {
 	case 1:
 		cout << "do you want to increase or decrease " << p->getFullname() << " price \n";
 		cout << "\t\t1 - increase price \n" << "\t\t2 - decrease price \n";
-		if (x == 1)
+		/*if (x == 1)
 			p->increasePrice();
 		else if (x==2)
-			p->decreasePrice();
+			p->decreasePrice();*/
 		break;
 	case 2:
 	{cout << "what is the new team's name \n";
@@ -235,7 +235,7 @@ void Admin::edit_player_menu()
 			if (Player_Option == "Y" || Player_Option == "y") {
 				//assign temp var to obj
 
-				edit_player_menu();
+				edit_player_options();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["GKP"][id]);
@@ -256,7 +256,7 @@ void Admin::edit_player_menu()
 		cout << "Are you sure you want to pick " << System::AllPlayers["DEF"][id]->getFullname() << " ?\n";
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
-			edit_player_menu();
+			edit_player_options();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["DEF"][id]);
@@ -274,7 +274,7 @@ void Admin::edit_player_menu()
 		cout << "Are you sure you want to pick " << System::AllPlayers["MID"][id]->getFullname() << " ?\n";
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
-			edit_player_menu();
+			edit_player_options();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["MID"][id]);
@@ -293,7 +293,7 @@ void Admin::edit_player_menu()
 		cin >> Player_Option;
 		if (Player_Option == "Y" || Player_Option == "y") {
 
-			edit_player_menu();
+			edit_player_options();
 			cin >> option;
 			//switch
 			option_choise(option, System::AllPlayers["FWD"][id]);
@@ -319,125 +319,125 @@ void edit_club_options() {
 }
 
 
-void Admin::edit_team_menu() {
-	int option;
-	int id;
-	string PlayerName;
-	string PlayerTeam;
-	int PlayerTotalPoints;
-	int PlayerPrice;
-	string PlayerPosition;
-	string PlayerStatus;
-	int TotalCleanSheets;
-	int TotalSaves;
-	string PlayerPositionoption=NULL;
-	cout << "\t\tWhat would you like to do ??\n"
-		<< "\t\t1 - add palyer to club \n"
-		<< "\t\t2 - remove palyer from club \n";
-	cin >> option;
-	do
-	{
-		cin >> option;
-
-	} while (option != 1 || option != 1);
-	switch (option) {
-		
-	case 1: {
-		cout << "enter players id";
-		cin >> id;
-		cout << "enter players name";
-		cin >> PlayerName;
-		cout << "enter players total points";
-		cin >> PlayerTotalPoints;
-		cout << "enter players price";
-		cin >> PlayerPrice;
-		cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n";
-		cin >> PlayerPositionoption;
-		cout << "enter players status";
-		cin >> PlayerStatus;
-		cout << "enter players Total Clean Sheets";
-		cin >> TotalCleanSheets;
-
-
-
-
-
-	validate:
-		switch (PlayerPositionoption[0])//add the temp to the file
-		{
-		case '1': {
-			cout << "enter goalkeeper's total saves";
-			cin >> TotalSaves;
-			GoalKeeper golytemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalSaves, TotalCleanSheets);
-			break; }
-		case '2': {
-			Defender deftemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
-			break;
-		}
-		case '3': {
-
-			Midfielder midtemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
-			break;
-		}
-		case '4': {
-
-			Attacker atktemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus);
-			break;
-		}
-		default:
-			cout << "enter valid number";
-			cin >> PlayerPositionoption;
-			goto validate;
-			break;
-		}
-
-		break;
-	}
-	
-
-
-	case 2: {
-		
-		string club_name;
-
-
-
-	DisplayClubs:
-
-		System::displayClubs();
-
-		cout << "enter club name";
-		cin >> club_name ; 
-
-		if (System::AllClubs.find(club_name) == System::AllClubs.end())
-			goto DisplayClubs;
-
-	Display_squad:
-
-		System::AllClubs[club_name]->DisplaySquad();
-		string player_id;
-
-		cout << "Please enter Player ID (or -1 to go back)";
-		cin >> player_id;
-
-		unordered_map<int, Player*> squad = System::AllClubs[club_name]->getSquad();
-
-		if (squad.find(stoi(player_id)) == squad.end())
-			goto Display_squad;
-		else if (player_id == "-1")
-			break;
-		System::AllClubs[club_name]->deletePlayer(stoi(player_id));
-		
-		break;
-
-
-
-	}
-	default:
-		cout << "enter valid number";
-	}
-
-}
+//void Admin::edit_team_menu() {
+//	int option;
+//	int id;
+//	string PlayerName;
+//	string PlayerTeam;
+//	int PlayerTotalPoints;
+//	int PlayerPrice;
+//	string PlayerPosition;
+//	string PlayerStatus;
+//	int TotalCleanSheets;
+//	int TotalSaves;
+//	string PlayerPositionoption=NULL;
+//	cout << "\t\tWhat would you like to do ??\n"
+//		<< "\t\t1 - add palyer to club \n"
+//		<< "\t\t2 - remove palyer from club \n";
+//	cin >> option;
+//	do
+//	{
+//		cin >> option;
+//
+//	} while (option != 1 || option != 1);
+//	switch (option) {
+//		
+//	case 1: {
+//		cout << "enter players id";
+//		cin >> id;
+//		cout << "enter players name";
+//		cin >> PlayerName;
+//		cout << "enter players total points";
+//		cin >> PlayerTotalPoints;
+//		cout << "enter players price";
+//		cin >> PlayerPrice;
+//		cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n";
+//		cin >> PlayerPositionoption;
+//		cout << "enter players status";
+//		cin >> PlayerStatus;
+//		cout << "enter players Total Clean Sheets";
+//		cin >> TotalCleanSheets;
+//
+//
+//
+//
+//
+//	validate:
+//		switch (PlayerPositionoption[0])//add the temp to the file
+//		{
+//		case '1': {
+//			cout << "enter goalkeeper's total saves";
+//			cin >> TotalSaves;
+//			GoalKeeper golytemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalSaves, TotalCleanSheets);
+//			break; }
+//		case '2': {
+//			Defender deftemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
+//			break;
+//		}
+//		case '3': {
+//
+//			Midfielder midtemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus, TotalCleanSheets);
+//			break;
+//		}
+//		case '4': {
+//
+//			Attacker atktemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPrice, PlayerPosition, PlayerStatus);
+//			break;
+//		}
+//		default:
+//			cout << "enter valid number";
+//			cin >> PlayerPositionoption;
+//			goto validate;
+//			break;
+//		}
+//
+//		break;
+//	}
+//	
+//
+//
+//	case 2: {
+//		
+//		string club_name;
+//
+//
+//
+//	DisplayClubs:
+//
+//		System::displayClubs();
+//
+//		cout << "enter club name";
+//		cin >> club_name ; 
+//
+//		if (System::AllClubs.find(club_name) == System::AllClubs.end())
+//			goto DisplayClubs;
+//
+//	Display_squad:
+//
+//		System::AllClubs[club_name]->DisplaySquad();
+//		string player_id;
+//
+//		cout << "Please enter Player ID (or -1 to go back)";
+//		cin >> player_id;
+//
+//		unordered_map<int, Player*> squad = System::AllClubs[club_name]->getSquad();
+//
+//		if (squad.find(stoi(player_id)) == squad.end())
+//			goto Display_squad;
+//		else if (player_id == "-1")
+//			break;
+//		System::AllClubs[club_name]->deletePlayer(stoi(player_id));
+//		
+//		break;
+//
+//
+//
+//	}
+//	default:
+//		cout << "enter valid number";
+//	}
+//
+//}
 	//club
 	
 
@@ -473,5 +473,21 @@ void Admin::displaydata()
 	cout << "Email: " << getEmail() << endl;
 	cout << "Username: " << getUsername() << endl;
 	cout << "Phone Number: " << getPhoneNumber() << endl;
+
+}
+
+void Admin::startNewGameweek()
+{
+	System::CurrGameWeek++;
+	for (auto& x : System::AllUsersTeams) {
+		x.second->StartNewtTotalPointsPerWeek();
+	}
+	for (auto& x : System::AllPlayers) {
+		for (auto& y :x.second) {
+			y.second->updatePlayer_History();
+		}
+
+	}
+		
 
 }

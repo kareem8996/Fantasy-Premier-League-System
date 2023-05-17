@@ -566,6 +566,15 @@ void System::loginInput() {
         cin >> attemptedUserName;
         if (cin.fail())
             InputFaliure(attemptedUserName, "Try to enter Your username");
+        string org2 = "";
+        for (int j = 0; j < attemptedUserName.size(); j++) {
+            if (isalpha(attemptedUserName[j]))
+                org2 += char(tolower(attemptedUserName[j]));
+            else {
+                org2 += attemptedUserName[j];
+            }
+        }
+        attemptedUserName = org2;
 
         cout << "Enter password: \n";
         
@@ -586,7 +595,9 @@ void System::loginInput() {
                 cin >> tAgain;
                 if (cin.fail())
                     InputFaliure(tAgain, "Please enter your choice correctly");
-            } while (tAgain != "Y" || tAgain != "y" || tAgain != "N" || tAgain != "n");
+            } while ((tAgain != "Y" && tAgain != "y") && (tAgain != "N" && tAgain != "n"));
+
+            if(tAgain == "N" || tAgain == "n") loginChoice[0] = '3';
 
         }
         printSeprator();
@@ -594,7 +605,162 @@ void System::loginInput() {
     } while (tAgain!= "N" && tAgain != "n");
     printSeprator();
 }
+void System::printAdminMenu() {
+    string Logout_choice = "";
+    string Quit_choice = "";
+    do {
+        cout << "Hello " << CurrAdmin.getName() << endl;
+        cout << "\t\tWhat would you like to do ??\n"
+            << "\t\t1 - Edit Users\n"
+            << "\t\t2 - Edit Leagues\n"
+            << "\t\t3 - Edit Club\n"
+            << "\t\t4 - Edit Player\n"
+            << "\t\t5 - Start New Gameweek\n"
+            << "\t\t6 - Change Account Info\n"
+            << "\t\t7 - To Logout\n"
+            << "\t\t8 - To Quit the System\n";
+        do {
+            cout << "\tPlease enter your choice here --->\t";
+            cin >> menuChoice;
+            if (cin.fail())
+                InputFaliure(menuChoice, choice_error);
+            if (menuChoice.size() == 1 && isdigit(menuChoice[0])) {
+                break;
+            }
+            else {
+                printSeprator_for_errors();
+                cout << "\t\t\tPlease enter a digit\n";
+                printSeprator_for_errors();
+            }
+        } while (true);
 
+        switch (menuChoice[0])
+        {
+        case '1':
+            printSeprator();
+            CurrAdmin.edit_user();
+            printSeprator();
+            break;
+        case '2':
+            printSeprator();
+            CurrAdmin.edit_leagues();
+            Sleep(5000);
+            printSeprator();
+            break;
+        case '3':
+            printSeprator();
+            //CurrAdmin.edit_team_menu();
+            Sleep(5000);
+            printSeprator();
+            break;
+        case '4':
+            printSeprator();
+            CurrAdmin.edit_player_menu();
+            Sleep(5000);
+            printSeprator();
+            break;
+        case '5':
+            printSeprator();
+            //CurrAdmin.startNewGameweek();
+            Sleep(3000);
+            printSeprator();
+            break;
+
+        case '6':
+            ChangeAccountSettings(CurrAdmin);
+            break;
+
+        case '7':
+
+            do {
+                cout << "Are you sure you want to logout? (Y/N)\n";
+                cin >> Logout_choice;
+                if (Logout_choice.size() == 1 && isalpha(Logout_choice[0])) {
+                    if (Logout_choice[0] == 'Y' || Logout_choice[0] == 'y') {
+                        cout << "Logging you out";
+                        for (int i = 0; i < 3; i++) {
+                            Sleep(1000);
+                            cout << ". ";
+                        }
+                        loginChoice = "3";
+                        cout << "\n--------------------Thank You for using our system!--------------------\n";
+                        Sleep(1000);
+                        return;
+                        break;
+                    }
+                    else if (Logout_choice[0] == 'N' || Logout_choice[0] == 'n') {
+                        Sleep(1000);
+                        printSeprator();
+                        break;
+                    }
+                    else {
+
+                        printSeprator_for_errors();
+                        cout << "\t\tPlease enter a (Y/N)\n";
+                        printSeprator_for_errors();
+                    }
+                }
+                else {
+                    printSeprator_for_errors();
+                    cout << "\t\tPlease enter a (Y/N)\n";
+                    printSeprator_for_errors();
+                }
+
+            } while (Logout_choice[0] != 'Y' || Logout_choice[0] != 'y' || Logout_choice[0] == 'N' || Logout_choice[0] == 'n');
+            break;
+        case '8':
+            cout << "Are you Sure you want to Quit?\n";
+            do {
+                cin >> Quit_choice;
+                if (Quit_choice.size() == 1 && isalpha(Quit_choice[0])) {
+                    if (Quit_choice[0] == 'Y' || Quit_choice[0] == 'y') {
+                        cout << "Exiting the system";
+
+                        for (int i = 0; i < 3; i++) {
+                            Sleep(1000);
+                            cout << ". ";
+                        }
+                        cout << "\n--------------------Thank You for using our system!--------------------\n";
+                        writeAdmins();
+                        writeUsers();
+                        writeUserTeams();
+                        writeLeagues();
+                        writeClub();
+                        Sleep(1000);
+                        exit(0);
+                        break;
+                    }
+                    else if (Quit_choice[0] == 'N' || Quit_choice[0] == 'n') {
+                        Sleep(1000);
+                        printSeprator();
+                        break;
+                    }
+                    else {
+
+                        printSeprator_for_errors();
+                        cout << "\t\tPlease enter (Y/N)\n";
+                        printSeprator_for_errors();
+                    }
+                }
+                else {
+                    printSeprator_for_errors();
+                    cout << "\t\tPlease enter (Y/N)\n";
+                    printSeprator_for_errors();
+                }
+
+            } while (Quit_choice[0] != 'Y' || Quit_choice[0] != 'y' || Quit_choice[0] == 'N' || Quit_choice[0] == 'n');
+            break;
+        
+        default:
+            printSeprator();
+            cout << "\tSorry this is an invalid choice please enter again.\n";
+            printSeprator();
+            break;
+        }
+
+    } while (menuChoice != "5");
+
+}
 void System::printUserMenu() {
     string Logout_choice = "";
     string Quit_choice = "";
@@ -670,6 +836,7 @@ void System::printUserMenu() {
                     loginChoice = "3";
                     cout << "\n--------------------Thank You for using our system!--------------------\n";
                     Sleep(1000);
+                    return;
                     break;
                 }
                 else if (Logout_choice[0] == 'N' || Logout_choice[0] == 'n') {
@@ -705,7 +872,11 @@ void System::printUserMenu() {
                         cout << ". ";
                     }
                     cout << "\n--------------------Thank You for using our system!--------------------\n";
-                  
+                    writeAdmins();
+                    writeUsers();
+                    writeUserTeams();
+                    writeLeagues();
+                    writeClub();
                     Sleep(1000);
                     exit(0);
                     break;
@@ -742,11 +913,7 @@ void System::printUserMenu() {
     
 }
 
-void System::printAdminMenu() {
-    cout << "Hello " << CurrAdmin.getName()<<endl;
-    CurrAdmin.edit_user();
-    cin >> loginChoice;
-}
+
 
 
 void System::RunSys() {
@@ -884,6 +1051,12 @@ void System::RunSys() {
                     /*writeAllPatients(allPatients);
                     writeAllDiseases(allDiseases);
                     writeAllDoctors(allDoctors);*/
+                    writeAdmins();
+                    writeUsers();
+                    writeUserTeams();
+                    writeLeagues();
+                    writeClub();
+
                     exit(0);
                     break;
                 default:
@@ -900,6 +1073,11 @@ void System::RunSys() {
             /*writeAllPatients(allPatients);
             writeAllDiseases(allDiseases);
             writeAllDoctors(allDoctors);*/
+            writeAdmins();
+            writeUsers();
+            writeUserTeams();
+            writeLeagues();
+            writeClub();
             exit(0);
 
         }
@@ -907,7 +1085,7 @@ void System::RunSys() {
         else {
             startchoice = "";
             printSeprator_for_errors();
-            cout << "\t\tSorry this is an invalid choice please enter again.\n";
+            /*cout << "\t\tSorry this is an invalid choice please enter again.\n";*/
             Sleep(3000);
             printSeprator();
         }
@@ -927,7 +1105,7 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     cout << "ID: " << p->getID() << delim;
     cout << "Name: " << p->getFullname() << delim;
     cout << "Club: " << p->getClub() << delim;
-    cout << "Price: " << (float)p->getPrice()/10 << delim;
+    cout << "Price: " << (float)p->getPlayer_History().back().getValue() / 10 << delim;
     cout << "Current Week Points: " << p->getPlayer_History().back().getTotal_points_gameweek() << delim;
     cout << "Total Points: " << p->getTotalPoints() << delim;
     if (!flag) {
@@ -1026,7 +1204,6 @@ void System::readPlayers() {
                             row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
                             row["name"].at(row_counter),
                             stoi(row["gameweek_points"].at(row_counter)),
-                            stoi(row["value"].at(row_counter)),
                             row["position"].at(row_counter),
                             row["status"].at(row_counter),
                             stoi(row["total_clean_sheets"].at(row_counter)));
@@ -1057,7 +1234,6 @@ void System::readPlayers() {
                             row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
                             row["name"].at(row_counter),
                             stoi(row["gameweek_points"].at(row_counter)),
-                            stoi(row["value"].at(row_counter)),
                             row["position"].at(row_counter),
                             row["status"].at(row_counter),
                             stoi(row["total_clean_sheets"].at(row_counter)));
@@ -1088,7 +1264,7 @@ void System::readPlayers() {
                             stoi(row["id_player"].at(row_counter)),
                             row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
                             row["name"].at(row_counter), stoi(row["gameweek_points"].at(row_counter)), 
-                            stoi(row["value"].at(row_counter)), row["position"].at(row_counter),
+                            row["position"].at(row_counter),
                             row["status"].at(row_counter));
 
                         a->updatePlayer_History({
@@ -1115,7 +1291,7 @@ void System::readPlayers() {
                             stoi(row["id_player"].at(row_counter)),
                             row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
                             row["name"].at(row_counter), stoi(row["gameweek_points"].at(row_counter)), 
-                            stoi(row["value"].at(row_counter)), row["position"].at(row_counter), 
+                            row["position"].at(row_counter), 
                             row["status"].at(row_counter), stoi(row["total_saves"].at(row_counter)),  
                             stoi(row["total_clean_sheets"].at(row_counter)));
 
@@ -1178,6 +1354,7 @@ void System::readPlayers() {
                         }
                     }
                 }
+
                     p->updatePlayer_History({
                             row["status"].at(row_counter),
                             stoi(row["value"].at(row_counter)),
@@ -1629,6 +1806,21 @@ void System::joinLeague(){
     if (!found) {
         cout << "No league found with the code you wrote\n";
    }
+}
+
+void System::writeClub()
+{
+    fstream clubFile;
+    clubFile.open("C:\\writeClub\\writeClub.csv", ios::out); //write data
+    if (clubFile.is_open())
+    {
+        clubFile << "ClubID,clubName,TotalPoints\n";
+        for (auto& x : System::AllClubs)
+        {
+            clubFile << x.second->getClubID() << "," << x.first << "," << x.second->getLeaguePoints() << endl;
+        }
+        clubFile.close();
+    }
 }
 
 void System::manageLeagues() {
@@ -2179,3 +2371,5 @@ void System::ViewPlayers() {
     }
     
 }
+
+

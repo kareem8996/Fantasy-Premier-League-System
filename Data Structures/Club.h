@@ -37,4 +37,5 @@ public:
 	unordered_map<int, Player*> getSquad();
 
 	void DisplaySquad();
+	int getClubID();
 };	

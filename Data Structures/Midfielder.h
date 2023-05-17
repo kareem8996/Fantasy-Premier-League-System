@@ -9,7 +9,7 @@ private:
 	int TotalCleanSheets;
 
 public:
-	Midfielder(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus,int TotalCleanSheets);
+	Midfielder(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, string PlayerStatus,int TotalCleanSheets);
 	int CalculatePoints();
 	bool getCurrentCleanSheet();
 	void setCurrentCleanSheet(bool Cleansheet);

@@ -6,17 +6,15 @@ Player::Player() {
 	FullName = "";
 	Team = "";
 	TotalPoints = 0;
-	Price = 0;
 	Position = "";
 	Status = "";
 
 }
-Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, int PlayerPrice, string PlayerPosition, string PlayerStatus) {
+Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, string PlayerStatus) {
 	ID = id;
 	FullName = PlayerName;
 	Team = PlayerTeam;
 	TotalPoints = PlayerTotalPoints;
-	Price = PlayerPrice;
 	Position = PlayerPosition;
 	Status = PlayerStatus;
 
@@ -51,18 +49,7 @@ void Player::setClub(string PlayerTeam) {
 //}
 
 
-int Player::getPrice() {
-	return Price;
-}
-void Player::setPrice(int PlayerPrice) {
-	Price = PlayerPrice;
-}
-void Player::increasePrice() {
-	Price += 1;
-}
-void Player::decreasePrice() {
-	Price -= 1;
-}
+
 
 
 int Player::getTotalPoints() {
@@ -191,5 +178,20 @@ vector<gameWeek> Player::getPlayer_History()
 void Player::updatePlayer_History(gameWeek hist)
 {
 	Player_History.push_back(hist);
+}
+void Player::updatePlayer_History()
+{
+	gameWeek game;
+	Player_History.push_back(game);
+}
+
+void Player::increasePrice()
+{
+	Player_History.back().increaseValue();
+}
+
+void Player::decreasePrice()
+{
+	Player_History.back().decreaseValue();
 }
 

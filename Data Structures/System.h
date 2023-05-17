@@ -89,6 +89,7 @@ public:
 	static void writeAdmins();
 	static void writeUserTeams();
 	static void writeLeagues();
+	static void writeClub();
 	//===================Leagues============================================
 	static void createLeague();
 	static void joinLeague();

@@ -71,4 +71,6 @@ void Club::DisplaySquad()
 }
 
 
-
+int Club::getClubID() {
+	return ID;
+}

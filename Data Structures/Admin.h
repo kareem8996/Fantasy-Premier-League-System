@@ -50,7 +50,8 @@ public:
 	void edit_leagues();
 
 	void displaydata();
-
+	//===================== ChangeGameweeks=========================
+	void startNewGameweek();
 
 
 };

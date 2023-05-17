@@ -38,7 +38,7 @@ bool User_Team::canAddPlayerPosition(string pos) {
 }
 
 bool User_Team::canAddPlayerPrice(Player*p) {
-	return 0 <= (totalBudget - p->getPrice()); 
+	return 0 <= (totalBudget - p->getPlayer_History().back().getValue());
 }
 
 bool User_Team::canAddPlayerCount(Player*p) {
@@ -145,7 +145,7 @@ void User_Team::pickPlayer(Player*p) {
 	/// this function updates all User_Team variables
 	/// </summary>
 	/// <param name="p">Player object</param>
-	totalBudget -= p->getPrice();
+	totalBudget -= p->getPlayer_History().back().getValue();
 
 	teamCount[p->getClub()]++;
 
@@ -169,7 +169,7 @@ void User_Team::RemovePlayer(Player*p) {
 	/// this function removes player from squad and updates User_Team variables
 	/// </summary>
 	/// <param name="p">Player object</param>
-	totalBudget += p->getPrice();
+	totalBudget += p->getPlayer_History().back().getValue();
 
 	teamCount[p->getClub()]--;
 
@@ -264,7 +264,14 @@ void User_Team::setTotalPointsPerWeek(vector<int> t) {
 	totalPointsPerWeek = t;
 }
 void User_Team::updateTotalPointsPerWeek(int points) {
-	totalPointsPerWeek.push_back(points);
+	if(totalPointsPerWeek.size()==0) 
+		totalPointsPerWeek.push_back(0);
+	else
+		totalPointsPerWeek.back() = points;
+}
+
+void User_Team::StartNewtTotalPointsPerWeek() {
+	totalPointsPerWeek.push_back(0);
 }
 
 map<string, int> User_Team::getTeamCount()
@@ -305,7 +312,7 @@ void User_Team::displaySquadPrice()
 	for (auto& t : Squad) {
 		cout << "----- " << t.first << " ------" << endl;
 		for (auto& p : t.second) {
-			cout << p.second->getID()<<" - "<< p.second->getFullname() << "\t" << (float)p.second->getPrice()/10 << " Price\n";
+			cout << p.second->getID()<<" - "<< p.second->getFullname() << "\t" << (float)p.second->getPlayer_History().back().getValue() / 10 << " Price\n";
 		}
 	}
 }
