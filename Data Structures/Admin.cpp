@@ -446,7 +446,23 @@ void Admin::edit_team_menu() {
 //===================== Update User Account Data=========================
 
 
-	void Admin::edit_user() { cout <<"ss"; }
+	void Admin::edit_user() { 
+		string user_name;
+		User tmp;
+		for (auto user : System::AllUsers) {
+			cout << user.first << "\t" << user.second->getName()<<endl;
+	}
+		display_user:
+		cout << "\nenter user id\n";
+		cin >> user_name;
+
+		if (System::AllUsers.find(stoi(user_name)) == System::AllUsers.end())
+			goto display_user;
+
+
+		tmp = *System::AllUsers[stoi(user_name)];
+		System::ChangeAccountSettings(tmp);
+	}
 //===================== Update League Data=========================
 
 void Admin::edit_leagues() {}

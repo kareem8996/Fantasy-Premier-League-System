@@ -12,5 +12,4 @@ int main()
     System::readLeagues();
     System::readUserTeams();
     System::RunSys();
-    
 }
