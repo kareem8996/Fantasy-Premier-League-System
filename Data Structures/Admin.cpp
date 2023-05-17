@@ -19,19 +19,12 @@ Admin::Admin(int id,string name, string email, string Adminname, string password
 }
 Admin::Admin() {}
 
-void Admin::setID(int id) {
-	this->id = id;
-}
-
-int Admin::getID() {
-	return id;
-}
-
 bool Admin::setPhoneNumber(string phone_number) {
 	bool vPhone;
-	
-	vPhone =System::Check_Phone(phone_number);
+
+	vPhone = System::Check_Phone(phone_number);
 	if (vPhone) {
+		phoneNumber = phone_number;
 		cout << "Your Phone number changed Successfully";
 		return true;
 	}
@@ -45,32 +38,41 @@ bool Admin::setPhoneNumber(string phone_number) {
 string Admin::getPhoneNumber() {
 	return phoneNumber;
 }
+void Admin::setID(int id)
+{
+	this->id = id;
+}
+int Admin::getID()
+{
+	return id;
+}
 void Admin::setName(string name) {
 	bool VName;
-	
+
 	VName = System::Check_Name(name);
 	if (VName) {
-		cout << "Your Phone number changed Successfully";
+		cout << "Your Name changed Successfully";
 		this->name = name;
 	}
 
 	else {
-		cout << "Couldn't change your pohne number";
+		cout << "Couldn't change Name";
 
 	}
 }
 void Admin::setEmail(string email)
 {
 	bool vEmail;
-	
+
 	vEmail = System::Check_Email(email);
 	if (vEmail) {
-		cout << "Your Phone number changed Successfully";
+		this->email = email;
+		cout << "Your Email changed Successfully";
 
 	}
 
 	else {
-		cout << "Couldn't change your pohne number";
+		cout << "Couldn't change your Email";
 
 	}
 
@@ -78,15 +80,16 @@ void Admin::setEmail(string email)
 void Admin::setUsername(string username)
 {
 	bool vUserName;
-	
+
 	vUserName = System::Check_Username(username);
 	if (vUserName) {
-		cout << "Your Phone number changed Successfully";
+		this->userName = username;
+		cout << "Your Username changed Successfully";
 
 	}
 
 	else {
-		cout << "Couldn't change your pohne number";
+		cout << "Couldn't change your username";
 
 	}
 
@@ -98,7 +101,25 @@ string Admin::getEmail()
 {
 	return email;
 }
-void Admin::setPassword(string password) {
+void Admin::setPassword(string pass, string conpass) {
+	if (pass == conpass) {
+		if (pass == getUsername())
+			cout << "Sorry password can not be as the username";
+		else if (pass == getPassword())
+			cout << "Sorry this is your old password";
+		else
+			password = pass;
+
+	}
+	else {
+		cout << "Sorry password does not match";
+
+	}
+}
+
+void Admin::setPassword(string pass)
+{
+	password = pass;
 }
 
 string Admin::getUsername()
@@ -429,3 +450,12 @@ void Admin::edit_team_menu() {
 //===================== Update League Data=========================
 
 void Admin::edit_leagues() {}
+
+void Admin::displaydata()
+{
+	cout << "Name: " << getName() << endl;
+	cout << "Email: " << getEmail() << endl;
+	cout << "Username: " << getUsername() << endl;
+	cout << "Phone Number: " << getPhoneNumber() << endl;
+
+}
