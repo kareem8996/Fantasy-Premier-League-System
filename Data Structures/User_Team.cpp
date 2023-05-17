@@ -257,21 +257,28 @@ void User_Team::setTotalBudget(int budget) {
 }
 
 
-vector<int> User_Team::getTotalPointsPerWeek() {
-	return totalPointsPerWeek;
+unordered_map<int, pair<vector<pair<string, int>>, int >> User_Team::getTotalPointsPerWeek() {
+	/*vector<int> totalPointsPerWeek;
+	for (auto weekPoints : squadPerweek) {
+		totalPointsPerWeek.push_back(weekPoints.second.second);
+	}*/
+	return squadPerweek;
 }
-void User_Team::setTotalPointsPerWeek(vector<int> t) {
-	totalPointsPerWeek = t;
+void User_Team::setTotalPointsPerWeek(unordered_map<int, pair<vector<pair<string, int>>, int >> squad_points_Hist) {
+	squadPerweek = squad_points_Hist;
 }
-void User_Team::updateTotalPointsPerWeek(int points) {
-	if(totalPointsPerWeek.size()==0) 
-		totalPointsPerWeek.push_back(0);
+void User_Team::updateTotalPointsPerWeek(int points=0) {
+	
+	vector<pair<string, int>> emptySqaud;
+	if (squadPerweek.empty())
+		squadPerweek.insert({System::CurrGameWeek,make_pair(emptySqaud ,points)});
 	else
-		totalPointsPerWeek.back() = points;
+		squadPerweek[System::CurrGameWeek].second = points;
 }
 
 void User_Team::StartNewtTotalPointsPerWeek() {
-	totalPointsPerWeek.push_back(0);
+	vector<pair<string, int>> emptySqaud;
+	squadPerweek.insert({ System::CurrGameWeek,make_pair(emptySqaud ,0) });
 }
 
 map<string, int> User_Team::getTeamCount()
@@ -284,25 +291,29 @@ void User_Team::setTeamCount(map<string, int>teams)
 	teamCount = teams;
 }
 
-void User_Team::displaySquad()
+void User_Team::displaySquad() /// Last Gameweek squad
 {
 	int points;
-	if (totalPointsPerWeek.size() != 0)
-		points = totalPointsPerWeek.back();
+	if (!squadPerweek.empty())
+		points = squadPerweek[System::CurrGameWeek].second;
 	else points = 0;
 
 	cout << "Total Points: " << points << endl<<endl;
-	for (auto& t : Squad) {
-		cout << "----- " << t.first << " ------" << endl;
+	for (auto& player : squadPerweek[System::CurrGameWeek].first) {
+		cout << "----- " << player.first << " ------" << endl; /// postion
 
-		for (auto& p : t.second) {
-			if (points != 0)
-			cout <<p.first<<" - "<< p.second->getFullname() << "\t" << p.second->getPlayer_History().back().getTotal_points_gameweek() << " Points\n";
-			else {
-				cout << p.first << " - " << p.second->getFullname() << "\t 0 Points\n";
+		//System::AllPlayers[player.first][player.second]
 
-			}
+		if (points != 0)
+		cout<< player.second<<" - "
+			<< System::AllPlayers[player.first][player.second]->getFullname() << "\t" 
+			<< System::AllPlayers[player.first][player.second]->getPlayer_History().back().getTotal_points_gameweek() 
+			<< " Points\n";
+		else {
+			cout << player.second << " - " 
+				<< System::AllPlayers[player.first][player.second]->getFullname() << "\t 0 Points\n";
 		}
+		
 	}
 }
 void User_Team::displaySquadPrice()
@@ -334,11 +345,34 @@ void User_Team::decreaseTransfers() {
 
 void User_Team::PunishTransfers()
 {
-	if (totalPointsPerWeek.size() == 0) updateTotalPointsPerWeek(-4);
-	else totalPointsPerWeek.back() -= 4;
+	if (squadPerweek.empty()) updateTotalPointsPerWeek(-4);
+	else squadPerweek[System::CurrGameWeek].second -= 4;
 }
 
-unordered_map<string, unordered_map<int, Player*>> User_Team::getSquad()
+unordered_map<string, unordered_map<int, Player*>> User_Team::getCurrentSquad()
 {
 	return Squad;
+}
+
+void User_Team::setSquad(unordered_map<string, unordered_map<int, Player*>> s) {
+
+	Squad = s;
+
+}
+
+vector<pair<string, int>> User_Team::getLastSquad()
+{
+	
+		return squadPerweek[System::CurrGameWeek-1].first;
+}
+
+void User_Team::StartNewGameWeek()
+{
+	vector<pair<string, int>> squadIds;
+	for (auto& player : Squad) {
+		for (auto& x : player.second)
+			squadIds.push_back({ player.first,x.first});
+
+	}
+	squadPerweek.insert({ System::CurrGameWeek,{squadIds,0} });
 }
