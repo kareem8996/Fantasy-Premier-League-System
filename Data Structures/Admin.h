@@ -26,8 +26,8 @@ public:
 	void setEmail(string email);
 	void setUsername(string username);
 	bool setPhoneNumber(string phone_number);
-	void setPassword(string password);
-
+	void setPassword(string pass, string conpass);
+	void setPassword(string pass);
 	
 	string getName();
 	string getEmail();
@@ -48,6 +48,8 @@ public:
 	void edit_user();
 	//===================== Update League Data=========================
 	void edit_leagues();
+
+	void displaydata();
 
 
 

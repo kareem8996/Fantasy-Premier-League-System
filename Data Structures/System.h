@@ -69,7 +69,8 @@ public:
 	static string underscore2space(string text);
 	//================User Menus=======================
 	static void ManageSqaudMenu(User_Team& c);
-	static void ChangeAccountSettings();
+	static void ChangeAccountSettings(User& CurrUser);
+	static void ChangeAccountSettings(Admin& CurrAdmin);
 	static void Transfers();
 	static void ViewPlayers();
 	// ======================Player Display=======================
