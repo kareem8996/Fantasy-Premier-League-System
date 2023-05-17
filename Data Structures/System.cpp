@@ -1530,7 +1530,10 @@ void System::readUserTeams()
             UserTeamsFile >> DataLine;
             map<string, int> teamCount;
             /*teamCount.insert*/
-            while (DataLine != "==========Gameweeks==============") {
+
+
+
+            while (DataLine != "==========CurrentSquad==============") { //Reading Team clubs counts
                 int count = 0;
                 string team_name;
                 stringstream str(DataLine);
@@ -1545,28 +1548,88 @@ void System::readUserTeams()
                 }
                 UserTeamsFile >> DataLine;
             }
-
-            vector<int>points;
-
-            while (DataLine != "==========EndUser==============") {
+            unordered_map<string, unordered_map<int, Player*>> currsquad;
+            currsquad.insert({ "GKP", {  } });
+            currsquad.insert({ "FWD", {  } });
+            currsquad.insert({ "DEF", {  } });
+            currsquad.insert({ "MID", {  } });
+            while (DataLine != "==========EndCurrentSquad===============") { //Reading Current squad
                 int count = 0;
-
-                string _;
-                stringstream str2(DataLine);
-                while (getline(str2, cellData, ':')) {
+                string postion;
+                stringstream str(DataLine);
+                while (getline(str, cellData, ':')) {
                     if (count == 0) {
-                        _ = cellData;
+                        postion = cellData;
                         count++;
                     }
-                    else {
-                        points.push_back(stoi(cellData));
+                    else  {
+                        currsquad[postion].insert({{stoi(cellData),AllPlayers[postion][stoi(cellData)]}});
                     }
                 }
                 UserTeamsFile >> DataLine;
             }
+
+            UserTeamsFile >> DataLine;          //Reading ==========Gameweeks==============
+            UserTeamsFile >> DataLine;         //Reading Gameweek:20:points:100
+
+            
+
+            unordered_map<int, pair<vector < pair<string, int>>, int >> SquadHistory;
+            string weekNum;
+            string ponits;
+            vector < pair<string, int>> weeksqaud;
+            bool weekPointsExtracted = false;
+            bool SquadExtracted = false;
+
+            while (DataLine != "==========EndGameweeks==============") { //Reading Current squad
+                int count = 0;
+
+                string _;
+                stringstream str2(DataLine);
+                while (getline(str2, cellData, ':')&& !weekPointsExtracted) {
+                    if (count  == 1) {
+                        weekNum= cellData;
+                        count++;
+                    }
+                    else if (count == 4) {
+                        ponits= cellData;
+                        count++;
+                        weekPointsExtracted = true;
+                    }
+                    count++;
+                }
+                while (weekPointsExtracted && DataLine != "==========EndSquad===============") {
+                    UserTeamsFile >> DataLine;     //GKP:10
+                    string postion;
+                    string playerId;
+                    int count = 0;
+                    stringstream str3(DataLine);
+                    while (getline(str3, cellData, ':')) {
+                        if (count == 0) {
+                            postion = cellData;
+                            count++;
+                        }
+                        else {
+                            playerId = cellData;
+                            weeksqaud.push_back({ postion,stoi(playerId) });
+                            
+                        }
+
+                    }
+
+                }
+                if (DataLine == "==========EndSquad===============") {
+                    weekPointsExtracted = false;
+                    SquadHistory.insert({ stoi(weekNum),{weeksqaud,stoi(ponits)} });
+                }
+
+                UserTeamsFile >> DataLine;     //==========Squad===============
+            }
+                UserTeamsFile >> DataLine;     //==========EndUser==============
                 team->setTeamCount(teamCount);
-                team->setTotalPointsPerWeek(points);
-                DataLine;
+                team->setSquad(currsquad);
+                team->setTotalPointsPerWeek(SquadHistory);
+                
                 AllUsersTeams.insert({ UserID, team });
         }
             UserTeamsFile.close();
@@ -1700,11 +1763,29 @@ void System::writeUserTeams()
             for (auto PlayersTeam = teamCount.begin(); PlayersTeam != teamCount.end(); PlayersTeam++) {
                 UserTeams << PlayersTeam->first << ":" << PlayersTeam->second<<endl;
             }
-            UserTeams << "==========Gameweeks=============="<<endl;
-            vector<int> gameweeksPoints = team->second->getTotalPointsPerWeek();
-            for (int i =0; i <gameweeksPoints.size(); i++) {
-                UserTeams <<"GameWeek"<<CurrGameWeek-gameweeksPoints.size()+1 +   i<<":"<< gameweeksPoints[i]<< endl;
+            
+            UserTeams << "==========CurrentSquad=============="<<endl;
+
+            unordered_map<string, unordered_map<int, Player*>> currsquad=team->second->getCurrentSquad();
+            for (auto Squad : currsquad) {                     /// Getting all Current Squad
+                for(auto player:Squad.second)
+                    UserTeams <<  Squad.first << ":" << player.first<< endl;
+                UserTeams << "==========EndCurrentSquad===============\n";
             }
+            UserTeams << "==========Gameweeks=============="<<endl;
+            unordered_map<int, pair<vector<pair<string, int>>, int >> gameweeksPoints = team->second->getTotalPointsPerWeek();
+            for (auto weeksquad: gameweeksPoints) {                     /// Getting all gameweeks for the team 
+                
+                UserTeams <<"GameWeek:"<<weeksquad.first<<":Points:"<< weeksquad.second.second<< endl;
+                UserTeams << "==========Squad===============\n";
+                for (auto player:weeksquad.second.first) {
+                    
+                    UserTeams << player.first << ":" << player.second<<endl;
+
+                }
+                UserTeams << "==========EndSquad===============\n";
+            }
+            UserTeams << "==========EndGameweeks=============="<<endl;
             UserTeams << "==========EndUser=============="<<endl;
 
 
@@ -2192,7 +2273,7 @@ void System::Transfers() {
         if (cin.fail())
             System::InputFaliure(user_option, "write a suitable number ");
         if (System::isNumber(user_option)) {
-            for (auto& s : Current_Team->getSquad()) {
+            for (auto& s : Current_Team->getCurrentSquad()) {
                 for (auto& x : s.second) {
                     if (x.second->getID() == stoi(user_option)) {
                         if (Transfers_left == 0) {
@@ -2333,7 +2414,7 @@ void System::ManageSqaudMenu(User_Team& c) {
 
 }
 
-void System::ViewPlayers() {
+void System::ViewPlayers() { // Last gameweek SQUAD
     User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
     while (true) {
         Current_Team->displaySquad();
@@ -2347,15 +2428,16 @@ void System::ViewPlayers() {
             if (System::isNumber(id)) {
                 int ID = stoi(id);
                 if (ID == 0) return;
-                for (auto& s : Current_Team->getSquad()) {
-                    for (auto& x : s.second) {
-                        if (x.first == ID) {
-                            displayPlayers(x.second);
+                
+                for (auto& s : Current_Team->getLastSquad()) {
+                    
+                        if (s.second== ID) {
+                            displayPlayers(AllPlayers[s.first][s.second]);
                             cout << "Press anything to go back\n";
                             flag = true;
                             break;
                         }
-                    }
+                    
                     if (flag) break;
                 }
 

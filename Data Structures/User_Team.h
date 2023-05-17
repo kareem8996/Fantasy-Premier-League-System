@@ -16,7 +16,8 @@ private:
 	bool isGoalKeeper; //was GoalKeeper picked
 	int totalBudget;
 	map<string, int> teamCount; // this is a map to count number of player picked in each team ex: "Chelsea", 2
-	vector<int> totalPointsPerWeek; // vector containing total points collected each week 
+	//vector<int> totalPointsPerWeek; // vector containing total points collected each week 
+	unordered_map<int , pair<vector<pair<string, int>> , int >> squadPerweek; // {#gameweek, {{{"GKP",player_id},{"MID",player_id},{"ATK",player_id}},100 point}
 	int Transfers_left;
 	
 public:
@@ -63,8 +64,8 @@ public:
 
 	
 
-	vector<int> getTotalPointsPerWeek();
-	void setTotalPointsPerWeek(vector<int>);
+	unordered_map<int, pair<vector<pair<string, int>>, int >> getTotalPointsPerWeek();
+	void setTotalPointsPerWeek(unordered_map<int, pair<vector<pair<string, int>>, int >>);
 	void updateTotalPointsPerWeek(int);
 
 	void StartNewtTotalPointsPerWeek();
@@ -78,7 +79,9 @@ public:
 	void increaseTransfers();
 	void decreaseTransfers();
 	void PunishTransfers();
-	unordered_map<string, unordered_map<int, Player*>> getSquad();
-
+	unordered_map<string, unordered_map<int, Player*>> getCurrentSquad();
+	void setSquad(unordered_map<string, unordered_map<int, Player*>> s);
+	vector < pair<string, int>> getLastSquad();
+	void StartNewGameWeek();
 };
 
