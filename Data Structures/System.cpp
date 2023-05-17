@@ -426,7 +426,7 @@ void System::RegisterAdmin() {
         cout << "Enter your Full name: ";
         getline(cin, Name);
         if (cin.fail())
-            InputFaliure(Name, "Please Enter your Full name:");
+            InputFaliure(Name, "Please Enter your Full name: ");
         test_name = Check_Name(Name);
     } while (test_name != true);
 
@@ -436,7 +436,7 @@ void System::RegisterAdmin() {
             cout << "Enter Username: ";
             getline(cin, Username);
             if (cin.fail())
-                InputFaliure(Username, "Please Enter your Username:");
+                InputFaliure(Username, "Please Enter your Username: ");
             test_name = Check_Username(Username);
         } while (test_name != true);
 
@@ -449,10 +449,10 @@ void System::RegisterAdmin() {
                 do {
                     cin >> Password;
                     if (cin.fail())
-                        InputFaliure(Password, "Please enter your Password:");
+                        InputFaliure(Password, "Please enter your Password: ");
                     if (Password == Username) {
                         Check_Password = false;
-                        cout << "The password is the same as your username\nPlease enter another password:";
+                        cout << "The password is the same as your username\nPlease enter another password: ";
                     }
                     else
                         Check_Password = true;
@@ -469,15 +469,15 @@ void System::RegisterAdmin() {
                 cout << "Enter Phone Number: ";
                 cin >> Phone;
                 if (cin.fail())
-                    InputFaliure(Phone, "Please enter Phone Number:");
+                    InputFaliure(Phone, "Please enter Phone Number: ");
                 vPhone = Check_Phone(Phone);
             } while (!vPhone);
             // input Email
             do {
-                cout << "Enter Your email";
+                cout << "Enter Your email: ";
                 cin >> Email;
                 if (cin.fail())
-                    InputFaliure(Email, "Please enter Email:");
+                    InputFaliure(Email, "Please enter Email: ");
                 vEmail = Check_Email(Email);
             } while (!vEmail);
             int id = AllAdmins.size() + 1;
@@ -743,7 +743,8 @@ void System::printUserMenu() {
 }
 
 void System::printAdminMenu() {
-    cout << "Hello " << CurrAdmin.getName();
+    cout << "Hello " << CurrAdmin.getName()<<endl;
+    CurrAdmin.edit_user();
     cin >> loginChoice;
 }
 
@@ -1305,10 +1306,15 @@ void System::readAdmins()
         {
             Admin* admin = new Admin();
             admin->setID(stoi(DataLine));
+            AdminsFile >> DataLine;
             admin->setName(underscore2space(DataLine));
+            AdminsFile >> DataLine;
             admin->setUsername(DataLine);
+            AdminsFile >> DataLine;
             admin->setPassword(DataLine);
+            AdminsFile >> DataLine;
             admin->setEmail(DataLine);
+            AdminsFile >> DataLine;
             admin->setPhoneNumber(DataLine);
             AllAdmins.insert(make_pair(admin->getID(), admin));
         }
@@ -1800,7 +1806,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
             cout << "Write new name\n";
             cin >> changing;
             if (cin.fail())
-                InputFaliure(changing, "Please enter new name");
+                InputFaliure(changing, "Please enter new name ");
         } while (!Check_Name(changing));
         CurrUser.setName(changing);
 
@@ -1810,7 +1816,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
             cout << "Write new username\n";
             cin >> changing;
             if (cin.fail())
-                InputFaliure(changing, "Please enter new username");
+                InputFaliure(changing, "Please enter new username ");
 
             if (!Check_Database(changing)) {
                 cout << "this username already exists\n";
@@ -1821,15 +1827,15 @@ void System::ChangeAccountSettings(User& CurrUser) {
 
     case 3:
         do {
-            cout << "Write new password\n";
+            cout << "Write new password \n";
             cin >> changing;
             if (cin.fail())
-                InputFaliure(changing, "Please enter your Password:");
+                InputFaliure(changing, "Please enter your Password: ");
             if (changing != CurrUser.getUsername()) {
                 break;
             }
             else
-                cout << "The password is the same as your username\nPlease enter another password:";
+                cout << "The password is the same as your username\nPlease enter another password: ";
         } while (true);
         do {
             cout << "Renter password: ";
@@ -1849,7 +1855,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
             cout << "Enter Your email: ";
             cin >> changing;
             if (cin.fail())
-                InputFaliure(changing, "Please enter Email:");
+                InputFaliure(changing, "Please enter Email: ");
         } while (!Check_Email(changing));
         CurrUser.setEmail(changing);
         break;
@@ -1920,7 +1926,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         cout << "Enter your Name\n";
         cin >> changing;
         if (cin.fail())
-            InputFaliure(changing, "Please enter new name");
+            InputFaliure(changing, "Please enter new name ");
         CurrAdmin.setName(changing);
 
         break;
@@ -1928,7 +1934,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         cout << "Write new username\n";
         cin >> changing;
         if (cin.fail())
-            InputFaliure(changing, "Please enter new username");
+            InputFaliure(changing, "Please enter new username ");
         CurrAdmin.setUsername(changing);
         break;
 
@@ -1937,7 +1943,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         cout << "Write new password\n";
         cin >> changing;
         if (cin.fail())
-            InputFaliure(changing, "Please enter your Password:");
+            InputFaliure(changing, "Please enter your Password: ");
 
         cout << "Renter password: ";
         cin >> reenter_password;
@@ -1952,7 +1958,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         cout << "Enter Your email: ";
         cin >> changing;
         if (cin.fail())
-            InputFaliure(changing, "Please enter Email:");
+            InputFaliure(changing, "Please enter Email: ");
         CurrAdmin.setEmail(changing);
         break;
 
