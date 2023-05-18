@@ -13,7 +13,7 @@ private:
 	string Name;
 	unordered_map<int, Player*> Squad;
 	int LeaguePoints;
-	vector<int> Fixtures;
+	vector<int> Fixtures;// fixture ID
 public:
 	Club(int,string);
 	void setName(string Name);

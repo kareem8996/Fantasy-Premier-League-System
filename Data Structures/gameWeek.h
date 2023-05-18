@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include"fixture.h"
 using namespace std;
 class gameWeek
 {
@@ -16,12 +17,15 @@ private:
 		saves_gameweek,
 
 
+
 		minutes_played,
 		penalties_missed,
 		bonus,
 		goals_conceded,
 		own_goals,
 		penalties_saved;
+	bool wasHome;
+	Fixture match;
 public:
 	gameWeek();
 	gameWeek(string status,
@@ -63,7 +67,7 @@ public:
 	// Getter and setter for minutes_played
 	int getMinutesPlayed();
 	void setMinutesPlayed(int minutes);
-
+	
 	// Getter and setter for penalties_missed
 	int getPenaltiesMissed();
 	void setPenaltiesMissed(int penalties);
@@ -87,5 +91,10 @@ public:
 
 	void decreaseValue();
 
+	void setWashome(bool);
+	bool WasHome();
+	void setFixture(int,int,int,int,int);
+	Fixture getFixture();
+	
 };
 
