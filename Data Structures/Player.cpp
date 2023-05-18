@@ -185,6 +185,12 @@ void Player::updatePlayer_History()
 	Player_History.push_back(game);
 }
 
+void Player::StartNewGameWeek()
+{
+	Player_History.back().setTotal_points_gameweek (this->CalculatePoints());
+	updatePlayer_History();
+}
+
 void Player::increasePrice()
 {
 	Player_History.back().increaseValue();

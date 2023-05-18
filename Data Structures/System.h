@@ -24,7 +24,7 @@ public:
 		registerChoice ,
 		loginChoice ,
 		menuChoice ;
-	static int CurrGameWeek;
+	static int CurrGameWeek; // Gameweek that will be played
 	static User CurrUser;
 	static Admin CurrAdmin;
 	static unordered_map<int, User*> AllUsers;//User id, User object

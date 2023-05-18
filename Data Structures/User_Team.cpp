@@ -291,18 +291,16 @@ void User_Team::setTeamCount(map<string, int>teams)
 	teamCount = teams;
 }
 
-void User_Team::displaySquad() /// Last Gameweek squad
+void User_Team::displaySquad(int week=System::CurrGameWeek-1) /// Display Gameweek squad
 {
 	int points;
 	if (!squadPerweek.empty())
-		points = squadPerweek[System::CurrGameWeek].second;
+		points = squadPerweek[week].second;
 	else points = 0;
 
 	cout << "Total Points: " << points << endl<<endl;
-	for (auto& player : squadPerweek[System::CurrGameWeek].first) {
+	for (auto& player : squadPerweek[week].first) {
 		cout << "----- " << player.first << " ------" << endl; /// postion
-
-		//System::AllPlayers[player.first][player.second]
 
 		if (points != 0)
 		cout<< player.second<<" - "
@@ -360,10 +358,10 @@ void User_Team::setSquad(unordered_map<string, unordered_map<int, Player*>> s) {
 
 }
 
-vector<pair<string, int>> User_Team::getLastSquad()
+vector<pair<string, int>> User_Team::getWeekSquad(int week = System::CurrGameWeek-1)
 {
 	
-		return squadPerweek[System::CurrGameWeek-1].first;
+		return squadPerweek[week].first;
 }
 
 void User_Team::StartNewGameWeek()
@@ -376,3 +374,30 @@ void User_Team::StartNewGameWeek()
 	}
 	squadPerweek.insert({ System::CurrGameWeek,{squadIds,0} });
 }
+
+int User_Team::displayGameweeks()
+{
+	string gameweekChoice;
+	cout << "Select which gameweek you want to display its squad\n";
+	for (auto& week : squadPerweek) {
+
+		cout << "Gameweek "<< week.first <<endl;
+	
+	}
+	gameweekInput:
+	cout << "Please enter your choice";
+	cin >> gameweekChoice;
+	if (cin.fail())
+		System::InputFaliure(gameweekChoice, "Please enter your choice");
+	if (squadPerweek.find(stoi(gameweekChoice)) == squadPerweek.end()) {
+		cout << "Invalid choice\n";
+		goto gameweekInput;
+
+	}
+	else {
+		return stoi(gameweekChoice);
+	}
+
+}
+
+

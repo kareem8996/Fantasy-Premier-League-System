@@ -1855,38 +1855,65 @@ void System::createLeague() {
 }
 
 void System::joinLeague(){
-    string code;
-    cout << "Enter Invitation Code you received";
-    while (true) {
-        cin >> code;
-        if (cin.fail())
-            InputFaliure(menuChoice, "write a suitable code consisting of only numbers");
-        if (isNumber(code)) {
-            break;
+    string choice;
+    cout << "\t\tWhat would you like to do ??\n"
+        << "\t\t1 - Join Public League\n"
+        << "\t\t2 - Join Private League \n";
+    Enterchoice:
+    cin >> choice;
+    if (cin.fail())
+        InputFaliure(choice, "Please enter your choice");
+
+    switch (choice[0]) {
+    case'1':
+        displayLeagues();
+        break;
+    case'2': {
+
+        string code; /// Insert League code
+        while (true) {
+            cout << "Enter Invitation Code you received";
+            cin >> code;
+            if (cin.fail())
+                InputFaliure(code, "write a suitable code consisting of only numbers");
+            if (isNumber(code)) {
+                break;
+            }
+            else {
+                cout << "Please write a code consisting of only numbers\n";
+            }
         }
-        else {
-            cout << "Please write a code consisting of only numbers\n";
+        bool found = false;
+
+        for (auto& league : AllLeagues) {
+            if (league.second->getcode() == stoi(code)) {
+                if (!league.second->userExists(&CurrUser))
+
+                    league.second->insertUser(&CurrUser);
+
+                else
+                    cout << "You are already a member of this league\n";
+                found = true;
+                break;
+            }
         }
+        if (!found) {
+            cout << "No league found with the code you wrote\n";
+        }
+        break;
+    
+    }
+
+    default:
+        cout << "Invalid Choice";
+        goto Enterchoice;
+        break;
+
     }
     
-    bool found = false;
-    if (cin.fail())
-        InputFaliure(code, "Invalid Code please write a valid code");
-    for (auto& t : AllLeagues) {
-        if (t.second->getcode() == stoi(code)) {
-            if (!t.second->userExists(&CurrUser))
-
-                t.second->insertUser(&CurrUser);
-
-            else
-                cout << "You are already a member of this league\n";
-            found = true;
-            break;
-       }
-    }
-    if (!found) {
-        cout << "No league found with the code you wrote\n";
-   }
+    
+    
+    
 }
 
 void System::writeClub()
@@ -2416,8 +2443,10 @@ void System::ManageSqaudMenu(User_Team& c) {
 
 void System::ViewPlayers() { // Last gameweek SQUAD
     User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
+    int weekNo;
+    weekNo = Current_Team->displayGameweeks();
     while (true) {
-        Current_Team->displaySquad();
+        Current_Team->displaySquad(weekNo);
         string id,user_option;
         bool flag = false;
         while (true) {
@@ -2429,7 +2458,7 @@ void System::ViewPlayers() { // Last gameweek SQUAD
                 int ID = stoi(id);
                 if (ID == 0) return;
                 
-                for (auto& s : Current_Team->getLastSquad()) {
+                for (auto& s : Current_Team->getWeekSquad(weekNo)) {
                     
                         if (s.second== ID) {
                             displayPlayers(AllPlayers[s.first][s.second]);
