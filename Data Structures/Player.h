@@ -78,7 +78,7 @@ public:
 	void updatePlayer_History();
 	void increasePrice();
 	void decreasePrice();
-	
+
 	void StartNewGameWeek();
 };
 	

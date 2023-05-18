@@ -9,3 +9,4 @@ public:
 	Attacker(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, string PlayerStatus);
 };
 
+

@@ -210,3 +210,19 @@ void gameWeek::increaseValue() {
 void gameWeek::decreaseValue() {
 	value -= 1;
 }
+void gameWeek::setWashome(bool){
+
+}
+bool gameWeek::WasHome(){
+
+}
+void gameWeek::setFixture(int id, int HTeam, int ATeam, int HScore, int AScore){
+	match.setId(id);
+	match.setHomeTeam(HTeam);
+	match.setAwayTeam(ATeam);
+	match.setHomescore(HScore);
+	match.setAwayscore(AScore);
+}
+Fixture gameWeek::getFixture(){
+	return match;
+}
