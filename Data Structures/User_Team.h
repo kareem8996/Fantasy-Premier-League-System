@@ -18,6 +18,8 @@ private:
 	map<string, int> teamCount; // this is a map to count number of player picked in each team ex: "Chelsea", 2
 	//vector<int> totalPointsPerWeek; // vector containing total points collected each week 
 	unordered_map<int , pair<vector<pair<string, int>> , int >> squadPerweek; // {#gameweek, {{{"GKP",player_id},{"MID",player_id},{"ATK",player_id}},100 point}
+	///			gameweek,{squad,squadpoints}
+	///                squad:{{FWD,10},{DEF,50}}   
 	int Transfers_left;
 	
 public:
@@ -72,7 +74,6 @@ public:
 
 	map<string, int> getTeamCount();
 	void setTeamCount(map<string, int>);
-	void displaySquad();
 	void displaySquadPrice();
 	int getTransfers();
 	void setTransfers(int t);
@@ -81,7 +82,16 @@ public:
 	void PunishTransfers();
 	unordered_map<string, unordered_map<int, Player*>> getCurrentSquad();
 	void setSquad(unordered_map<string, unordered_map<int, Player*>> s);
-	vector < pair<string, int>> getLastSquad();
+	
+	vector < pair<string, int>> getWeekSquad(int);
+	
+	void displaySquad(int);
+
+
+
 	void StartNewGameWeek();
+	
+	int displayGameweeks();
+
 };
 
