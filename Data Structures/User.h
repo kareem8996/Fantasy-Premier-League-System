@@ -13,7 +13,6 @@ private:
     string phoneNumber;
     string birthdate;
     int totalPoints;
-    int currPoints;
     string teamName;
     vector<int> leagues;
 
@@ -28,7 +27,6 @@ public:
         string phoneNumber,
 
         int totalPoints,
-        int currPoints,
         string teamName,
         vector<int> leagues = {});
 
@@ -41,7 +39,6 @@ public:
     void setPhoneNumber(string phoneNumber);
     void setBirthdate(string birthdate);
     void setTotalPoints(int totalPoints);
-    void setCurrPoints(int currPoints);
     void setTeamName(string teamName);
     void setLeagues(vector<int>& leagues);
     void setSquad(User_Team squad);
@@ -54,7 +51,6 @@ public:
     string getPhoneNumber();
     string getBirthdate();
     int getTotalPoints();
-    int getCurrPoints();
     string getTeamName();
     vector<int> getLeagues();
     // Menus
@@ -66,4 +62,6 @@ public:
 
 
     void updateLeagues(int);
+    void updateTotalPoints();
+    void startNewGameweek();
 };

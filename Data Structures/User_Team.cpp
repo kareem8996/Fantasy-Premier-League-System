@@ -6,7 +6,9 @@ User_Team::User_Team()
 void User_Team::setUserTeamID(int id)
 {
 	userTeam_ID = id;
-}
+
+
+}//
 int User_Team::getUserTeamID()
 {
 	return userTeam_ID;
@@ -199,10 +201,10 @@ int User_Team::getTotalPlayers()
 int User_Team::calculateSquadPoints()
 {
 	int total_points=0;
-	for (auto v : this->Squad)
+	for (auto player : squadPerweek[System::CurrGameWeek-1].first)
 	{
-		for (auto t : v.second)
-		total_points += t.second->CalculatePoints();
+		
+		total_points += System::AllPlayers[player.first][player.second]->CalculatePoints();
 	}
 	return total_points;
 }
@@ -276,10 +278,7 @@ void User_Team::updateTotalPointsPerWeek(int points=0) {
 		squadPerweek[System::CurrGameWeek].second = points;
 }
 
-void User_Team::StartNewtTotalPointsPerWeek() {
-	vector<pair<string, int>> emptySqaud;
-	squadPerweek.insert({ System::CurrGameWeek,make_pair(emptySqaud ,0) });
-}
+
 
 map<string, int> User_Team::getTeamCount()
 {
@@ -291,7 +290,7 @@ void User_Team::setTeamCount(map<string, int>teams)
 	teamCount = teams;
 }
 
-void User_Team::displaySquad(int week=System::CurrGameWeek-1) /// Display Gameweek squad
+void User_Team::displaySquad(int week) /// Display Gameweek squad
 {
 	int points;
 	if (!squadPerweek.empty())
@@ -313,6 +312,10 @@ void User_Team::displaySquad(int week=System::CurrGameWeek-1) /// Display Gamewe
 		}
 		
 	}
+}
+void User_Team::displaySquad()
+{
+	displaySquad(System::CurrGameWeek-1);
 }
 void User_Team::displaySquadPrice()
 {
@@ -399,5 +402,6 @@ int User_Team::displayGameweeks()
 	}
 
 }
+
 
 

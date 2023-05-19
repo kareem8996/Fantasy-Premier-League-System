@@ -1,5 +1,5 @@
 #include "gameWeek.h"
-
+#include "System.h"
 gameWeek::gameWeek()
 {
 	this->status = "";
@@ -34,7 +34,8 @@ gameWeek::gameWeek(
 	int bonus,
 	int goals_conceded,
 	int own_goals,
-	int penalties_saved
+	int penalties_saved,
+	int matchID
 	)
 {
 	this->status = status;
@@ -52,6 +53,7 @@ gameWeek::gameWeek(
 	this->goals_conceded = goals_conceded;
 	this->own_goals = own_goals;
 	this->penalties_saved = penalties_saved;
+	this->match_ID = matchID;
 }
 
 void gameWeek::setStatus(string s)
@@ -72,6 +74,7 @@ void gameWeek::setTotal_points_gameweek(int n)
 void gameWeek::setGoals_scored_gameweek(int n)
 {
 	goals_scored_gameweek = n;
+	
 }
 
 void gameWeek::setAssists_gameweek(int n)
@@ -79,9 +82,13 @@ void gameWeek::setAssists_gameweek(int n)
 	assists_gameweek = n;
 }
 
-void gameWeek::setClean_sheets_gameweek(int n)
+void gameWeek::setClean_sheets_gameweek()
 {
-	clean_sheets_gameweek = n;
+
+	if(minutes_played >=60 && getFixtureCleansheet())
+		clean_sheets_gameweek = 1;
+	else
+		clean_sheets_gameweek = 0;
 }
 
 void gameWeek::setRed_cards_gameweek(int n)
@@ -180,8 +187,8 @@ int gameWeek::getGoalsConceded() {
 }
 
 // Setter for goals_conceded
-void gameWeek::setGoalsConceded(int goals) {
-	goals_conceded = goals;
+void gameWeek::setGoalsConceded() {
+	goals_conceded = getFixtureGoalConceded();
 }
 
 // Getter for own_goals
@@ -210,19 +217,76 @@ void gameWeek::increaseValue() {
 void gameWeek::decreaseValue() {
 	value -= 1;
 }
-void gameWeek::setWashome(bool){
-
+void gameWeek::setWashome(bool wh){
+	wasHome = wh;
 }
+
 bool gameWeek::WasHome(){
+	return wasHome;
+}
 
+void gameWeek::updatePenaltiesSaved(int val) {
+	penalties_saved += val;
 }
-void gameWeek::setFixture(int id, int HTeam, int ATeam, int HScore, int AScore){
-	match.setId(id);
-	match.setHomeTeam(HTeam);
-	match.setAwayTeam(ATeam);
-	match.setHomescore(HScore);
-	match.setAwayscore(AScore);
+
+void gameWeek::updateOwnGoals(int val) {
+	own_goals += val;
+	updateFixture(val, true);
 }
-Fixture gameWeek::getFixture(){
-	return match;
+void gameWeek::updatePenaltiesMissed(int val) {
+	penalties_missed += val;
+}
+
+void gameWeek::updateGoals_scored_gameweek(int goals) {
+	goals_scored_gameweek += goals;
+	updateFixture(goals,false);
+}
+
+void gameWeek::updateYellow_Cards_gameweek(int val) {
+	yellow_cards_gameweek += val;
+}
+
+void gameWeek::updateAssists_gameweek(int assists) {
+	assists_gameweek += assists;
+}
+
+void gameWeek::updateSaves_gameweek(int saves) {
+	saves += saves;
+}
+
+
+
+
+
+void gameWeek::updateFixture( int Score,bool Own){
+	Fixture* match = System::AllFixtures[System::CurrGameWeek - 1][match_ID];
+	if (!Own) {
+		if (wasHome)
+			match->updateHomescore(Score);
+		else
+			match->updateAwayscore(Score);
+	}
+	else {
+		if (!wasHome)
+			match->updateHomescore(Score);
+		else
+			match->updateAwayscore(Score);
+	}
+}
+bool gameWeek::getFixtureCleansheet(){
+	Fixture* match = System::AllFixtures[System::CurrGameWeek-1][match_ID];
+	if (wasHome)
+		return match->getHomescore()==0;
+	else
+		return match->getAwayscore()==0;
+}
+int gameWeek::getFixtureGoalConceded() {
+	Fixture* match = System::AllFixtures[System::CurrGameWeek - 1][match_ID];
+	if (wasHome)
+		return match->getHomescore();
+	else
+		return match->getAwayscore();
+}
+Fixture* gameWeek::getFixture(){
+	return System::AllFixtures[System::CurrGameWeek - 1][match_ID];
 }

@@ -1,6 +1,6 @@
 #include "Defender.h"
-Defender::Defender(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, string PlayerStatus, int TotalCleanSheets)
-	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints,PlayerPosition, PlayerStatus) {
+Defender::Defender(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, int TotalCleanSheets)
+	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints,PlayerPosition) {
 	this->TotalCleanSheets = TotalCleanSheets;
 }
 void Defender::setCurrentCleanSheet(bool currentCleanSheet) {

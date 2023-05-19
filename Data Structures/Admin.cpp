@@ -134,32 +134,26 @@ string Admin::getPassword() {
 
 
 //===================== Update Player Data=========================
+
 void edit_player_options(string pos) {
 		cout << "\t\tWhat would you like to do ??\n"
 			<< "\t\t1  - Minutes Played\n"
 			<< "\t\t2  - Change Goals\n"
 			<< "\t\t3  - Change Assists\n"
-			<< "\t\t4  - change price\n"
-			<< "\t\t5  - change status \n"// cheack a d i n s u
-			<< "\t\t6  - Change YellowCards\n"
-			<< "\t\t7  - Change RedCards\n"
+			<< "\t\t4  - Change Price\n"
+			<< "\t\t5  - Change Status\n"// cheack a d i n s u
+			<< "\t\t6  - Change Yellow Cards\n"
+			<< "\t\t7  - Change Red Cards\n"
 			<< "\t\t8  - Change Own Goals\n"
 			<< "\t\t9  - Change Bonus\n"
 			<< "\t\t10 - Change Penalties Missed\n";
-		if(pos!="FWD"){
-			cout << "\t\t11 - Change Cleansheets\n";
-			if(pos=="DEF"||pos=="GKP"){
-			cout<< "\t\t12 - Change Goals Conceded\n";
-			if(pos=="GKP"){
-			cout<< "\t\t13 - Change Saves\n";
-			cout<< "\t\t14 - Change Penalties Saved\n";
+		
+
+				if(pos=="GKP"){
+					cout<< "\t\t11 - Change Saves\n";
+					cout<< "\t\t12 - Change Penalties Saved\n";
 			}
-		}
-		}
-
-
-
-
+		cout << "\t\t0 - Back\n";
 }
 void option_choise(int option,Player *&p) {
 	string changed;
@@ -167,88 +161,203 @@ void option_choise(int option,Player *&p) {
 	int x = -1;
 	switch (option) {
 	case 1:
-	validating:
+	Minutes:
 		cout << "Enter Minutes Played: ";
 		cin >> changed;
 		if (System::isNumber(changed)) {
 			int Ichanged = stoi(changed);
-			if (Ichanged > 0 || Ichanged <= 90)
+			if (Ichanged >=0 && Ichanged <= 90)
 			{
-
+				p->updateMinutes(Ichanged);
 			}
 			else{
 			cout << "Invalid Number of Minutes\n";
-			goto validating;
+			goto Minutes;
 			}
 		}
 		else{
 			cout << "Please enter a number\n";
-			goto validating;
+			goto Minutes;
 		}
 		break;
 	case 2:
 	{
-
+	Goals:
+		cout << "Enter Amount of Goals: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			p->updateGoalScoredGameweek(stoi(changed));
+			p->updateTotalGoals();
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto Goals;
+		}
 	break;
 	}
 	case 3:
-	{	cout << "what is the new status";
-	string stat;
-	cin >> stat;// cheack a d i n s u
-	while (stat != "a" || stat != "d" || stat != "i" || stat != "n" || stat != "s" || stat != "u")
 	{
-		cout << "enter valid status from 'a d i n s u' ";
-		cin >> stat;
-	}
-	p->setStatus(stat);
+	Assists:
+		cout << "Enter Amount of Assists: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			p->updateAssistsGameweek(stoi(changed));
+			p->updateTotalAssists();
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto Assists;
+		}
+		
+		
 	break;
 	}
 	///////////////////
 	case 4:
+	Price:
 	cout << "do you want to increase or decrease " << p->getFullname() << " price \n";
 		cout << "\t\t1 - increase price \n" << "\t\t2 - decrease price \n";
-		if (x == 1)
-			p->increasePrice();
-		else if (x==2)
-			p->decreasePrice();
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			if (x == 1)
+				p->increasePrice();
+			else if (x == 2)
+				p->decreasePrice();
+			else {
+				cout << "Invalid Number\n";
+				goto Price;
+			}
+		}
+		else {
+			cout << "Please write a number\n";
+			goto Price;
+		}
 		break;
 		///////////////////
 	case 5:
-		int goals;
-		cout << "enter total goals";
-		cin >> goals;
-		p->setTotalGoals(goals);
+		while (changed != "a" || changed != "d" || changed != "i" || changed != "n" || changed != "s" || changed != "u")
+		{
+		cout << "what is the new status 'a d i n s u'";
+			cin >> changed;
+		}
+		p->updateStatusGameweek(changed);
 		break;
 		///////////////////
 	case 6:
-		int assits;
-		cout << "enter total assits";
-		cin >> assits;
-		p->setTotalAssists(assits);
+	YellowCards:
+		cout << "Enter Amount of Yellow Cards\n";
+		cin >> changed;
+		cout << "Enter Amount of Assists: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			if (stoi(changed) < 3) {
+				p->updateYellowCardsGameweek(stoi(changed));
+			}
+			else {
+				cout << "Yellow cards cannot be more than 2\n";
+				goto YellowCards;
+			}
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto YellowCards;
+		}
 		break;
 		///////////////////
 	case 7:
-		int yellow;
-		cout << "enter total yellow cards";
-		cin >> yellow;
-		p->setTotalYellowCards(yellow);
+	RedCard:
+		cout << "Did player receive Red card (Y/N): ";
+		cin >> changed;
+		if (changed == "y" || changed == "Y") {
+			p->updateRedCardGameweek();
+			p->updateTotalRedCards();
+		}
+		else if (changed != "n" || changed != "N") {
+			cout << "Invalid Option\n";
+			goto RedCard;
+		}
 		break;
 		///////////////////
 	case 8:
-		int red;
-		cout << "enter total red cards";
-		cin >> red;
-		p->setTotalRedCards(red);
+	OwnGoals:
+		cout << "Enter Amount of Own Goals: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			p->updateOwnGoals(stoi(changed));
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto OwnGoals;
+		}
 		break;
+	case 9:
+	Bonus:
+		cout << "Enter Bonus: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			if(stoi(changed)<3 ||stoi(changed)>0)
+			p->updateBonusGameweek(stoi(changed));
+			else {
+				cout << "Bonus is between 1 and 3 points\n";
+				goto Bonus;
+			}
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto Bonus;
+		}
+		break;
+	case 10:
+	PenaltiesMissed:
+		cout << "Enter Amount of Penalties Missed: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			p->updatePenaltiesMissedGameweek(stoi(changed));
+			
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto PenaltiesMissed;
+		}
+		break;
+	case 11:
+	Saves:
+		cout << "Enter Amount of Saves: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			p->updateSavesGameweek(stoi(changed));
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto Saves;
+		}
+		break;
+
+	case 12:
+	PenaltiesSaved:
+		cout << "Enter Amount of Penalties Saved: ";
+		cin >> changed;
+		if (System::isNumber(changed)) {
+			p->updatePenaltiesSaved(stoi(changed));
+		}
+		else {
+			cout << "Please enter a number\n";
+			goto PenaltiesSaved;
+		}
+		break;
+
+
 		///////////////////
 	default:
 		cout << "enter valid number";
+		option_choise(option, p);
 	}
 }
 
 //=============
 void Admin::edit_player_menu()
 {
+	
 	int option;
 	string position_picked;
 	cout << "Pick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Back\n";
@@ -347,7 +456,7 @@ void Admin::edit_team_menu() {
 	{
 		cin >> option;
 
-	} while (option != 1 || option != 1);
+	} while (option != 1);
 	switch (option) {
 		
 	case 1: {
@@ -376,20 +485,20 @@ void Admin::edit_team_menu() {
 		case '1': {
 			cout << "enter goalkeeper's total saves";
 			cin >> TotalSaves;
-			GoalKeeper golytemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, PlayerStatus, TotalSaves, TotalCleanSheets);
+			GoalKeeper golytemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, TotalSaves, TotalCleanSheets);
 			break; }
 		case '2': {
-			Defender deftemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, PlayerStatus, TotalCleanSheets);
+			Defender deftemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, TotalCleanSheets);
 			break;
 		}
 		case '3': {
 
-			Midfielder midtemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, PlayerStatus, TotalCleanSheets);
+			Midfielder midtemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, TotalCleanSheets);
 			break;
 		}
 		case '4': {
 
-			Attacker atktemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, PlayerStatus);
+			Attacker atktemp(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition);
 			break;
 		}
 		default:
@@ -446,6 +555,7 @@ void Admin::edit_team_menu() {
 	}
 
 }
+
 	//club
 	
 
@@ -453,13 +563,11 @@ void Admin::edit_team_menu() {
 
 //===================== Update User Account Data=========================
 
-
-	void Admin::edit_user() { 
+void Admin::edit_user() { 
 		string user_name;
-		User tmp;
 		for (auto user : System::AllUsers) {
 			cout << user.first << "\t" << user.second->getName()<<endl;
-	}
+		}
 		display_user:
 		cout << "\nenter user id\n";
 		cin >> user_name;
@@ -468,15 +576,100 @@ void Admin::edit_team_menu() {
 			goto display_user;
 
 
-		tmp = *System::AllUsers[stoi(user_name)];
-		System::ChangeAccountSettings(tmp);
-	}
+		
+		System::ChangeAccountSettings(System::AllUsers[stoi(user_name)]);
+}
 //===================== Update League Data=========================
 
-void Admin::edit_leagues() {}
+void Admin::edit_leagues() {
 
-void Admin::displaydata()
-{
+	string leagueID;
+	string choice;
+	string confirm;
+	string userID;
+	System::displayLeagues(true);
+EnterLeagueID:
+	cout << "\t\tChoose the League you want to edit or 0 to go back: ";
+	cin >> leagueID;
+	if (cin.fail())
+		System::InputFaliure(leagueID, "\t\tEnter League you want to edit or 0 to go back");
+	if(!System::isNumber(leagueID))
+	{
+		cout << "\t\tPlease Enter a League ID in numbers";
+		goto EnterLeagueID;
+	}
+	if (leagueID == "0") return;
+	if (System::AllLeagues.find(stoi(leagueID)) == System::AllLeagues.end()){
+		cout << "\t\tPlease Enter a valid League\n";
+		goto EnterLeagueID;
+	}
+	League* currentleague = System::AllLeagues[stoi(leagueID)];
+	EnterEditChoice:
+	cout << "\t\tWhat do you want to edit for this league(" << currentleague->getName() << ") ?\n";
+	cout << "\t\t1- Change league Accessebility\n"
+		<< "\t\t2 - Generate new code\n"
+		<< "\t\t3 - Remove User from league\n"
+		<< "\t\t0 - Back\n";
+	
+	
+		cout << "Enter your Choice: ";
+		cin >> choice;
+		if (cin.fail())
+			System::InputFaliure(choice, "\t\tEnter League you want to edit");
+		if (!System::isNumber(choice)|| (stoi(choice)>3 && stoi(choice) < 0))
+		{
+			cout << "\t\tPlease Enter a valid choice";
+			goto EnterEditChoice;
+		}
+	switch(choice[0]){
+		case'1':
+			cout << "This league is " << ((currentleague->IsPublic()==true) ? "Public":"Not Public");
+			cout << "\nWould you like to change it?(Y/N)";
+			cin >> confirm;
+			if (confirm == "Y" || confirm == "y") {
+				currentleague->togglePublic();
+				break;
+			}
+			goto EnterEditChoice;
+		case'2':
+			cout << "This league code is " << currentleague->getcode();
+			cout << "\nWould you like to change it?(Y/N)";
+			cin >> confirm;
+			if (confirm == "Y" || confirm == "y") {
+				currentleague->setCode(League::generateCode());
+				cout << "Now this league's code is " << currentleague->getcode() << endl;
+				break;
+			}
+			goto EnterEditChoice;
+		case'3':
+			currentleague->displayUsers();
+			cout << "Enter User id to remove?";
+			EnterUserID:
+			cin >> userID;
+			if (cin.fail())
+				System::InputFaliure(userID, "\t\tEnter League you want to edit");
+			if (!System::isNumber(userID)&&!currentleague->userExists(stoi(userID)))
+			{
+				cout << "\t\tPlease Enter a valid user ID: ";
+				goto EnterUserID;
+			}
+			cout << "Are you sure you want to remove this user?(Y/N)";
+			cin >> confirm;
+			if (confirm == "Y" || confirm == "y") {
+				currentleague->removeUser(stoi(userID));
+				break;	
+			}
+			goto EnterEditChoice;
+		case '0':
+			goto EnterLeagueID;
+		default:
+			break;
+
+
+	}
+	}
+
+void Admin::displaydata(){
 	cout << "Name: " << getName() << endl;
 	cout << "Email: " << getEmail() << endl;
 	cout << "Username: " << getUsername() << endl;
@@ -484,18 +677,87 @@ void Admin::displaydata()
 
 }
 
-void Admin::startNewGameweek()
+
+
+
+void Admin::edit_fixture_menu()
 {
-	System::CurrGameWeek++;
-	for (auto& x : System::AllUsersTeams) {
-		x.second->StartNewtTotalPointsPerWeek();
+	string again;
+	bool goBack=false;
+	DisplayFixtures:
+
+		int fixtureID;
+		fixtureID=System::ChooseFixture(goBack);
+		if (goBack) return;
+
+	DisplayFixtureClubs:
+
+		string teamName = System::ChooseFixtureClub(fixtureID, goBack);
+		if (goBack)
+			goto DisplayFixtures;
+SelectFixturePlayer:
+
+		Player* p = System::ChooseFixturePlayer(teamName, goBack);
+		if (goBack)
+			goto DisplayFixtureClubs;
+
+DisplayPlayerEditMenu:
+
+		edit_player_options(p->getPosition());
+
+Validating:
+		string choice;
+		cout << "Please enter option\n";
+		cin >> choice;
+		if (!System::isNumber(choice)) {
+			cout << "Please enter a number\n";
+			goto Validating;
+		}
+
+		if (stoi(choice) > 12 || (p->getPosition()!="GKP" && stoi(choice)>10)){
+			cout << "Please enter a suitable number\n";
+			goto Validating;
+		}
+		if (choice == "0")
+			goto SelectFixturePlayer;
+	option_choise(stoi(choice),p);
+	cout << "Change Statistics for Same Player Again?";
+	cin >> again;
+	if (again == "y" || again == "Y") {
+		goto DisplayPlayerEditMenu;
 	}
-	for (auto& x : System::AllPlayers) {
-		for (auto& y :x.second) {
-			y.second->updatePlayer_History();
+	else {
+		goto SelectFixturePlayer;
+	}
+}
+
+void Admin::startNewGameweek() {
+	for (auto& UserTeam : System::AllUsersTeams) {
+		UserTeam.second->StartNewGameWeek();
+	}
+	for (auto& position : System::AllPlayers) {
+		for (auto& player : position.second) {
+			player.second->StartNewGameWeek();
 		}
 
 	}
-		
+	for (auto& user : System::AllUsers) {
+		user.second->startNewGameweek();
+	}
+
+	for(auto&league:System::AllLeagues){
+		league.second->UpdateLeaderBoard();
+	}
+
+	for (auto& fixture : System::AllFixtures[System::CurrGameWeek - 1]) {
+		fixture.second->setFinished(true);
+		fixture.second->updateWinnerPoints();
+
+	}
+
+	for (auto& fixture : System::AllFixtures[System::CurrGameWeek]) {
+		fixture.second->setFinished(false);
+	}
+	System::CurrGameWeek++;
 
 }

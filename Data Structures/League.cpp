@@ -59,6 +59,7 @@ bool League::IsPublic()
 
 void League::displayLeaderboard()
 {
+	UpdateLeaderBoard();
 	const pair<int, pair<int, User*>>* p;
 	p = &leaderBoard.top();
 
@@ -78,13 +79,18 @@ void League::displayUser(int userchoice)
 
 void League::removeUser(int id)
 {
+	if (id == league_creator->getID()){
+		cout << "You can't remove League Creator";
+		return;
+	}
+	
 	//O(logn)
 	priority_queue<pair<int, pair<int, User*>>> newLeaderBoard;
 	const pair<int, pair<int, User*>>* p;
 
 	while (!leaderBoard.empty()) {
 		p = &leaderBoard.top();
-		if (p->second.second->getID() != id) {
+		if (p->second.first != id) {
 			newLeaderBoard.push(*p);
 		}
 		leaderBoard.pop();
@@ -111,15 +117,16 @@ void League::insertUser(int score, User*u)
 	this->leaderBoard.push({ score, { u->getID(),u} });
 }
 
-bool League::userExists(User* u) {
+bool League::userExists(int id) {
 
 	const pair<int, pair<int, User*>>* p = &leaderBoard.top();
 
 	for (int i = 0; i < leaderBoard.size(); i++) {
 		
-		if ((p + i)->second.second->getID() == u->getID())
+		if ((p + i)->second.first == id){}
 			return true;
 	}
+	cout << "User does not exist";
 	return false;
 }
 
@@ -136,6 +143,32 @@ priority_queue<pair<int, pair<int, User*>>> League::getLeaderBoard()
 void League::setLeaderBoard(priority_queue<pair<int, pair<int, User*>>> leaderboard)
 {
 	this->leaderBoard = leaderboard;
+}
+
+void League::UpdateLeaderBoard()
+{
+	priority_queue<pair<int, pair<int, User*>>> newleaderboard;
+	const pair<int, pair<int, User*>>* p = &leaderBoard.top();
+
+	for (int i = 0; i < leaderBoard.size(); i++) {
+		
+		newleaderboard.push({ (p + i)->second.second->getTotalPoints() , { (p + i)->second.first,(p + i)->second.second} });
+	}
+	this->leaderBoard = newleaderboard;
+}
+void League::togglePublic(){
+	this->isPublic = !this->isPublic;
+	if(!isPublic){
+		code=generateCode();
+		cout << "Now this league's code is " << code<<endl;
+	}
+}
+void League::displayUsers(){
+	const pair<int, pair<int, User*>>* p = &leaderBoard.top();
+	for (int i = 0; i < leaderBoard.size(); i++) {
+
+		cout << (p + i)->second.first <<" - " << (p + i)->second.second->getName();
+	}
 }
 
 

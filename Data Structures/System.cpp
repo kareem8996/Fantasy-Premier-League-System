@@ -26,13 +26,14 @@ string  System::startchoice="",
         System::menuChoice = "";
 User System::CurrUser ;
 Admin System::CurrAdmin;
-int System::CurrGameWeek = 0;
+int System::CurrGameWeek = 37;
 unordered_map<int,User*> System::AllUsers;
 unordered_map<int,Admin*> System::AllAdmins;
 unordered_map<string, Club*> System::AllClubs; //name,club object
 unordered_map < string, unordered_map<int, Player*>> System::AllPlayers;
 unordered_map <int, User_Team*> System::AllUsersTeams;
 unordered_map<int, League*> System::AllLeagues; //League id, League object
+unordered_map<int, unordered_map<int, Fixture*>>System::AllFixtures;
 
 void System::printSeprator() {
     cout << "-------------------------------------------------------------------------------------\n";
@@ -392,7 +393,7 @@ void System::RegisterUser() {
             cout << "Enter Team Name: ";
             cin >> TeamName;
             int id = AllUsers.size() + 1;
-            User user = {id, Name, Email, Username, Password, Phone, 0, 0, TeamName };
+            User user = {id, Name, Email, Username, Password, Phone, 0, TeamName };
             AllUsers.insert({id,&user});
             CurrUser = *AllUsers[id];
         }
@@ -613,12 +614,13 @@ void System::printAdminMenu() {
         cout << "\t\tWhat would you like to do ??\n"
             << "\t\t1 - Edit Users\n"
             << "\t\t2 - Edit Leagues\n"
-            << "\t\t3 - Edit Club\n"
-            << "\t\t4 - Edit Player\n"
-            << "\t\t5 - Start New Gameweek\n"
-            << "\t\t6 - Change Account Info\n"
-            << "\t\t7 - To Logout\n"
-            << "\t\t8 - To Quit the System\n";
+            << "\t\t3 - Edit Fixtures\n"
+            << "\t\t4 - Edit Club\n"
+            << "\t\t5 - Edit Player\n"
+            << "\t\t6 - Start New Gameweek\n"
+            << "\t\t7 - Change Account Info\n"
+            << "\t\t8 - To Logout\n"
+            << "\t\t9 - To Quit the System\n";
         do {
             cout << "\tPlease enter your choice here --->\t";
             cin >> menuChoice;
@@ -633,7 +635,6 @@ void System::printAdminMenu() {
                 printSeprator_for_errors();
             }
         } while (true);
-
         switch (menuChoice[0])
         {
         case '1':
@@ -649,28 +650,34 @@ void System::printAdminMenu() {
             break;
         case '3':
             printSeprator();
-            //CurrAdmin.edit_team_menu();
+            CurrAdmin.edit_fixture_menu();
             Sleep(5000);
             printSeprator();
             break;
         case '4':
             printSeprator();
-            CurrAdmin.edit_player_menu();
+            //CurrAdmin.edit_team_menu();
             Sleep(5000);
             printSeprator();
             break;
         case '5':
             printSeprator();
-            //CurrAdmin.startNewGameweek();
+            CurrAdmin.edit_player_menu();
+            Sleep(5000);
+            printSeprator();
+            break;
+        case '6':
+            printSeprator();
+            CurrAdmin.startNewGameweek();
             Sleep(3000);
             printSeprator();
             break;
 
-        case '6':
-            ChangeAccountSettings(CurrAdmin);
+        case '7':
+            ChangeAccountSettings(&CurrAdmin);
             break;
 
-        case '7':
+        case '8':
 
             do {
                 cout << "Are you sure you want to logout? (Y/N)\n";
@@ -708,7 +715,7 @@ void System::printAdminMenu() {
 
             } while (Logout_choice[0] != 'Y' || Logout_choice[0] != 'y' || Logout_choice[0] == 'N' || Logout_choice[0] == 'n');
             break;
-        case '8':
+        case '9':
             cout << "Are you Sure you want to Quit?\n";
             do {
                 cin >> Quit_choice;
@@ -717,7 +724,7 @@ void System::printAdminMenu() {
                         cout << "Exiting the system";
 
                         for (int i = 0; i < 3; i++) {
-                            Sleep(1000);
+                           Sleep(1000);
                             cout << ". ";
                         }
                         cout << "\n--------------------Thank You for using our system!--------------------\n";
@@ -758,7 +765,7 @@ void System::printAdminMenu() {
             break;
         }
 
-    } while (menuChoice != "5");
+    } while (menuChoice != "8");
 
 }
 void System::printUserMenu() {
@@ -816,7 +823,7 @@ void System::printUserMenu() {
         break;
     case '5':
         printSeprator();
-        ChangeAccountSettings(CurrUser);
+        ChangeAccountSettings(&CurrUser);
         Sleep(3000);
         printSeprator();
         break;
@@ -1110,7 +1117,7 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     cout << "Total Points: " << p->getTotalPoints() << delim;
     if (!flag) {
         cout << "Position: " << p->getPosition() << delim;
-        cout << "Status: " << p->getStatus() << delim;
+        cout << "Status: " << p->getPlayer_History().back().getStatus() << delim;
         cout << "Current Week Goals: " << p->getPlayer_History().back().getGoals_scored_gameweek() << delim;
         cout << "Total Goals: " << p->getTotalGoals() << delim;
         cout << "Current Week Assists: " << p->getPlayer_History().back().getAssists_gameweek() << delim;
@@ -1164,6 +1171,53 @@ void System::displayPlayers(string position) {
         displayPlayers(it.second, true, "\t||\t");
     }
 }
+void System::readFixtures() {
+
+    unordered_map<string, vector<string>>row;
+    string line, cellData;
+    fstream file("Fixtures.csv", ios::in);
+    int row_counter = -1;
+    Player* p = nullptr;
+    int player_id;
+    if (file.is_open())
+    {
+        vector<string> column_names;
+        while (getline(file, line))
+        {
+            stringstream str(line);
+            int column_counter = 0;
+            //Getting columns headers
+            while (getline(str, cellData, ',')) {
+                if (row_counter == -1) {
+                    row.insert({ cellData,vector<string>{} });
+                    column_names.push_back(cellData);
+                    continue;
+                }
+                else {
+                    row[column_names[column_counter]].push_back(cellData);
+                }
+                column_counter++;
+            }
+            if (row_counter > -1) {
+                bool finish = row["finished"][row_counter] == "TRUE";
+                int h_score = finish ? stoi(row["team_h_score"].at(row_counter)) : 0;
+                int a_score = finish ? stoi(row["team_a_score"].at(row_counter)) : 0;
+                
+                Fixture* match = new Fixture(stoi(row["id"].at(row_counter)),
+                    h_score,
+                    a_score,
+                    stoi(row["team_h"].at(row_counter)),
+                    stoi(row["team_a"].at(row_counter)),
+                    stoi(row["team_h_difficulty"].at(row_counter)),
+                    stoi(row["team_a_difficulty"].at(row_counter)),
+                    finish);
+                match->updateWinnerPoints();
+                AllFixtures[stoi(row["event"].at(row_counter))].insert({ stoi(row["id"].at(row_counter)),match });
+            }
+            row_counter++;
+        }
+    }
+}
 
 void System::readPlayers() {
     /// <summary>
@@ -1175,7 +1229,7 @@ void System::readPlayers() {
     /// </summary>
     unordered_map<string, vector<string>>row;
     string line, cellData;
-    fstream file("D:\\Uni Projects\\Data Structure\\Data\\total_players.csv", ios::in);
+    fstream file("total_players.csv", ios::in);
     int row_counter = -1;
     Player* p=nullptr;
     int player_id;
@@ -1205,7 +1259,6 @@ void System::readPlayers() {
                             row["name"].at(row_counter),
                             stoi(row["gameweek_points"].at(row_counter)),
                             row["position"].at(row_counter),
-                            row["status"].at(row_counter),
                             stoi(row["total_clean_sheets"].at(row_counter)));
                       
                         
@@ -1224,7 +1277,9 @@ void System::readPlayers() {
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
                             stoi(row["own_goals"].at(row_counter)),
-                            stoi(row["penalties_saved"].at(row_counter))
+                            stoi(row["penalties_saved"].at(row_counter)),
+                           stoi(row["fixture"].at(row_counter))
+
                             });
                         
                         p = m;
@@ -1235,7 +1290,6 @@ void System::readPlayers() {
                             row["name"].at(row_counter),
                             stoi(row["gameweek_points"].at(row_counter)),
                             row["position"].at(row_counter),
-                            row["status"].at(row_counter),
                             stoi(row["total_clean_sheets"].at(row_counter)));
 
 
@@ -1254,7 +1308,9 @@ void System::readPlayers() {
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
                             stoi(row["own_goals"].at(row_counter)),
-                            stoi(row["penalties_saved"].at(row_counter))
+                            stoi(row["penalties_saved"].at(row_counter)),
+                           stoi(row["fixture"].at(row_counter))
+
                             });
                         
                         p = d;
@@ -1264,8 +1320,7 @@ void System::readPlayers() {
                             stoi(row["id_player"].at(row_counter)),
                             row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
                             row["name"].at(row_counter), stoi(row["gameweek_points"].at(row_counter)), 
-                            row["position"].at(row_counter),
-                            row["status"].at(row_counter));
+                            row["position"].at(row_counter));
 
                         a->updatePlayer_History({
                             row["status"].at(row_counter),
@@ -1282,7 +1337,9 @@ void System::readPlayers() {
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
                             stoi(row["own_goals"].at(row_counter)),
-                            stoi(row["penalties_saved"].at(row_counter))
+                            stoi(row["penalties_saved"].at(row_counter)),
+                            stoi(row["fixture"].at(row_counter))
+
                             });
                         p = a;
                     }
@@ -1292,7 +1349,7 @@ void System::readPlayers() {
                             row["first_name"].at(row_counter) + " " + row["second_name"].at(row_counter),
                             row["name"].at(row_counter), stoi(row["gameweek_points"].at(row_counter)), 
                             row["position"].at(row_counter), 
-                            row["status"].at(row_counter), stoi(row["total_saves"].at(row_counter)),  
+                            stoi(row["total_saves"].at(row_counter)),  
                             stoi(row["total_clean_sheets"].at(row_counter)));
 
                         g->updatePlayer_History({
@@ -1311,28 +1368,19 @@ void System::readPlayers() {
                            stoi(row["goals_conceded"].at(row_counter)),
                            stoi(row["own_goals"].at(row_counter)),
                            stoi(row["penalties_saved"].at(row_counter)),
+                           stoi(row["fixture"].at(row_counter))
                             });
                         p = g;
                     }
                     if (AllClubs[p->getClub()]->isSquadEmpty()) {
-                        if (stoi(row["team_h_score"].at(row_counter)) == stoi(row["team_a_score"].at(row_counter))) {
-                            AllClubs[p->getClub()]->draw_UpdatePoints();
-                        }
-                        else {
-                            if (stoi(row["team_h_score"].at(row_counter)) > stoi(row["team_a_score"].at(row_counter)) && row["was_home"].at(row_counter) == "TRUE") {
-                                AllClubs[p->getClub()]->win_UpdatePoints();
-                            }
-                            if (stoi(row["team_h_score"].at(row_counter)) < stoi(row["team_a_score"].at(row_counter)) && row["was_home"].at(row_counter) == "FALSE") {
-                                AllClubs[p->getClub()]->win_UpdatePoints();
-                            }
-                        }
+                        
                         player_id = p->getID();
 
                     }
                     AllClubs[p->getClub()]->insertPlayer(p);
                     AllClubs[p->getClub()]->updateFixtures(stoi(row["opponent_team"].at(row_counter)));
                     p->setTotalPoints(stoi(row["total_points"].at(row_counter)));
-                    p->setTotalGoals(stoi(row["total_goals"].at(row_counter)));
+                    p->setTotalGoals(stoi(row["total_goals_scored"].at(row_counter)));
                     p->setTotalAssists(stoi(row["total_assists"].at(row_counter)));
                     p->setTotalYellowCards(stoi(row["total_yellow_cards"].at(row_counter)));
                     p->setTotalRedCards(stoi(row["total_red_cards"].at(row_counter)));
@@ -1340,7 +1388,7 @@ void System::readPlayers() {
                 }
                 else {//updating
 
-                AllClubs[p->getClub()]->updateFixtures(stoi(row["opponent_team"].at(row_counter)));
+                /*AllClubs[p->getClub()]->updateFixtures(stoi(row["opponent_team"].at(row_counter)));
                 if (p->getID()==player_id) {
                     if (stoi(row["team_h_score"].at(row_counter)) == stoi(row["team_a_score"].at(row_counter))) {
                         AllClubs[p->getClub()]->draw_UpdatePoints();
@@ -1353,7 +1401,7 @@ void System::readPlayers() {
                             AllClubs[p->getClub()]->win_UpdatePoints();
                         }
                     }
-                }
+                }*/
 
                     p->updatePlayer_History({
                             row["status"].at(row_counter),
@@ -1370,7 +1418,9 @@ void System::readPlayers() {
                             stoi(row["bonus"].at(row_counter)),
                             stoi(row["goals_conceded"].at(row_counter)),
                             stoi(row["own_goals"].at(row_counter)),
-                            stoi(row["penalties_saved"].at(row_counter))
+                            stoi(row["penalties_saved"].at(row_counter)),
+                            stoi(row["fixture"].at(row_counter))
+
                         });
                 }
             }
@@ -1460,8 +1510,6 @@ void System::readUsers()
             UsersFile >> DataLine;
             user->setTotalPoints(stoi(DataLine));
             UsersFile >> DataLine;
-            user->setCurrPoints(stoi(DataLine));
-            UsersFile >> DataLine;
             user->setTeamName(underscore2space(DataLine));
             
             // user->setBirthdate(DataLine);
@@ -1529,9 +1577,6 @@ void System::readUserTeams()
             UserTeamsFile >> DataLine;
             UserTeamsFile >> DataLine;
             map<string, int> teamCount;
-            /*teamCount.insert*/
-
-
 
             while (DataLine != "==========CurrentSquad==============") { //Reading Team clubs counts
                 int count = 0;
@@ -1709,7 +1754,6 @@ void System::writeUsers()
             UsersFile << it->second->getPhoneNumber() << endl;
             UsersFile << it->second->getEmail() << endl;
             UsersFile << it->second->getTotalPoints() << endl;
-            UsersFile << it->second->getCurrPoints() << endl;
             UsersFile << it->second->getTeamName() << endl;
             it++;
         }
@@ -1866,7 +1910,7 @@ void System::joinLeague(){
 
     switch (choice[0]) {
     case'1':
-        displayLeagues();
+        displayLeagues(false);
         break;
     case'2': {
 
@@ -1887,7 +1931,7 @@ void System::joinLeague(){
 
         for (auto& league : AllLeagues) {
             if (league.second->getcode() == stoi(code)) {
-                if (!league.second->userExists(&CurrUser))
+                if (!league.second->userExists(CurrUser.getID()))
 
                     league.second->insertUser(&CurrUser);
 
@@ -1937,6 +1981,7 @@ void System::manageLeagues() {
 
     //Display Personal Leagues
     vector<int> personalLeagues = CurrUser.getLeagues();
+   
     if (personalLeagues.size() != 0) {
         for (int i = 0; i < personalLeagues.size(); i++) {
             League* currentLeague = AllLeagues[personalLeagues[i]];
@@ -2000,6 +2045,7 @@ void System::manageLeagues() {
         switch (stoi(User_option))
         {
         case 1:
+            
             currentLeague->displayLeaderboard();
             cout << "Choose Manager you want to view or 0 to go back\n";
             while (true) {
@@ -2052,10 +2098,12 @@ void System::manageLeagues() {
     }
 }
 
-void System::displayLeagues() {
+void System::displayLeagues(bool displayAll) {
     for (auto& t : AllLeagues) {
-        if(t.second->IsPublic())
-        cout << t.second->getId() << " - " << t.second->getName() << endl;
+        if(t.second->IsPublic() && !displayAll)
+            cout << t.second->getId() << " - " << t.second->getName() << endl;
+        else
+            cout << t.second->getId() << " - " << t.second->getName() << endl;
     }
 }
 
@@ -2068,11 +2116,11 @@ bool System::isNumber(string s)
     return true;
 }
 
-void System::ChangeAccountSettings(User& CurrUser) {
+void System::ChangeAccountSettings(User* CurrUser) {
     string option;
     string changing;
     string reenter_password;
-    CurrUser.displaydata();
+    CurrUser->displaydata();
     cout << "\n\t\tWhat would you like to change ??\n"
         << "\t\t1 - Name\n"
         << "\t\t2 - Username\n"
@@ -2108,7 +2156,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
             if (cin.fail())
                 InputFaliure(changing, "Please enter new name ");
         } while (!Check_Name(changing));
-        CurrUser.setName(changing);
+        CurrUser->setName(changing);
 
         break;
     case 2:
@@ -2122,7 +2170,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
                 cout << "this username already exists\n";
             }
         } while (!Check_Username(changing) && !Check_Database(changing));
-        CurrUser.setUsername(changing);
+        CurrUser->setUsername(changing);
         break;
 
     case 3:
@@ -2131,7 +2179,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
             cin >> changing;
             if (cin.fail())
                 InputFaliure(changing, "Please enter your Password: ");
-            if (changing != CurrUser.getUsername()) {
+            if (changing != CurrUser->getUsername()) {
                 break;
             }
             else
@@ -2147,7 +2195,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
             else
                 cout << "Password doesn't match\nPlease enter the password again\n";
         } while (true);
-        CurrUser.setPassword(changing);
+        CurrUser->setPassword(changing);
         break;
 
     case 4:
@@ -2157,7 +2205,7 @@ void System::ChangeAccountSettings(User& CurrUser) {
             if (cin.fail())
                 InputFaliure(changing, "Please enter Email: ");
         } while (!Check_Email(changing));
-        CurrUser.setEmail(changing);
+        CurrUser->setEmail(changing);
         break;
 
     case 5:
@@ -2172,13 +2220,13 @@ void System::ChangeAccountSettings(User& CurrUser) {
                 cout << "this phone already exists\n";
             }
         } while (!Check_Phone(changing) && !Check_PhoneDatabase(changing));
-        CurrUser.setPhoneNumber(changing);
+        CurrUser->setPhoneNumber(changing);
         break;
 
     case 6:
         cout << "Enter your team name: ";
         cin >> changing;
-        CurrUser.setTeamName(changing);
+        CurrUser->setTeamName(changing);
         break;
     case 7:
         return;
@@ -2189,12 +2237,12 @@ void System::ChangeAccountSettings(User& CurrUser) {
 
 }
 
-void System::ChangeAccountSettings(Admin& CurrAdmin)
+void System::ChangeAccountSettings(Admin *CurrAdmin)
 {
     string changing;
     string reenter_password;
     string option;
-    CurrAdmin.displaydata();
+    CurrAdmin->displaydata();
     cout << "\n\t\tWhat would you like to change ??\n"
         << "\t\t1 - Name\n"
         << "\t\t2 - Username\n"
@@ -2227,7 +2275,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         cin >> changing;
         if (cin.fail())
             InputFaliure(changing, "Please enter new name ");
-        CurrAdmin.setName(changing);
+        CurrAdmin->setName(changing);
 
         break;
     case 2:
@@ -2235,7 +2283,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         cin >> changing;
         if (cin.fail())
             InputFaliure(changing, "Please enter new username ");
-        CurrAdmin.setUsername(changing);
+        CurrAdmin->setUsername(changing);
         break;
 
     case 3:
@@ -2250,7 +2298,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         if (cin.fail())
             InputFaliure(reenter_password, "Please renter password: ");
 
-        CurrAdmin.setPassword(changing, reenter_password);
+        CurrAdmin->setPassword(changing, reenter_password);
         break;
 
     case 4:
@@ -2259,7 +2307,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         cin >> changing;
         if (cin.fail())
             InputFaliure(changing, "Please enter Email: ");
-        CurrAdmin.setEmail(changing);
+        CurrAdmin->setEmail(changing);
         break;
 
     case 5:
@@ -2270,7 +2318,7 @@ void System::ChangeAccountSettings(Admin& CurrAdmin)
         if (cin.fail())
             InputFaliure(changing, "Please enter Phone Number: ");
 
-        CurrAdmin.setPhoneNumber(changing);
+        CurrAdmin->setPhoneNumber(changing);
         break;
     case 7:
 
@@ -2482,5 +2530,120 @@ void System::ViewPlayers() { // Last gameweek SQUAD
     }
     
 }
+void System::displayFixtures(int week) {
 
+    unordered_map<int, string>clubs = getClubsByID();
+    //displayFixtures();
+    string choice;
+    string teamName;
+    for (auto& match : AllFixtures[week]) {
 
+        cout << match.first <<" - " << clubs[match.second->getHomeTeam()] << "\tVS\t" << clubs[match.second->getAwayTeam()] << endl;
+    }
+    
+}
+int System::ChooseFixture(bool&goBack) {
+    string choice;
+    displayFixtures(CurrGameWeek-1);
+Enter_FixtureID:
+    cout << "Enter Fixture ID";
+    cin >> choice;
+    if (cin.fail())
+        InputFaliure(choice, "Please enter a valid Fixture ID");
+    if (!isNumber(choice)) {
+        cout << "Please enter Fixture ID in NUMBERS!!\n";
+        goto Enter_FixtureID;
+    }
+    if (choice!="0" && AllFixtures[CurrGameWeek - 1].find(stoi(choice)) == AllFixtures[CurrGameWeek - 1].end())
+    {
+        cout << "Please enter a valid Fixture ID";
+        goto Enter_FixtureID;
+    }
+    goBack = stoi(choice) == 0;
+    return stoi(choice);
+}
+string System::ChooseFixtureClub(int fixtureID,bool& goBack) {
+    string TeamName;
+    unordered_map<int, string>clubs = getClubsByID();
+    Fixture* CurrFixture = AllFixtures[CurrGameWeek - 1][fixtureID];
+    cout << "Which team do you want to update\n";
+    cout << "1 - " << clubs[CurrFixture->getHomeTeam()] << endl;
+    cout << "2 - " << clubs[CurrFixture->getAwayTeam()] << endl;
+    cout << "0 - To go back to Fixture Selection " << endl;
+    cin.ignore();
+    EnterHomeOrAway:
+    cout << "Enter Team Name";
+    getline(cin,TeamName);
+    if (cin.fail())
+        InputFaliure(TeamName, "Please enter a valid Team name");
+    if (TeamName!="0"&& AllClubs.find(TeamName) == AllClubs.end()) {
+        cout << "Enter Squad Name correctly\n";
+        goto EnterHomeOrAway;
+    }
+    goBack = TeamName == "0";
+
+    return TeamName;
+}
+
+Player* System::ChooseFixturePlayer(string teamName,bool &goBack)
+{
+    EnterPlayerId:
+        string choice;
+        AllClubs[teamName]->DisplaySquad();
+        cout << "Enter player you want to edit his fixture data (OR 0 To go back and select the club)";
+        cin >> choice;
+	    if (cin.fail())
+		    InputFaliure(choice, "Please enter a valid Team name");
+	    if (!isNumber(choice)) {
+		    cout << "Please enter player ID in NUMBERS!!\n";
+			    goto EnterPlayerId;
+	    }
+    
+        goBack = choice == "0";
+    
+    unordered_map<int, Player*> ClubSquad = AllClubs[teamName]->getSquad();
+	if (choice !="0"&&ClubSquad.find(stoi(choice)) == ClubSquad.end()) {
+		cout << "Enter Player ID Not found please enter it correctly\n";
+		goto EnterPlayerId;
+	}
+    if (choice != "0") {
+        string player_postion = ClubSquad[stoi(choice)]->getPosition();
+        return AllPlayers[player_postion][stoi(choice)];
+    }
+}
+unordered_map<int, string>System::getClubsByID() {
+    unordered_map<int, string>clubs;
+    for (auto& x : AllClubs) {
+        clubs.insert({ x.second->getClubID(), x.first });
+    }
+    return clubs;
+}
+
+void System::writeFixtures(){
+
+	fstream FixtureFile;
+	FixtureFile.open("FixtureSave.csv", ios::out); //write data
+	if (FixtureFile.is_open())
+	{
+		FixtureFile << "Gameweek,id,team_h_difficulty,homeTeam,homeScore,awayScore,awayTeam,team_a_difficulty,finished\n";
+		for (auto& GameweekMatches : System::AllFixtures)
+		{
+            for(auto& match: GameweekMatches.second){
+
+                FixtureFile << GameweekMatches.first << ","
+                    << match.first << ","
+                    << match.second->getHomeTeamDif() << ","
+                    << match.second->getHomeTeam() << ","
+                    << match.second->getHomescore() << ","
+                    << match.second->getAwayscore() << ","
+                    << match.second->getAwayTeam() << ","
+                    << match.second->getAwayTeamDif() << ","
+                    << match.second->IsFinished() << endl;
+            }
+            
+                        
+		}
+		FixtureFile.close();
+	}
+
+}

@@ -5,6 +5,7 @@
 #include "Club.h"
 #include "User_Team.h"
 #include "League.h"
+#include "Fixture.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -33,6 +34,7 @@ public:
 	static unordered_map < string, unordered_map<int, Player *>> AllPlayers;//position,{player id,player object}
 	static unordered_map <int, User_Team*> AllUsersTeams;//User Team id, User Team object
 	static unordered_map<int, League*> AllLeagues; //League id, League object
+	static unordered_map<int,unordered_map<int, Fixture*>>AllFixtures;//gameweek number,{ fixture id, fixture }
 	//============= System Run ===========
 	static void RunSys();
 	//============= Menus ================
@@ -69,8 +71,8 @@ public:
 	static string underscore2space(string text);
 	//================User Menus=======================
 	static void ManageSqaudMenu(User_Team& c);
-	static void ChangeAccountSettings(User& CurrUser);
-	static void ChangeAccountSettings(Admin& CurrAdmin);
+	static void ChangeAccountSettings(User* CurrUser);
+	static void ChangeAccountSettings(Admin* CurrAdmin);
 	static void Transfers();
 	static void ViewPlayers();
 	// ======================Player Display=======================
@@ -84,15 +86,24 @@ public:
 	static void readAdmins();
 	static void readUserTeams();
 	static void readLeagues();
+	static void readFixtures();
 	//==================File Handling:Write========================
 	static void writeUsers();
 	static void writeAdmins();
 	static void writeUserTeams();
 	static void writeLeagues();
 	static void writeClub();
+	static void writeFixtures();
+	//===================Fixtures============================================
+	static Player* manageFixtures(); //return player to admin for editing
+	static void displayFixtures(int week);
+	static int ChooseFixture(bool&);
+	static string ChooseFixtureClub(int fixtureID,bool&);
+	static Player* ChooseFixturePlayer(string,bool&);
+	static unordered_map<int, string> getClubsByID();
 	//===================Leagues============================================
 	static void createLeague();
 	static void joinLeague();
 	static void manageLeagues();
-	static void displayLeagues();
+	static void displayLeagues(bool displayall);
 };

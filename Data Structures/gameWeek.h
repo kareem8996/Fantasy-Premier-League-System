@@ -25,7 +25,7 @@ private:
 		own_goals,
 		penalties_saved;
 	bool wasHome;
-	Fixture match;
+	int match_ID;
 public:
 	gameWeek();
 	gameWeek(string status,
@@ -42,14 +42,15 @@ public:
 		int bonus,
 		int goals_conceded,
 		int own_goals,
-		int penalties_saved);
+		int penalties_saved,
+		int matchid);
 
 	void setStatus(string s);
 	void setValue(int n);
 	void setTotal_points_gameweek(int n);
 	void setGoals_scored_gameweek(int n);
 	void setAssists_gameweek(int n);
-	void setClean_sheets_gameweek(int n);
+	void setClean_sheets_gameweek();
 	void setRed_cards_gameweek(int n);
 	void setYellow_cards_gameweek(int n);
 	void setSaves_gameweek(int n);
@@ -78,7 +79,7 @@ public:
 
 	// Getter and setter for goals_conceded
 	int getGoalsConceded();
-	void setGoalsConceded(int goals);
+	void setGoalsConceded();
 
 	// Getter and setter for own_goals
 	int getOwnGoals();
@@ -91,10 +92,21 @@ public:
 
 	void decreaseValue();
 
+	bool getFixtureCleansheet();
+	int  getFixtureGoalConceded();
+
 	void setWashome(bool);
 	bool WasHome();
-	void setFixture(int,int,int,int,int);
-	Fixture getFixture();
+	void updateFixture(int,bool);
+	Fixture* getFixture();
 	
+
+	void updatePenaltiesSaved(int val);
+	void updateOwnGoals(int val);
+	void updatePenaltiesMissed(int val);
+	void updateGoals_scored_gameweek(int goals);
+	void updateYellow_Cards_gameweek(int val);
+	void updateAssists_gameweek(int assists);
+	void updateSaves_gameweek(int saves);
 };
 

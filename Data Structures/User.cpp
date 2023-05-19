@@ -1,8 +1,9 @@
 #include "user.h"
+#include "System.h"
 
 // Constructor
 User::User() {}
-User::User(int id,string name,string email,string username,string password,string phoneNumber,int totalPoints,int currPoints,string teamName,vector<int> leagues) {
+User::User(int id,string name,string email,string username,string password,string phoneNumber,int totalPoints,string teamName,vector<int> leagues) {
     this->id = id;
     this->name = name;
     this->email = email;
@@ -10,7 +11,6 @@ User::User(int id,string name,string email,string username,string password,strin
     this->password = password;
     this->phoneNumber = phoneNumber;
     this->totalPoints = totalPoints;
-    this->currPoints = currPoints;
     this->teamName = teamName;
     this->leagues = leagues;
 }
@@ -43,10 +43,6 @@ void User::setBirthdate(string birthdate) {
 
 void User::setTotalPoints(int totalPoints) {
     this->totalPoints = totalPoints;
-}
-
-void User::setCurrPoints(int currPoints) {
-    this->currPoints = currPoints;
 }
 
 void User::setTeamName(string teamName) {
@@ -87,9 +83,6 @@ int User::getTotalPoints() {
     return totalPoints;
 }
 
-int User::getCurrPoints() {
-    return currPoints;
-}
 
 string User::getTeamName() {
     return teamName;
@@ -108,7 +101,7 @@ void User::displaydata()
     cout<<"Phone Number: " << getPhoneNumber() << endl;
     //cout<<"Birthdate" << getBirthdate() << endl;
     cout<<"Total Points: " << getTotalPoints() << endl;
-    cout<<"Current Gameweek Points: " << getCurrPoints() << endl;
+    cout<<"Current Gameweek Points: " << System::AllUsersTeams[id]->calculateSquadPoints() << endl;
     cout<<"Team Name: " << getTeamName() << endl;
 }
 
@@ -123,4 +116,10 @@ int User::getID() {
 void User::updateLeagues(int leagueID)
 {
     this->leagues.push_back(leagueID);
+}
+
+
+void User::startNewGameweek()
+{
+    totalPoints += System::AllUsersTeams[id]->calculateSquadPoints();
 }

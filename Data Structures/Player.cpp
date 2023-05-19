@@ -1,3 +1,4 @@
+#include "System.h"
 #include "Player.h"
 #include <iostream>
 using namespace std;
@@ -7,16 +8,13 @@ Player::Player() {
 	Team = "";
 	TotalPoints = 0;
 	Position = "";
-	Status = "";
-
 }
-Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, string PlayerStatus) {
+Player::Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition) {
 	ID = id;
 	FullName = PlayerName;
 	Team = PlayerTeam;
 	TotalPoints = PlayerTotalPoints;
 	Position = PlayerPosition;
-	Status = PlayerStatus;
 
 	TotalGoals = 0;
 	TotalAssists = 0;
@@ -70,12 +68,7 @@ void Player::setPosition(string PlayerPosition) {
 	Position = PlayerPosition;
 }
 
-string Player::getStatus() {
-	return Status;
-}
-void Player::setStatus(string PlayerStatus) {
-	Status = PlayerStatus;
-}
+
 
 
 //
@@ -201,3 +194,89 @@ void Player::decreasePrice()
 	Player_History.back().decreaseValue();
 }
 
+//FROM FIXTURES
+//goals_conceded,
+// clean sheet
+// 
+// 
+
+//bool wasHome;
+//Fixture match;
+void Player::updateMinutes(int Minutes)
+{
+	Player_History.back().setMinutesPlayed(Minutes);
+	Player_History.back().setClean_sheets_gameweek();
+	Player_History.back().setGoalsConceded();
+}
+
+void Player::updateStatusGameweek(string status)
+{
+	Player_History.back().setStatus(status);
+}
+void Player::updateGoalScoredGameweek(int goals)
+{
+	Player_History.back().updateGoals_scored_gameweek(goals);
+	
+}
+void Player::updatePointsGameweek()
+{
+	Player_History.back().setTotal_points_gameweek(CalculatePoints());
+}
+
+void Player::updateAssistsGameweek(int assists)
+{
+	Player_History.back().updateAssists_gameweek(assists);
+}
+
+void Player::updateCleansheetGameweek()
+{
+	Player_History.back().setClean_sheets_gameweek();
+}
+
+void Player::updateRedCardGameweek()
+{
+	Player_History.back().setRed_cards_gameweek(1);
+}
+
+void Player::updateYellowCardsGameweek(int val)
+{
+	Player_History.back().updateYellow_Cards_gameweek(val);
+}
+
+void Player::updateSavesGameweek(int val)
+{
+	Player_History.back().updateSaves_gameweek(val);
+}
+
+void Player::updatePenaltiesMissedGameweek(int val)
+{
+	Player_History.back().updatePenaltiesMissed(val);
+}
+
+void Player::updateBonusGameweek(int val)
+{
+	Player_History.back().setBonus(val);
+}
+void Player::updateOwnGoals(int val)
+{
+	Player_History.back().updateOwnGoals(val);
+}
+
+void Player::updatePenaltiesSaved(int val) {
+	Player_History.back().updatePenaltiesSaved(val);
+
+}
+
+
+void Player::setWashome(bool) {
+	int homeTeamId = Player_History.back().getFixture()->getHomeTeam();
+	int playerTeam = System::AllClubs[Team]->getClubID();
+	if (playerTeam == homeTeamId)
+		Player_History.back().setWashome(true);
+	else
+		Player_History.back().setWashome(false);
+}
+
+bool Player::WasHome() {
+	return Player_History.back().WasHome();
+}

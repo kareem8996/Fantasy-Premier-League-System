@@ -1,6 +1,6 @@
 #include "Attacker.h"
-Attacker::Attacker(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, string PlayerStatus)
-	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, PlayerStatus)
+Attacker::Attacker(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition)
+	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition)
 {
 }
 int Attacker::CalculatePoints() {

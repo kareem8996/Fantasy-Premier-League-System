@@ -22,6 +22,7 @@ public:
     string getName();
     void setId(int id);
     void setIsPublic(bool is);
+    void togglePublic();
     void setCode(int code);
     void setLeagueCreator(User*u);
     int getId();
@@ -34,10 +35,11 @@ public:
     void insertUser(User*);
     void insertUser(int score,User*);
 
-    bool userExists(User* u);
-
+    bool userExists(int id);
+    void displayUsers();
     int getLeagueCreatorID();
     priority_queue<pair<int, pair<int, User*>>> getLeaderBoard();
     void setLeaderBoard(priority_queue<pair<int, pair<int, User*>>>);
+    void UpdateLeaderBoard();
 };
 

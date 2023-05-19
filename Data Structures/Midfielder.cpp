@@ -1,6 +1,6 @@
 #include "Midfielder.h"
-Midfielder::Midfielder(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, string PlayerStatus, int TotalCleanSheets)
-:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition, PlayerStatus)
+Midfielder::Midfielder(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition,int TotalCleanSheets)
+:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition)
 {
 	this->TotalCleanSheets = TotalCleanSheets;
 }

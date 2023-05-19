@@ -43,6 +43,8 @@ public:
 
 	//===================== Update Team Data=========================
 	void edit_team_menu();
+	//======================Update Fixture Data=========================
+	void edit_fixture_menu();
 
 	//===================== Update User Account Data=========================
 	void edit_user();

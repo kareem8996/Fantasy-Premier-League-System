@@ -2,6 +2,7 @@
 
 #include "Player.h"
 #include "Club.h"
+
 #include <map>
 
 class User_Team
@@ -70,7 +71,6 @@ public:
 	void setTotalPointsPerWeek(unordered_map<int, pair<vector<pair<string, int>>, int >>);
 	void updateTotalPointsPerWeek(int);
 
-	void StartNewtTotalPointsPerWeek();
 
 	map<string, int> getTeamCount();
 	void setTeamCount(map<string, int>);
@@ -86,6 +86,8 @@ public:
 	vector < pair<string, int>> getWeekSquad(int);
 	
 	void displaySquad(int);
+	void displaySquad();
+	
 
 
 

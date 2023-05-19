@@ -11,5 +11,6 @@ int main()
     System::readAdmins();
     System::readLeagues();
     System::readUserTeams();
+    System::readFixtures();
     System::RunSys();
 }
