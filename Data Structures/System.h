@@ -16,7 +16,7 @@ using namespace std;
 class System {
 private:
 	static string const choice_error ;
-	static vector<string> const domains;
+	static vector<string>  domains;
 
 public:
 	
@@ -87,6 +87,7 @@ public:
 	static void readUserTeams();
 	static void readLeagues();
 	static void readFixtures();
+	static void ReadSystemconfig();
 	//==================File Handling:Write========================
 	static void writeUsers();
 	static void writeAdmins();
@@ -94,6 +95,7 @@ public:
 	static void writeLeagues();
 	static void writeClub();
 	static void writeFixtures();
+	static void writeSystemconfig();
 	//===================Fixtures============================================
 	static Player* manageFixtures(); //return player to admin for editing
 	static void displayFixtures(int week);

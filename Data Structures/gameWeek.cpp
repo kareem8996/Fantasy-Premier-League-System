@@ -20,7 +20,8 @@ gameWeek::gameWeek()
 }
 
 gameWeek::gameWeek(
-	string status, 
+	string status,
+	int r,
 	int value,
 	int total_points_gameweek,
 	int goals_scored_gameweek,
@@ -38,6 +39,7 @@ gameWeek::gameWeek(
 	int matchID
 	)
 {
+	this->round = r;
 	this->status = status;
 	this->value = value;
 	this->total_points_gameweek = total_points_gameweek;
@@ -252,6 +254,51 @@ void gameWeek::updateAssists_gameweek(int assists) {
 
 void gameWeek::updateSaves_gameweek(int saves) {
 	saves += saves;
+}
+
+int gameWeek::getmatchID()
+{
+	return match_ID;
+}
+
+void gameWeek::setmatchID(int matchID)
+{
+	match_ID = matchID;
+}
+
+void gameWeek::setRound(int r)
+{
+	this->round = r;
+}
+
+int gameWeek::getRound()
+{
+	return this->round;
+}
+
+void gameWeek::displayGameweek(string pos)
+{
+		
+	cout << "Total Points: " << total_points_gameweek
+		<< "\nBouns: " << bonus
+		<< "\nMinutes Played: " << minutes_played
+		<< "\nGoals Scored: " << goals_scored_gameweek
+		<< "\nAssists: " << assists_gameweek
+		<< "\nRed Cards: " << red_cards_gameweek
+		<< "\nYellow Cards: " << yellow_cards_gameweek
+		<< "\nPenalties Missed: " << penalties_missed
+		<< "\nOwn goals: " << own_goals;
+	if (pos != "FWD")
+		cout<< "\nClean Sheet"<<clean_sheets_gameweek;
+	if (pos == "GKP" || pos == "DEF")
+		cout << "\nGoals Conceded:" << goals_conceded;
+	if (pos == "GKP")
+		cout<< "\nSaves: "<<saves_gameweek;
+
+
+
+		
+		
 }
 
 

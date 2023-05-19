@@ -16,6 +16,7 @@ private:
 	int totalMidfielders;//total number of midfielders picked
 	bool isGoalKeeper; //was GoalKeeper picked
 	int totalBudget;
+	int currPoints=0;
 	map<string, int> teamCount; // this is a map to count number of player picked in each team ex: "Chelsea", 2
 	//vector<int> totalPointsPerWeek; // vector containing total points collected each week 
 	unordered_map<int , pair<vector<pair<string, int>> , int >> squadPerweek; // {#gameweek, {{{"GKP",player_id},{"MID",player_id},{"ATK",player_id}},100 point}

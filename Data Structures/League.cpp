@@ -1,4 +1,5 @@
 #include "League.h"
+#include "System.h"
 using namespace std;
 
 League::League()
@@ -63,9 +64,11 @@ void League::displayLeaderboard()
 	const pair<int, pair<int, User*>>* p;
 	p = &leaderBoard.top();
 
-	cout << "Position\tManager\tPoints\n";
 	for (int i = 0; i < leaderBoard.size(); i++) {
-		cout <<i+1<<"\t" << (p + i)->second.second->getName() <<"\t"<< (p + i)->first<<endl;
+		cout << "Position #" << i + 1;
+		cout <<"\nManager: " << (p + i)->second.second->getUsername();
+		cout <<"\nPoints\n" << (p + i)->first;
+		System::printSeprator_for_errors();
 	}
 
 }
@@ -123,10 +126,12 @@ bool League::userExists(int id) {
 
 	for (int i = 0; i < leaderBoard.size(); i++) {
 		
-		if ((p + i)->second.first == id){}
+		if ((p + i)->second.first == id){
+		
 			return true;
+		}
 	}
-	cout << "User does not exist";
+	
 	return false;
 }
 

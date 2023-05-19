@@ -12,6 +12,7 @@ private:
 public:
 	GoalKeeper(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition, int TotalSaves, int TotalCleanSheets);
 	int CalculatePoints();
+	int CalculateMatchPoints(int matchid);
 	bool getCurrentCleanSheet();
 	void setCurrentCleanSheet(bool Cleansheet);
 
