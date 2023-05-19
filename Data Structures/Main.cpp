@@ -4,7 +4,7 @@ int main()
 {
 
     
-    
+    System::ReadSystemconfig();
     System::readClub();
     System::readPlayers();
     System::readUsers();

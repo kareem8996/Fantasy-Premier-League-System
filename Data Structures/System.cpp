@@ -19,7 +19,7 @@
 using namespace std;
 
 string const System::choice_error = "\tPlease enter your choice here --->\t";
-vector<string> const System::domains = { "gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" };
+vector<string>  System::domains ;
 string  System::startchoice="",
         System:: registerChoice = "",
         System::loginChoice = "",
@@ -1319,6 +1319,8 @@ void System::readFixtures() {
         }
     }
 }
+
+
 
 void System::readPlayers() {
     /// <summary>
@@ -2796,4 +2798,29 @@ void System::writeSystemconfig()
     }
 
     SystemFile.close();
+}
+void System::ReadSystemconfig()
+{
+    vector<string> d;
+    fstream Systemfile("Config.txt", ios::in);
+    
+    if (Systemfile.is_open())
+    {
+        string DataLine;
+        while (Systemfile >> DataLine)
+        {
+            
+            CurrGameWeek = stoi(DataLine);
+            Systemfile >> DataLine;//"================StartDomains==================\n"
+            Systemfile >> DataLine;
+            while (DataLine != "================EndDomains==================") {
+                d.push_back(DataLine);
+                Systemfile >> DataLine;
+            }
+            domains = d;
+        }
+        Systemfile.close();
+        
+    }
+
 }
