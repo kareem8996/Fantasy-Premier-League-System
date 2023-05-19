@@ -60,6 +60,7 @@ int Midfielder::CalculateMatchPoints(int matchid) {
 			points -= game.getPenaltiesMissed() * 2;
 			points += game.getBonus();
 			points -= game.getOwnGoals() * 2;
+			return points;
 		}
 	}
 }
