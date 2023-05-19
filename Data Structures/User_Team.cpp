@@ -61,7 +61,12 @@ void User_Team::pickSquad() {
 	int current_totalPlayers = totalPlayers;
 	string position_picked;
 	while (totalPlayers != MAX_PLAYERS) {
-		cout << "\nPick a Position\n1.Goalkeeper\n2.Defender\n3.Midfielder\n4.Attacker\n5.Quit\n";
+		cout <<"\nPick a Position\n"
+			 <<"1.Goalkeeper " << ((isGoalKeeper == true) ? "1/1":"0/1")
+			 <<"\n2.Defender "<<"Total selected: "<<totalDefenders
+			 <<"\n3.Midfielder " << "Total selected: " << totalMidfielders
+			 <<"\n4.Attacker " << "Total selected: " << totalAttackers
+			 <<"\n5.Quit\n";
 		while (true) {
 			cin >> position_picked;
 			if (cin.fail())
@@ -84,62 +89,63 @@ void User_Team::pickSquad() {
 				cout << "Invalid Choice\n Please choose again\n";
 			}
 		}
-			if (canAddPlayerPosition(position_picked)) {
+		if (canAddPlayerPosition(position_picked)) {
 
-				System::displayPlayers(position_picked);
-				cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
-				string id;
-				cout << "Enter the player ID\n";
-				while (true) {
-					cin >> id;
-					if (cin.fail())
-						System::InputFaliure(id, "write a suitable number ");
-					if (System::isNumber(id)) {
-						if (System::AllPlayers[position_picked].find(stoi(id)) != System::AllPlayers[position_picked].end()) {
-							break;
-						}
-						else {
-							cout << "Player does not exist\n";
-						}
-
+			System::displayPlayers(position_picked);
+			cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
+			string id;
+			cout << "Enter the player ID\n";
+			while (true) {
+				cin >> id;
+				if (cin.fail())
+					System::InputFaliure(id, "write a suitable number ");
+				if (System::isNumber(id)) {
+					if (System::AllPlayers[position_picked].find(stoi(id)) != System::AllPlayers[position_picked].end()) {
+						break;
 					}
 					else {
-						cout << "Please write a code consisting of only numbers\n";
+						cout << "Player does not exist\n";
 					}
-				}
-				if (!Player_Exist(stoi(id))) {
 
-					System::displayPlayers(System::AllPlayers[position_picked][stoi(id)], false, "\n");
-					string Player_Option;
-					cout << "Are you sure you want to pick " << System::AllPlayers[position_picked][stoi(id)]->getFullname() << " ?\n";
-					cin >> Player_Option;
-
-					if (Player_Option == "Y" || Player_Option == "y") {
-
-						if (canAddPlayerPrice(System::AllPlayers[position_picked][stoi(id)])) {
-
-							if (canAddPlayerCount(System::AllPlayers[position_picked][stoi(id)])) {
-
-								pickPlayer(System::AllPlayers[position_picked][stoi(id)]);
-								
-							}
-							else {
-								cout << "Players limit from the same team exceeded\n";
-							}
-						}
-						else {
-							cout << "Player Price exceeds budget\n";
-						}
-					}
 				}
 				else {
-					cout << "You already chose this player\n";
+					cout << "Please write a code consisting of only numbers\n";
+				}
+			}
+			if (!Player_Exist(stoi(id))) {
+
+				System::displayPlayers(System::AllPlayers[position_picked][stoi(id)], false, "\n");
+				string Player_Option;
+				cout << "Are you sure you want to pick " << System::AllPlayers[position_picked][stoi(id)]->getFullname() << " ?\n";
+				cin >> Player_Option;
+
+				if (Player_Option == "Y" || Player_Option == "y") {
+
+					if (canAddPlayerPrice(System::AllPlayers[position_picked][stoi(id)])) {
+
+						if (canAddPlayerCount(System::AllPlayers[position_picked][stoi(id)])) {
+
+							pickPlayer(System::AllPlayers[position_picked][stoi(id)]);
+
+						}
+						else {
+							cout << "Players limit from the same team exceeded\n";
+						}
+					}
+					else {
+						cout << "Player Price exceeds budget\n";
+					}
 				}
 			}
 			else {
-				cout << "You have reached the maximum number of players from this position to choose from\n";
+				cout << "You already chose this player\n";
 			}
-		
+		}
+		else {
+			cout << "You have reached the maximum number of players from this position to choose from\n";
+		}
+
+		System::printSeprator();
 	}
 }
 void User_Team::pickPlayer(Player*p) {
@@ -201,12 +207,16 @@ int User_Team::getTotalPlayers()
 int User_Team::calculateSquadPoints()
 {
 	int total_points=0;
-	for (auto player : squadPerweek[System::CurrGameWeek-1].first)
-	{
-		
-		total_points += System::AllPlayers[player.first][player.second]->CalculatePoints();
+
+	if(squadPerweek.find(System::CurrGameWeek - 1)!=squadPerweek.end()){
+		for (auto player : squadPerweek[System::CurrGameWeek - 1].first)
+		{
+
+			total_points += System::AllPlayers[player.first][player.second]->CalculatePoints();
+		}
+
+		return total_points;
 	}
-	return total_points;
 }
 
 void User_Team::setTotalPlayers(int players) {
@@ -271,11 +281,7 @@ void User_Team::setTotalPointsPerWeek(unordered_map<int, pair<vector<pair<string
 }
 void User_Team::updateTotalPointsPerWeek(int points=0) {
 	
-	vector<pair<string, int>> emptySqaud;
-	if (squadPerweek.empty())
-		squadPerweek.insert({System::CurrGameWeek,make_pair(emptySqaud ,points)});
-	else
-		squadPerweek[System::CurrGameWeek].second = points;
+	currPoints += points;
 }
 
 
@@ -294,39 +300,43 @@ void User_Team::displaySquad(int week) /// Display Gameweek squad
 {
 	if (week != System::CurrGameWeek) {
 		int points;
-		if (!squadPerweek.empty())
+		if (!squadPerweek.empty()) {
+			
 			points = squadPerweek[week].second;
-		else points = 0;
 
-		cout << "Total Points: " << points << endl << endl;
-		for (auto& player : squadPerweek[week].first) {
-			cout << "----- " << player.first << " ------" << endl; /// postion
+			cout << "Total Points: " << points << endl << endl;
+			
+			for (auto& player : squadPerweek[week].first) {
+				cout << "----- " << player.first << " ------" << endl; /// postion
 
-			if (points != 0)
-				cout << player.second << " - "
-				<< System::AllPlayers[player.first][player.second]->getFullname() << "\t"
-				<< System::AllPlayers[player.first][player.second]->getPlayer_History().back().getTotal_points_gameweek()
-				<< " Points\n";
-			else {
-				cout << player.second << " - "
-					<< System::AllPlayers[player.first][player.second]->getFullname() << "\t 0 Points\n";
+				if (points != 0)
+					cout << player.second << " - "
+					<< System::AllPlayers[player.first][player.second]->getFullname() << "\t"
+					<< System::AllPlayers[player.first][player.second]->getPlayer_History().back().getTotal_points_gameweek()
+					<< " Points\n";
+				else {
+					cout << player.second << " - "
+						<< System::AllPlayers[player.first][player.second]->getFullname() << "\t 0 Points\n";
+				}
+
 			}
-
 		}
+		else points = 0;
 	}
 	else {
 		for (auto& t : Squad) {
 			cout << "----- " << t.first << " ------" << endl;
 			for (auto& p : t.second) {
-				Club* c = System::AllClubs[p.second->getClub()];
-				pair<int, int>* match = &c->getFixtures()[System::CurrGameWeek];
-				Fixture* f = System::AllFixtures[System::CurrGameWeek][match->second];
+				//fixtures in club is zero based
+			   // fixtures in All fixtures is 1 based
+				Fixture* f = System::AllFixtures[System::CurrGameWeek][System::AllClubs[p.second->getClub()]->getFixtures()[System::CurrGameWeek - 1].second];
 				cout << p.second->getID() << " - " << p.second->getFullname() << "\t" << " Next Fixture: ";
+				
 				if (p.second->getClub() == System::getClubByID(f->getHomeTeam())) {
-					cout << System::getClubByID(f->getAwayTeam());
+					cout << System::getClubByID(f->getAwayTeam())<<endl;
 				}
 				else {
-					cout << System::getClubByID(f->getHomeTeam());
+					cout << System::getClubByID(f->getHomeTeam()) << endl;
 				}
 			}
 		}
@@ -358,7 +368,8 @@ void User_Team::setTransfers(int t) {
 }
 
 void User_Team::increaseTransfers() {
-	Transfers_left++;
+	if(Transfers_left<2)
+		Transfers_left++;
 }
 void User_Team::decreaseTransfers() {
 	Transfers_left--;
@@ -366,8 +377,8 @@ void User_Team::decreaseTransfers() {
 
 void User_Team::PunishTransfers()
 {
-	if (squadPerweek.empty()) updateTotalPointsPerWeek(-4);
-	else squadPerweek[System::CurrGameWeek].second -= 4;
+	updateTotalPointsPerWeek(-4);
+	
 }
 
 unordered_map<string, unordered_map<int, Player*>> User_Team::getCurrentSquad()
@@ -383,8 +394,16 @@ void User_Team::setSquad(unordered_map<string, unordered_map<int, Player*>> s) {
 
 vector<pair<string, int>> User_Team::getWeekSquad(int week = System::CurrGameWeek-1)
 {
-	
-		return squadPerweek[week].first;
+	if (week == System::CurrGameWeek) {
+		vector<pair<string, int>> squadIds;
+		for (auto& player : Squad) {
+			for (auto& x : player.second)
+				squadIds.push_back({ player.first,x.first });
+
+		}
+		return squadIds;
+	}
+	return squadPerweek[week].first;
 }
 
 void User_Team::StartNewGameWeek()
@@ -395,7 +414,10 @@ void User_Team::StartNewGameWeek()
 			squadIds.push_back({ player.first,x.first});
 
 	}
-	squadPerweek.insert({ System::CurrGameWeek,{squadIds,0} });
+	squadPerweek[System::CurrGameWeek - 1].second += calculateSquadPoints();
+	this->increaseTransfers();
+	squadPerweek.insert({ System::CurrGameWeek,{squadIds,currPoints} });
+	currPoints = 0;
 }
 
 int User_Team::displayGameweeks()

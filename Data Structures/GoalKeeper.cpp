@@ -1,4 +1,5 @@
 #include "GoalKeeper.h"
+#include "System.h"
 
 GoalKeeper::GoalKeeper(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints,string PlayerPosition,int TotalSaves,int TotalCleanSheets) 
 	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition){
@@ -49,20 +50,47 @@ void GoalKeeper::updateTotalSaves() {
 
 int GoalKeeper::CalculatePoints() {
 	int points = 0;
-	points += this->getPlayer_History().back().getGoals_scored_gameweek() * 6;
-	points += this->getPlayer_History().back().getAssists_gameweek() * 3;
-	points += this->getPlayer_History().back().getClean_sheets_gameweek() * 4;
-	points += this->getPlayer_History().back().getSaves_gameweek()/3;
-	points -= this->getPlayer_History().back().getYellow_cards_gameweek();
-	points -= this->getPlayer_History().back().getRed_cards_gameweek() * 3;
+	for (auto& game : getPlayer_History()) {
+		if (game.getRound() == System::CurrGameWeek) {
+			points += game.getGoals_scored_gameweek() * 6;
+			points += game.getAssists_gameweek() * 3;
+			points += game.getClean_sheets_gameweek() * 4;
+			points += game.getSaves_gameweek() / 3;
+			points -= game.getYellow_cards_gameweek();
+			points -= game.getRed_cards_gameweek() * 3;
 
-	if (this->getPlayer_History().back().getMinutesPlayed() < 60) points += 1;
-	else points += 2;
+			if (game.getMinutesPlayed() < 60) points += 1;
+			else points += 2;
 
-	points -= this->getPlayer_History().back().getPenaltiesMissed() * 2;
-	points += this->getPlayer_History().back().getBonus();
-	points -= this->getPlayer_History().back().getOwnGoals() * 2;
-	points += this->getPlayer_History().back().getGoalsConceded() / 2;
-	points += this->getPlayer_History().back().getPenaltiesSaved() * 5;
+			points -= game.getPenaltiesMissed() * 2;
+			points += game.getBonus();
+			points -= game.getOwnGoals() * 2;
+			points += game.getGoalsConceded() / 2;
+			points += game.getPenaltiesSaved() * 5;
+		}
+	}
 	return points;
+}
+int GoalKeeper::CalculateMatchPoints(int matchid) {
+	int points = 0;
+	for (auto& game : getPlayer_History()) {
+		if (game.getmatchID() == matchid) {
+			points += game.getGoals_scored_gameweek() * 6;
+			points += game.getAssists_gameweek() * 3;
+			points += game.getClean_sheets_gameweek() * 4;
+			points += game.getSaves_gameweek() / 3;
+			points -= game.getYellow_cards_gameweek();
+			points -= game.getRed_cards_gameweek() * 3;
+
+			if (game.getMinutesPlayed() < 60) points += 1;
+			else points += 2;
+
+			points -= game.getPenaltiesMissed() * 2;
+			points += game.getBonus();
+			points -= game.getOwnGoals() * 2;
+			points += game.getGoalsConceded() / 2;
+			points += game.getPenaltiesSaved() * 5;
+			return points;
+		}
+	}
 }

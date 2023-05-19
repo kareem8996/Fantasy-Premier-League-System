@@ -6,6 +6,7 @@ class Attacker : public Player
 {
 public:
 	int CalculatePoints();
+	int CalculateMatchPoints(int matchID);
 	Attacker(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition);
 };
 

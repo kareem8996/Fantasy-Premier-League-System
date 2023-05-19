@@ -7,7 +7,8 @@ class gameWeek
 {
 private:
 	string status;
-	int value,
+	int round,
+		value,
 		total_points_gameweek,
 		goals_scored_gameweek,
 		assists_gameweek,
@@ -29,6 +30,7 @@ private:
 public:
 	gameWeek();
 	gameWeek(string status,
+		int round,
 		int value,
 		int total_points_gameweek,
 		int goals_scored_gameweek,
@@ -54,7 +56,6 @@ public:
 	void setRed_cards_gameweek(int n);
 	void setYellow_cards_gameweek(int n);
 	void setSaves_gameweek(int n);
-
 	string getStatus();
 	int getValue();
 	int getTotal_points_gameweek();
@@ -108,5 +109,10 @@ public:
 	void updateYellow_Cards_gameweek(int val);
 	void updateAssists_gameweek(int assists);
 	void updateSaves_gameweek(int saves);
+	int getmatchID();
+	void setmatchID(int matchID);
+	void setRound(int r);
+	int getRound();
+	void displayGameweek(string pos);
 };
 

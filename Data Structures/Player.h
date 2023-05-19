@@ -28,6 +28,7 @@ public:
 	Player();
 
 	virtual int CalculatePoints()=0;
+	virtual int CalculateMatchPoints(int matchID)=0;
 	Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition);
 	string getFullname();
 	void setFullname(string Fullname);
@@ -71,7 +72,7 @@ public:
 	vector<gameWeek> getPlayer_History();
 	void updatePlayer_History(gameWeek hist);
 
-	void updatePlayer_History();
+	void updatePlayer_History(pair<int, int>);
 	void increasePrice();
 	void decreasePrice();
 
@@ -81,7 +82,7 @@ public:
 
 	void updateGoalScoredGameweek(int goals);
 
-	void updatePointsGameweek();
+	//void updatePointsGameweek();
 
 	void updateAssistsGameweek(int);
 
@@ -104,6 +105,6 @@ public:
     void setWashome(bool);
     bool WasHome();
 
-	void StartNewGameWeek();
+	void StartNewGameWeek(pair<int, int>);
 };
 	

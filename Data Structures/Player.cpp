@@ -172,16 +172,21 @@ void Player::updatePlayer_History(gameWeek hist)
 {
 	Player_History.push_back(hist);
 }
-void Player::updatePlayer_History()
+void Player::updatePlayer_History(pair<int, int> fixture)
 {
 	gameWeek game;
+	game.setmatchID(fixture.second);
+	game.setRound(fixture.first);
 	Player_History.push_back(game);
 }
 
-void Player::StartNewGameWeek()
+void Player::StartNewGameWeek(pair<int,int> fixture)
 {
-	Player_History.back().setTotal_points_gameweek (this->CalculatePoints());
-	updatePlayer_History();
+	for (auto& gameweek : Player_History) {
+		if (gameweek.getRound()==System::CurrGameWeek-1)
+			gameweek.setTotal_points_gameweek (this->CalculateMatchPoints(gameweek.getmatchID()));
+	}
+	updatePlayer_History(fixture);
 }
 
 void Player::increasePrice()
@@ -218,10 +223,10 @@ void Player::updateGoalScoredGameweek(int goals)
 	Player_History.back().updateGoals_scored_gameweek(goals);
 	
 }
-void Player::updatePointsGameweek()
-{
-	Player_History.back().setTotal_points_gameweek(CalculatePoints());
-}
+//void Player::updatePointsGameweek()
+//{
+//	Player_History.back().setTotal_points_gameweek(CalculatePoints());
+//}
 
 void Player::updateAssistsGameweek(int assists)
 {

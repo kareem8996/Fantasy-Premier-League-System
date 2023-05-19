@@ -648,9 +648,13 @@ EnterLeagueID:
 			cin >> userID;
 			if (cin.fail())
 				System::InputFaliure(userID, "\t\tEnter League you want to edit");
-			if (!System::isNumber(userID)&&!currentleague->userExists(stoi(userID)))
+			if (!System::isNumber(userID))
 			{
 				cout << "\t\tPlease Enter a valid user ID: ";
+				goto EnterUserID;
+			}
+			if (!currentleague->userExists(stoi(userID))) {
+				cout << "User does not exist";
 				goto EnterUserID;
 			}
 			cout << "Are you sure you want to remove this user?(Y/N)";
@@ -732,18 +736,15 @@ Validating:
 }
 
 void Admin::startNewGameweek() {
+
+
 	for (auto& UserTeam : System::AllUsersTeams) {
 		UserTeam.second->StartNewGameWeek();
-	}
-	for (auto& position : System::AllPlayers) {
-		for (auto& player : position.second) {
-			player.second->StartNewGameWeek();
-		}
-
 	}
 	for (auto& user : System::AllUsers) {
 		user.second->startNewGameweek();
 	}
+
 
 	for(auto&league:System::AllLeagues){
 		league.second->UpdateLeaderBoard();
@@ -758,6 +759,18 @@ void Admin::startNewGameweek() {
 	for (auto& fixture : System::AllFixtures[System::CurrGameWeek]) {
 		fixture.second->setFinished(false);
 	}
+	
+	for (auto& club : System::AllClubs) {
+		for (auto& fixture : club.second->getFixtures()) {
+			if (fixture.first == System::CurrGameWeek) {
+
+				for (auto& player : club.second->getSquad()) {
+						player.second->StartNewGameWeek(fixture);
+				}
+			}
+		}
+	}
+
 	System::CurrGameWeek++;
 
 }
