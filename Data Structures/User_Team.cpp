@@ -292,27 +292,47 @@ void User_Team::setTeamCount(map<string, int>teams)
 
 void User_Team::displaySquad(int week) /// Display Gameweek squad
 {
-	int points;
-	if (!squadPerweek.empty())
-		points = squadPerweek[week].second;
-	else points = 0;
+	if (week != System::CurrGameWeek) {
+		int points;
+		if (!squadPerweek.empty())
+			points = squadPerweek[week].second;
+		else points = 0;
 
-	cout << "Total Points: " << points << endl<<endl;
-	for (auto& player : squadPerweek[week].first) {
-		cout << "----- " << player.first << " ------" << endl; /// postion
+		cout << "Total Points: " << points << endl << endl;
+		for (auto& player : squadPerweek[week].first) {
+			cout << "----- " << player.first << " ------" << endl; /// postion
 
-		if (points != 0)
-		cout<< player.second<<" - "
-			<< System::AllPlayers[player.first][player.second]->getFullname() << "\t" 
-			<< System::AllPlayers[player.first][player.second]->getPlayer_History().back().getTotal_points_gameweek() 
-			<< " Points\n";
-		else {
-			cout << player.second << " - " 
-				<< System::AllPlayers[player.first][player.second]->getFullname() << "\t 0 Points\n";
+			if (points != 0)
+				cout << player.second << " - "
+				<< System::AllPlayers[player.first][player.second]->getFullname() << "\t"
+				<< System::AllPlayers[player.first][player.second]->getPlayer_History().back().getTotal_points_gameweek()
+				<< " Points\n";
+			else {
+				cout << player.second << " - "
+					<< System::AllPlayers[player.first][player.second]->getFullname() << "\t 0 Points\n";
+			}
+
 		}
-		
+	}
+	else {
+		for (auto& t : Squad) {
+			cout << "----- " << t.first << " ------" << endl;
+			for (auto& p : t.second) {
+				Club* c = System::AllClubs[p.second->getClub()];
+				pair<int, int>* match = &c->getFixtures()[System::CurrGameWeek];
+				Fixture* f = System::AllFixtures[System::CurrGameWeek][match->second];
+				cout << p.second->getID() << " - " << p.second->getFullname() << "\t" << " Next Fixture: ";
+				if (p.second->getClub() == System::getClubByID(f->getHomeTeam())) {
+					cout << System::getClubByID(f->getAwayTeam());
+				}
+				else {
+					cout << System::getClubByID(f->getHomeTeam());
+				}
+			}
+		}
 	}
 }
+
 void User_Team::displaySquad()
 {
 	displaySquad(System::CurrGameWeek-1);
@@ -380,25 +400,30 @@ void User_Team::StartNewGameWeek()
 
 int User_Team::displayGameweeks()
 {
-	string gameweekChoice;
-	cout << "Select which gameweek you want to display its squad\n";
-	for (auto& week : squadPerweek) {
+	if (squadPerweek.size() != 0) {
+		string gameweekChoice;
+		cout << "Select which gameweek you want to display its squad\n";
+		for (auto& week : squadPerweek) {
 
-		cout << "Gameweek "<< week.first <<endl;
-	
-	}
+			cout << "Gameweek " << week.first << endl;
+
+		}
 	gameweekInput:
-	cout << "Please enter your choice";
-	cin >> gameweekChoice;
-	if (cin.fail())
-		System::InputFaliure(gameweekChoice, "Please enter your choice");
-	if (squadPerweek.find(stoi(gameweekChoice)) == squadPerweek.end()) {
-		cout << "Invalid choice\n";
-		goto gameweekInput;
+		cout << "Please enter your choice";
+		cin >> gameweekChoice;
+		if (cin.fail())
+			System::InputFaliure(gameweekChoice, "Please enter your choice");
+		if (squadPerweek.find(stoi(gameweekChoice)) == squadPerweek.end()) {
+			cout << "Invalid choice\n";
+			goto gameweekInput;
 
+		}
+		else {
+			return stoi(gameweekChoice);
+		}
 	}
 	else {
-		return stoi(gameweekChoice);
+		return System::CurrGameWeek;
 	}
 
 }

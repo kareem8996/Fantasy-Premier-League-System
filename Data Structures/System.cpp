@@ -400,11 +400,11 @@ void System::RegisterUser() {
         else {
             cout << "this username is already taken, Please enter another username.\n";
         }
-        cout << "\t\tThank You for registering on our system!\n";
-        printSeprator();
-        loginChoice = "2";
-        startchoice = "1";
     } while (vUsername != true);
+    cout << "\t\tThank You for registering on our system!\n";
+    printSeprator();
+    loginChoice = "2";
+    startchoice = "1";
 }
 
 void System::RegisterAdmin() {
@@ -489,11 +489,11 @@ void System::RegisterAdmin() {
         else {
             cout << "this username is already taken, Please enter another username.\n";
         }
-        cout << "\t\tThank You for registering on our system!\n";
-        printSeprator();
-        loginChoice = "1";
-        startchoice = "1";
     } while (vUsername != true);
+    cout << "\t\tThank You for registering on our system!\n";
+    printSeprator();
+    loginChoice = "1";
+    startchoice = "1";
 }
 
 bool System::userLogin( string attemptedUsername, string attemptedPassword) {
@@ -1106,7 +1106,7 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
     /// displays only one player
     /// </summary>
     /// <param name="p">player object</param>
-    /// <param name="flag">This is used so we can use the same code twice</param>
+    /// <paramname="flag">This is used so we can use the same code twice</param>
     /// <param name="delim"> the delimiter can either be enter or tab</param>
     System::printSeprator_for_errors();
     cout << "ID: " << p->getID() << delim;
@@ -1168,7 +1168,13 @@ void System::displayPlayers(string position) {
     /// </summary>
     /// <param name="position"></param>
     for (auto& it : System::AllPlayers[position]) {
-        displayPlayers(it.second, true, "\t||\t");
+        if(it.second!=nullptr)
+             displayPlayers(it.second, true, "\t||\t");
+    }
+}
+string System::getClubByID(int id) {
+    for (auto& club : AllClubs) {
+        if (club.second->getClubID() == id) return club.second->getName();
     }
 }
 void System::readFixtures() {
@@ -1212,6 +1218,8 @@ void System::readFixtures() {
                     stoi(row["team_a_difficulty"].at(row_counter)),
                     finish);
                 match->updateWinnerPoints();
+                AllClubs[getClubByID(stoi(row["team_h"].at(row_counter)))]->updateFixtures(stoi(row["event"].at(row_counter)),stoi(row["id"].at(row_counter)));
+                AllClubs[getClubByID(stoi(row["team_a"].at(row_counter)))]->updateFixtures(stoi(row["event"].at(row_counter)),stoi(row["id"].at(row_counter)));
                 AllFixtures[stoi(row["event"].at(row_counter))].insert({ stoi(row["id"].at(row_counter)),match });
             }
             row_counter++;
@@ -2492,6 +2500,7 @@ void System::ManageSqaudMenu(User_Team& c) {
 void System::ViewPlayers() { // Last gameweek SQUAD
     User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
     int weekNo;
+    
     weekNo = Current_Team->displayGameweeks();
     while (true) {
         Current_Team->displaySquad(weekNo);

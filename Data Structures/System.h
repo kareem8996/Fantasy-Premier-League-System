@@ -101,6 +101,7 @@ public:
 	static string ChooseFixtureClub(int fixtureID,bool&);
 	static Player* ChooseFixturePlayer(string,bool&);
 	static unordered_map<int, string> getClubsByID();
+	static string getClubByID(int id);
 	//===================Leagues============================================
 	static void createLeague();
 	static void joinLeague();

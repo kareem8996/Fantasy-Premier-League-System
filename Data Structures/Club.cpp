@@ -36,19 +36,19 @@ void  Club::deletePlayer(Player* playerToBeDeleted) {
 	Squad.erase(playerToBeDeleted->getID());
 }
 
-void Club::setFixtures(vector<int> fix)
+void Club::setFixtures(vector<pair<int,int>> fix)
 {
 	Fixtures = fix;
 }
 
-vector<int> Club::getFixtures()
+vector<pair<int, int>> Club::getFixtures()
 {
 	return Fixtures;
 }
 
-void Club::updateFixtures(int fix)
+void Club::updateFixtures( int gameweek ,int fix )
 {
-	Fixtures.push_back(fix);
+	Fixtures.push_back({ gameweek,fix });
 }
 
 bool Club::isSquadEmpty() {

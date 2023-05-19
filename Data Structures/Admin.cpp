@@ -566,7 +566,7 @@ void Admin::edit_team_menu() {
 void Admin::edit_user() { 
 		string user_name;
 		for (auto user : System::AllUsers) {
-			cout << user.first << "\t" << user.second->getName()<<endl;
+			cout << user.first << "\t" << user.second->getUsername()<<endl;
 		}
 		display_user:
 		cout << "\nenter user id\n";

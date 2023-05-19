@@ -101,7 +101,8 @@ void User::displaydata()
     cout<<"Phone Number: " << getPhoneNumber() << endl;
     //cout<<"Birthdate" << getBirthdate() << endl;
     cout<<"Total Points: " << getTotalPoints() << endl;
-    cout<<"Current Gameweek Points: " << System::AllUsersTeams[id]->calculateSquadPoints() << endl;
+    if(System::AllUsersTeams.find(id)!= System::AllUsersTeams.end())
+        cout<<"Current Gameweek Points: " << System::AllUsersTeams[id]->calculateSquadPoints() << endl;
     cout<<"Team Name: " << getTeamName() << endl;
 }
 

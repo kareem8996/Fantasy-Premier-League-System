@@ -13,7 +13,7 @@ private:
 	string Name;
 	unordered_map<int, Player*> Squad;
 	int LeaguePoints;
-	vector<int> Fixtures;// fixture ID
+	vector<pair<int,int>> Fixtures;//gameweek, fixture ID
 public:
 	Club(int,string);
 	void setName(string Name);
@@ -28,9 +28,9 @@ public:
 	void deletePlayer(int playerToBeDeleted);
 	void deletePlayer(Player* playerToBeDeleted);
 	
-	void setFixtures(vector<int>);
-	vector<int> getFixtures();
-	void updateFixtures(int);
+	void setFixtures(vector<pair<int, int>>);
+	vector<pair<int, int>> getFixtures();
+	void updateFixtures(int,int);
 
 	bool isSquadEmpty();
 
