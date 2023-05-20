@@ -26,8 +26,8 @@ public:
 		loginChoice ,
 		menuChoice ;
 	static int CurrGameWeek; // Gameweek that will be played
-	static User CurrUser;
-	static Admin CurrAdmin;
+	static User* CurrUser;
+	static Admin* CurrAdmin;
 	static unordered_map<int, User*> AllUsers;//User id, User object
 	static unordered_map<int, Admin*> AllAdmins;//Admin id, Admin object
 	static unordered_map<string, Club*> AllClubs; //Club name,club object
@@ -79,6 +79,7 @@ public:
 	static void displayPlayers(string position);
 	static void displayPlayers(Player *p, bool flag, string delim);
 	static void displayClubs();
+	static void DisplayPlayerGameweek(Player* p);
 	//==================File Handling:Read========================
 	static void readPlayers();
 	static void readClub();

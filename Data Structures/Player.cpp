@@ -177,6 +177,8 @@ void Player::updatePlayer_History(pair<int, int> fixture)
 	gameWeek game;
 	game.setmatchID(fixture.second);
 	game.setRound(fixture.first);
+	game.setValue(Player_History.back().getValue());
+	game.setStatus(Player_History.back().getStatus());
 	Player_History.push_back(game);
 }
 

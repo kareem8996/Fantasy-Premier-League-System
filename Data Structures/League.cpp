@@ -111,8 +111,9 @@ int League::generateCode() {
    return num1 * 1000 + num2 * 100 + num3 * 10 + num4;
 }
 
-void League::insertUser(User* u) {
+void League::insertUser(User*& u) {
 	this->leaderBoard.push({ 0, { u->getID(),u} });
+	u->updateLeagues(id);
 }
 
 void League::insertUser(int score, User*u)
@@ -156,8 +157,7 @@ void League::UpdateLeaderBoard()
 	const pair<int, pair<int, User*>>* p = &leaderBoard.top();
 
 	for (int i = 0; i < leaderBoard.size(); i++) {
-		
-		newleaderboard.push({ (p + i)->second.second->getTotalPoints() , { (p + i)->second.first,(p + i)->second.second} });
+		newleaderboard.push({ (System::AllUsersTeams[(p + i)->second.first]->getTotalPointsPerWeek(System::CurrGameWeek - 1) + (p + i)->second.second->getTotalPoints()) , {(p + i)->second.first,(p + i)->second.second}});
 	}
 	this->leaderBoard = newleaderboard;
 }

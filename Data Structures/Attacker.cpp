@@ -4,17 +4,17 @@ Attacker::Attacker(int id, string PlayerName, string PlayerTeam, int PlayerTotal
 	:Player(id, PlayerName, PlayerTeam, PlayerTotalPoints, PlayerPosition)
 {
 }
-int Attacker::CalculatePoints() {
+int Attacker::CalculatePoints(int week) {
 	int points = 0;
 	for (auto& game : getPlayer_History()) {
-		if (game.getRound() == System::CurrGameWeek) {
+		if (game.getRound() == week) {
 			points += game.getGoals_scored_gameweek() * 4;
 			points += game.getAssists_gameweek() * 3;
 			points -= game.getYellow_cards_gameweek();
 			points -= game.getRed_cards_gameweek() * 3;
 
-			if (game.getMinutesPlayed() < 60) points += 1;
-			else points += 2;
+			if (game.getMinutesPlayed() < 60&& game.getMinutesPlayed() > 0) points += 1;
+			else if (game.getMinutesPlayed() >=60)points += 2;
 
 			points -= game.getPenaltiesMissed() * 2;
 			points += game.getBonus();
@@ -24,6 +24,9 @@ int Attacker::CalculatePoints() {
 	}
 	return points;
 }
+int Attacker::CalculatePoints() {
+	return CalculatePoints(System::CurrGameWeek);
+}
 
 int Attacker::CalculateMatchPoints(int matchid) {
 	int points = 0;
@@ -32,10 +35,10 @@ int Attacker::CalculateMatchPoints(int matchid) {
 			points += game.getGoals_scored_gameweek() * 4;
 			points += game.getAssists_gameweek() * 3;
 			points -= game.getYellow_cards_gameweek();
-			points -= game.getRed_cards_gameweek()*3;
+			points -= game.getRed_cards_gameweek() * 3;
 
-			if (game.getMinutesPlayed()< 60) points += 1;
-			else points += 2;
+			if (game.getMinutesPlayed() < 60 && game.getMinutesPlayed() > 0) points += 1;
+			else if (game.getMinutesPlayed() >= 60)points += 2;
 
 			points -= game.getPenaltiesMissed() * 2;
 			points += game.getBonus();

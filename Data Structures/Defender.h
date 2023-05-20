@@ -10,6 +10,7 @@ private:
 public:
 	Defender(int id, string PlayerName, string PlayerTeam, int PlayerTotalPoints,string PlayerPosition,int TotalCleanSheets);
 	int CalculatePoints();
+	int CalculatePoints(int);
 	int CalculateMatchPoints(int matchid);
 	bool getCurrentCleanSheet();
 	void setCurrentCleanSheet(bool Cleansheet);

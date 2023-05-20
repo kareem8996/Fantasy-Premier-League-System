@@ -68,7 +68,8 @@ public:
 
 	
 
-	unordered_map<int, pair<vector<pair<string, int>>, int >> getTotalPointsPerWeek();
+	int getTotalPointsPerWeek(int week);
+	unordered_map<int, pair<vector<pair<string, int>>, int>> getSquadPerWeek();
 	void setTotalPointsPerWeek(unordered_map<int, pair<vector<pair<string, int>>, int >>);
 	void updateTotalPointsPerWeek(int);
 

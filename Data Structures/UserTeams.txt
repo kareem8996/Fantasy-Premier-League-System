@@ -8,9 +8,9 @@
 ==========UserTeamClubsCount==============
 Arsenal:2
 Chelsea:1
+City:2
 Fulham:1
 Liverpool:3
-Man City:2
 Spurs:2
 ==========CurrentSquad==============
 GKP:15
@@ -19,11 +19,11 @@ MID:724
 MID:301
 MID:428
 MID:446
+FWD:28
+FWD:318
 DEF:285
 DEF:284
 DEF:1
-FWD:28
-FWD:318
 ==========EndCurrentSquad===============
 ==========Gameweeks==============
 GameWeek:25:Points:45
@@ -52,9 +52,9 @@ FWD:318
 ==========UserTeamClubsCount==============
 Arsenal:2
 Chelsea:1
+City:2
 Fulham:1
 Liverpool:3
-Man City:2
 Spurs:2
 ==========CurrentSquad==============
 GKP:15
@@ -63,11 +63,42 @@ MID:724
 MID:301
 MID:428
 MID:446
+FWD:28
+FWD:318
 DEF:285
 DEF:284
 DEF:1
-FWD:28
+==========EndCurrentSquad===============
+==========Gameweeks==============
+==========EndGameweeks==============
+==========EndUser==============
+3
+11
+4
+2
+4
+1
+45
+==========UserTeamClubsCount==============
+Arsenal:2
+Aston Villa:1
+Chelsea:1
+Liverpool:3
+Man City:2
+Newcastle:1
+Spurs:1
+==========CurrentSquad==============
+GKP:15
+MID:283
+MID:301
+MID:368
+MID:755
+DEF:284
+DEF:285
 FWD:318
+FWD:427
+FWD:28
+FWD:617
 ==========EndCurrentSquad===============
 ==========Gameweeks==============
 ==========EndGameweeks==============

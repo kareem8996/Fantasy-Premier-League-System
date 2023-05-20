@@ -24,18 +24,18 @@ void Defender::updateTotalCleanSheets() {
 	if (CurrentCleanSheet)
 		TotalCleanSheets++;
 }
-int Defender::CalculatePoints() {
+int Defender::CalculatePoints(int week) {
 	int points = 0;
 	for (auto& game : getPlayer_History()) {
-		if (game.getRound() == System::CurrGameWeek) {
+		if (game.getRound() ==week) {
 			points += game.getGoals_scored_gameweek() * 6;
 			points += game.getAssists_gameweek() * 3;
 			points += game.getClean_sheets_gameweek() * 4;
 			points -= game.getYellow_cards_gameweek();
 			points -= game.getRed_cards_gameweek() * 3;
 
-			if (game.getMinutesPlayed() < 60) points += 1;
-			else points += 2;
+			if (game.getMinutesPlayed() < 60 && game.getMinutesPlayed() > 0) points += 1;
+			else if (game.getMinutesPlayed() >= 60)points += 2;
 
 			points -= game.getPenaltiesMissed() * 2;
 			points += game.getBonus();
@@ -44,6 +44,9 @@ int Defender::CalculatePoints() {
 		}
 	}
 	return points;
+}
+int Defender::CalculatePoints() {
+	return CalculatePoints(System::CurrGameWeek);
 }
 int Defender::CalculateMatchPoints(int matchid) {
 	int points = 0;
@@ -55,8 +58,8 @@ int Defender::CalculateMatchPoints(int matchid) {
 			points -= game.getYellow_cards_gameweek();
 			points -= game.getRed_cards_gameweek() * 3;
 
-			if (game.getMinutesPlayed() < 60) points += 1;
-			else points += 2;
+			if (game.getMinutesPlayed() < 60 && game.getMinutesPlayed() > 0) points += 1;
+			else if(game.getMinutesPlayed() >=60 )points += 2;
 
 			points -= game.getPenaltiesMissed() * 2;
 			points += game.getBonus();

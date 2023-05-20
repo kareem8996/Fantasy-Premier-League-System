@@ -28,6 +28,7 @@ public:
 	Player();
 
 	virtual int CalculatePoints()=0;
+	virtual int CalculatePoints(int)=0;
 	virtual int CalculateMatchPoints(int matchID)=0;
 	Player(int id,string PlayerName, string PlayerTeam, int PlayerTotalPoints, string PlayerPosition);
 	string getFullname();

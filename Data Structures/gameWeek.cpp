@@ -323,16 +323,16 @@ void gameWeek::updateFixture( int Score,bool Own){
 bool gameWeek::getFixtureCleansheet(){
 	Fixture* match = System::AllFixtures[System::CurrGameWeek-1][match_ID];
 	if (wasHome)
-		return match->getHomescore()==0;
-	else
 		return match->getAwayscore()==0;
+	else
+		return match->getHomescore()==0;
 }
 int gameWeek::getFixtureGoalConceded() {
 	Fixture* match = System::AllFixtures[System::CurrGameWeek - 1][match_ID];
 	if (wasHome)
-		return match->getHomescore();
-	else
 		return match->getAwayscore();
+	else
+		return match->getHomescore();
 }
 Fixture* gameWeek::getFixture(){
 	return System::AllFixtures[System::CurrGameWeek - 1][match_ID];

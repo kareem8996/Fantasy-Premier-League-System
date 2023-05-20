@@ -32,7 +32,7 @@ public:
     void displayUser(int userchoice);
     void removeUser(int id);
     int static generateCode();
-    void insertUser(User*);
+    void insertUser(User*&);
     void insertUser(int score,User*);
 
     bool userExists(int id);

@@ -19,13 +19,13 @@
 using namespace std;
 
 string const System::choice_error = "\tPlease enter your choice here --->\t";
-vector<string>  System::domains ;
+vector<string>  System::domains= { "gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" } ;
 string  System::startchoice="",
         System:: registerChoice = "",
         System::loginChoice = "",
         System::menuChoice = "";
-User System::CurrUser ;
-Admin System::CurrAdmin;
+User* System::CurrUser ;
+Admin* System::CurrAdmin;
 int System::CurrGameWeek = 37;
 unordered_map<int,User*> System::AllUsers;
 unordered_map<int,Admin*> System::AllAdmins;
@@ -394,9 +394,9 @@ void System::RegisterUser() {
             cin.ignore();
             getline(cin, TeamName);
             int id = AllUsers.size() + 1;
-            User user = {id, Name, Email, Username, Password, Phone, 0, TeamName };
-            AllUsers.insert({id,&user});
-            CurrUser = *AllUsers[id];
+            
+            AllUsers.insert({id, (new User(id, Name, Email, Username, Password, Phone, 0, TeamName )) });
+            CurrUser = AllUsers[id];
         }
         else {
             cout << "this username is already taken, Please enter another username.\n";
@@ -483,9 +483,8 @@ void System::RegisterAdmin() {
                 vEmail = Check_Email(Email);
             } while (!vEmail);
             int id = AllAdmins.size() + 1;
-            Admin admin = {id, Name, Email, Username, Password, Phone};
-            AllAdmins.insert({ id,&admin });
-            CurrAdmin = admin;
+            AllAdmins.insert({ id,(new Admin({id, Name, Email, Username, Password, Phone}))});
+            CurrAdmin = AllAdmins[id];
         }
         else {
             cout << "this username is already taken, Please enter another username.\n";
@@ -500,7 +499,7 @@ void System::RegisterAdmin() {
 bool System::userLogin( string attemptedUsername, string attemptedPassword) {
     for (auto& it : AllUsers) {
         if (it.second->getUsername() == attemptedUsername && it.second->getPassword()==attemptedPassword) {
-            CurrUser = *it.second;
+            CurrUser = it.second;
             return true;
         }
     }
@@ -510,7 +509,7 @@ bool System::userLogin( string attemptedUsername, string attemptedPassword) {
 bool System::AdminLogin( string attemptedUsername, string attemptedPassword) {
     for (auto& it : AllAdmins) {
         if (it.second->getUsername() == attemptedUsername && it.second->getPassword() == attemptedPassword) {
-            CurrAdmin = *it.second;
+            CurrAdmin = it.second;
             return true;
         }
     }
@@ -611,7 +610,7 @@ void System::printAdminMenu() {
     string Logout_choice = "";
     string Quit_choice = "";
     do {
-        cout << "Hello " << CurrAdmin.getName() << endl;
+        cout << "Hello " << CurrAdmin->getName() << endl;
         cout << "\t\tWhat would you like to do ??\n"
             << "\t\t1 - Edit Users\n"
             << "\t\t2 - Edit Leagues\n"
@@ -640,42 +639,42 @@ void System::printAdminMenu() {
         {
         case '1':
             printSeprator();
-            CurrAdmin.edit_user();
+            CurrAdmin->edit_user();
             printSeprator();
             break;
         case '2':
             printSeprator();
-            CurrAdmin.edit_leagues();
+            CurrAdmin->edit_leagues();
             Sleep(5000);
             printSeprator();
             break;
         case '3':
             printSeprator();
-            CurrAdmin.edit_fixture_menu();
+            CurrAdmin->edit_fixture_menu();
             Sleep(5000);
             printSeprator();
             break;
         case '4':
             printSeprator();
-            //CurrAdmin.edit_team_menu();
+            //CurrAdmin->edit_team_menu();
             Sleep(5000);
             printSeprator();
             break;
         case '5':
             printSeprator();
-            CurrAdmin.edit_player_menu();
+            CurrAdmin->edit_player_menu();
             Sleep(5000);
             printSeprator();
             break;
         case '6':
             printSeprator();
-            CurrAdmin.startNewGameweek();
+            CurrAdmin->startNewGameweek();
             Sleep(3000);
             printSeprator();
             break;
 
         case '7':
-            ChangeAccountSettings(&CurrAdmin);
+            ChangeAccountSettings(CurrAdmin);
             break;
 
         case '8':
@@ -776,7 +775,7 @@ void System::printUserMenu() {
     string Quit_choice = "";
     do{
 
-    cout << "Hello " << CurrUser.getName()<<endl;
+    cout << "Hello " << CurrUser->getName()<<endl;
     cout << "\t\tWhat would you like to do ??\n"
         << "\t\t1 - Manage Squad\n"
         << "\t\t2 - Create League\n"
@@ -804,7 +803,7 @@ void System::printUserMenu() {
     {
     case '1':
         printSeprator();
-        ManageSqaudMenu(getsquad(CurrUser.getID()));
+        ManageSqaudMenu(getsquad(CurrUser->getID()));
         printSeprator();
         break;
     case '2':
@@ -827,7 +826,7 @@ void System::printUserMenu() {
         break;
     case '5':
         printSeprator();
-        ChangeAccountSettings(&CurrUser);
+        ChangeAccountSettings(CurrUser);
         Sleep(3000);
         printSeprator();
         break;
@@ -882,7 +881,7 @@ void System::printUserMenu() {
                 cout << "Please write a code consisting of only numbers\n";
             }
         }
-        displayPlayers(AllPlayers[position_picked][stoi(id)],false, "\n");
+        DisplayPlayerGameweek(AllPlayers[position_picked][stoi(id)]);
         
         }
         break;
@@ -1088,7 +1087,7 @@ void System::RunSys() {
                 switch (registerChoice[0]) {
                 case '1':
                     /*Doctor Registeration
-                    -----------------------
+                    displa
                     1-Full Name
                     2-Username
                     3-Password
@@ -1160,7 +1159,7 @@ void System::RunSys() {
 }
 
 
-void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
+void System::displayPlayers(Player* p, bool flag = false, string delim = "\n") {
     /// <summary>
     /// displays only one player
     /// </summary>
@@ -1184,36 +1183,41 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
         cout << "Current Week Yellow Cards: " << p->getPlayer_History().back().getYellow_cards_gameweek() << delim;
         cout << "Total Yellow Cards: " << p->getTotalYellowCards() << delim;
         cout << "Current Week Red Card: " << p->getPlayer_History().back().getRed_cards_gameweek() << delim;
-        cout << "Total Red Cards: " << p->getTotalRedCards() <<endl;
-        
- 
+        cout << "Total Red Cards: " << p->getTotalRedCards() << endl;
 
-            if (p->getPosition()=="MID") {
-                Midfielder* m = (Midfielder*)p;
-                cout << "Current Week Cleansheet: " << m->getPlayer_History().back().getClean_sheets_gameweek() << delim;
-                cout << "Total Cleansheet: " << m->getTotalCleanSheets() << delim;
-            } 
-            else if (p->getPosition() == "DEF") {
-                Defender* d =(Defender*)(p);
-                cout << "Current Week Cleansheet: " << d->getPlayer_History().back().getClean_sheets_gameweek() << delim;
-                cout << "Total Cleansheet: " << d->getTotalCleanSheets() <<endl;
-            }
-            else if (p->getPosition() == "GKP") {
-                GoalKeeper* g =(GoalKeeper*)p;
-                cout << "Current Week Saves: " << g->getPlayer_History().back().getSaves_gameweek() << delim;
-                cout << "Total Saves: " << g->getTotalSaves()<<delim;
-                cout << "Current Week Cleansheet: " << g->getPlayer_History().back().getClean_sheets_gameweek() << delim;
-                cout << "Total Cleansheet: " <<g->getTotalCleanSheets() <<endl;
-            }
+
+
+        if (p->getPosition() == "MID") {
+            Midfielder* m = (Midfielder*)p;
+            cout << "Current Week Cleansheet: " << m->getPlayer_History().back().getClean_sheets_gameweek() << delim;
+            cout << "Total Cleansheet: " << m->getTotalCleanSheets() << delim;
+        }
+        else if (p->getPosition() == "DEF") {
+            Defender* d = (Defender*)(p);
+            cout << "Current Week Cleansheet: " << d->getPlayer_History().back().getClean_sheets_gameweek() << delim;
+            cout << "Total Cleansheet: " << d->getTotalCleanSheets() << endl;
+        }
+        else if (p->getPosition() == "GKP") {
+            GoalKeeper* g = (GoalKeeper*)p;
+            cout << "Current Week Saves: " << g->getPlayer_History().back().getSaves_gameweek() << delim;
+            cout << "Total Saves: " << g->getTotalSaves() << delim;
+            cout << "Current Week Cleansheet: " << g->getPlayer_History().back().getClean_sheets_gameweek() << delim;
+            cout << "Total Cleansheet: " << g->getTotalCleanSheets() << endl;
+        }
+
+    }
+}
+
+void System::DisplayPlayerGameweek(Player *p) {
         System::printSeprator_for_errors();
-        EnterGameweekTodisplay:
+    EnterGameweekTodisplay:
         cout << "Player Played Fixtures\n";
         System::printSeprator_for_errors();
         vector<gameWeek>playerHist = p->getPlayer_History();
         for (auto& match : playerHist) {
-            
-            Fixture * f= AllFixtures[match.getRound()][match.getmatchID()];
-            cout << "Gameweek "<< match.getRound()<<" : " << getClubByID(f->getHomeTeam()) << "\tVS\t" << getClubByID(f->getAwayTeam()) << endl;
+
+            Fixture* f = AllFixtures[match.getRound()][match.getmatchID()];
+            cout << "Gameweek " << match.getRound() << " : " << getClubByID(f->getHomeTeam()) << "\tVS\t" << getClubByID(f->getAwayTeam()) << endl;
         }
         string gameweekNo;
         cout << "Select Match to display its stats (or hit 0 to go back)\n";
@@ -1222,11 +1226,11 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
             System::InputFaliure(gameweekNo, "write a suitable number ");
         if (gameweekNo == "0")
             return;
-        if (System::isNumber(gameweekNo)&&(stoi(gameweekNo)<38 && stoi(gameweekNo) > 0)) {
+        if (System::isNumber(gameweekNo) && (stoi(gameweekNo) < 38 && stoi(gameweekNo) > 0)) {
             for (auto& match : playerHist) {
                 if (match.getRound() == stoi(gameweekNo)) {
                     Fixture* f = AllFixtures[match.getRound()][match.getmatchID()];
-                    cout <<"\t\t" << getClubByID(f->getHomeTeam()) << "\tVS\t" << getClubByID(f->getAwayTeam()) << endl;
+                    cout << "\t\t" << getClubByID(f->getHomeTeam()) << "\tVS\t" << getClubByID(f->getAwayTeam()) << endl;
                     match.displayGameweek(p->getPosition());
                     printSeprator_for_errors();
                 }
@@ -1237,13 +1241,13 @@ void System::displayPlayers(Player*p, bool flag=false, string delim="\n") {
         else {
             cout << "Invalid Choice\n Please choose again\n";
         }
-
-
-        
-        
-    }
-    System::printSeprator_for_errors();
+        string anything;
+        cout << "Press anything to exit\n";
+        cin >> anything;
+    printSeprator_for_errors();
 }
+
+
 
 void System::displayClubs()
 {
@@ -1927,7 +1931,7 @@ void System::writeUserTeams()
             }
             UserTeams << "==========EndCurrentSquad===============\n";
             UserTeams << "==========Gameweeks=============="<<endl;
-            unordered_map<int, pair<vector<pair<string, int>>, int >> gameweeksPoints = team->second->getTotalPointsPerWeek();
+            unordered_map<int, pair<vector<pair<string, int>>, int >> gameweeksPoints = team->second->getSquadPerWeek();
             for (auto weeksquad: gameweeksPoints) {                     /// Getting all gameweeks for the team 
                 
                 UserTeams <<"GameWeek:"<<weeksquad.first<<":Points:"<< weeksquad.second.second<< endl;
@@ -2001,9 +2005,9 @@ void System::createLeague() {
     else {
         isPublic = false;
     }
-    League* NL = new League(id, League_Name,&CurrUser ,isPublic);
+    League* NL = new League(id, League_Name,CurrUser ,isPublic);
     AllLeagues.insert({ id,NL });
-    CurrUser.updateLeagues(id);
+    CurrUser->updateLeagues(id);
     cout << "League created\n";
 
 }
@@ -2028,12 +2032,13 @@ void System::joinLeague(){
                 InputFaliure(leagueID, "Please write a valid league id");
 
             if (isNumber(leagueID)) {
+                
                 for (auto& league : AllLeagues) {
                     if (league.second->getId() == stoi(leagueID)) {
-                        if (!league.second->userExists(CurrUser.getID())) {
-                            league.second->insertUser(&CurrUser);
+                        if (!league.second->userExists(CurrUser->getID())) {
+                            league.second->insertUser(CurrUser);
                             cout << "You are now member of " << league.second->getName() << " League.";
-
+                               
                         }
 
 
@@ -2063,8 +2068,8 @@ void System::joinLeague(){
 
         for (auto& league : AllLeagues) {
             if (league.second->getcode() == stoi(code)) {
-                if (!league.second->userExists(CurrUser.getID())) {
-                    league.second->insertUser(&CurrUser);
+                if (!league.second->userExists(CurrUser->getID())) {
+                    league.second->insertUser(CurrUser);
                     cout << "You are now member of " << league.second->getName() << " League.";
                 }
 
@@ -2114,7 +2119,7 @@ void System::manageLeagues() {
     string User_option;
 
     //Display Personal Leagues
-    vector<int> personalLeagues = CurrUser.getLeagues();
+    vector<int> personalLeagues = CurrUser->getLeagues();
    
     if (personalLeagues.size() != 0) {
         for (int i = 0; i < personalLeagues.size(); i++) {
@@ -2129,6 +2134,7 @@ void System::manageLeagues() {
                 InputFaliure(League_option, "Please write a valid league id");
 
             if (isNumber(League_option)) {
+                if (stoi(League_option) == 0) return;
                 if (find(personalLeagues.begin(), personalLeagues.end(),stoi( League_option)) != personalLeagues.end()) {
                     break;
                 }
@@ -2148,7 +2154,7 @@ void System::manageLeagues() {
             << "\t\t1 - View Leaderboard\n";
 
 
-        if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser.getID()) {
+        if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser->getID()) {
             cout << "\t\t2 - Invite managers to your league\n";
         }
         else {
@@ -2190,6 +2196,7 @@ void System::manageLeagues() {
                 if (isNumber(User_option)) {
                     if (stoi(User_option) == 0) {
                         manageLeagues();
+                        break;
                     }
                      else if (currentLeague->getLeaderBoard().size() >= stoi(User_option)) {
                         break;
@@ -2206,17 +2213,17 @@ void System::manageLeagues() {
         
             currentLeague->displayUser(stoi(User_option) - 1);
             cout << "\n\n\n";
-            AllUsersTeams[CurrUser.getID()]->displaySquad();
+            AllUsersTeams[CurrUser->getID()]->displaySquad();
             break;
 
         case 2:
-            if (currentLeague->getLeagueCreatorID() == CurrUser.getID()) {
+            if (currentLeague->getLeagueCreatorID() == CurrUser->getID()) {
                 //Invite
 
             }
             else {
                 //Leave
-                currentLeague->removeUser(CurrUser.getID());
+                currentLeague->removeUser(CurrUser->getID());
             }
             break;
         case 3:
@@ -2466,7 +2473,7 @@ void System::ChangeAccountSettings(Admin *CurrAdmin)
 }
 
 void System::Transfers() {
-    User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
+    User_Team* Current_Team = AllUsersTeams[CurrUser->getID()];
     Current_Team->displaySquadPrice();
 
     int totalBudget = (float)Current_Team->getTotalBudget()/10;
@@ -2624,7 +2631,7 @@ void System::ManageSqaudMenu(User_Team& c) {
 }
 
 void System::ViewPlayers() { // Last gameweek SQUAD
-    User_Team* Current_Team = AllUsersTeams[CurrUser.getID()];
+    User_Team* Current_Team = AllUsersTeams[CurrUser->getID()];
     int weekNo;
     
     weekNo = Current_Team->displayGameweeks();
