@@ -11,7 +11,7 @@ private:
     string password;
     string email;
     string phoneNumber;
-    string birthdate;
+    //string birthdate;
     int totalPoints;
     string teamName;
     vector<int> leagues;

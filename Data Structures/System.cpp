@@ -520,7 +520,7 @@ User_Team& System::getsquad(int id)
 {    
     unordered_map <int, User_Team*> ::const_iterator got = AllUsersTeams.find(id);
    
-
+    
     if (got == AllUsersTeams.end()) {
         User_Team* newUserTeam = new User_Team(id);
         AllUsersTeams.insert({ id, newUserTeam });
@@ -615,12 +615,11 @@ void System::printAdminMenu() {
             << "\t\t1 - Edit Users\n"
             << "\t\t2 - Edit Leagues\n"
             << "\t\t3 - Edit Fixtures\n"
-            << "\t\t4 - Edit Club\n"
-            << "\t\t5 - Edit Player\n"
-            << "\t\t6 - Start New Gameweek\n"
-            << "\t\t7 - Change Account Info\n"
-            << "\t\t8 - To Logout\n"
-            << "\t\t9 - To Quit the System\n";
+            << "\t\t4 - Edit Player\n"
+            << "\t\t5 - Start New Gameweek\n"
+            << "\t\t6 - Change Account Info\n"
+            << "\t\t7 - To Logout\n"
+            << "\t\t8 - To Quit the System\n";
         do {
             cout << "\tPlease enter your choice here --->\t";
             cin >> menuChoice;
@@ -656,28 +655,22 @@ void System::printAdminMenu() {
             break;
         case '4':
             printSeprator();
-            //CurrAdmin->edit_team_menu();
-            Sleep(5000);
-            printSeprator();
-            break;
-        case '5':
-            printSeprator();
             CurrAdmin->edit_player_menu();
             Sleep(5000);
             printSeprator();
             break;
-        case '6':
+        case '5':
             printSeprator();
             CurrAdmin->startNewGameweek();
             Sleep(3000);
             printSeprator();
             break;
 
-        case '7':
+        case '6':
             ChangeAccountSettings(CurrAdmin);
             break;
 
-        case '8':
+        case '7':
 
             do {
                 cout << "Are you sure you want to logout? (Y/N)\n";
@@ -715,7 +708,7 @@ void System::printAdminMenu() {
 
             } while (Logout_choice[0] != 'Y' || Logout_choice[0] != 'y' || Logout_choice[0] == 'N' || Logout_choice[0] == 'n');
             break;
-        case '9':
+        case '8':
             cout << "Are you Sure you want to Quit?\n";
             do {
                 cin >> Quit_choice;
@@ -1216,7 +1209,7 @@ void System::DisplayPlayerGameweek(Player *p) {
         vector<gameWeek>playerHist = p->getPlayer_History();
         for (auto& match : playerHist) {
 
-            Fixture* f = AllFixtures[match.getRound()][match.getmatchID()];
+            Fixture* f = AllFixtures[match.getRound()][match.getmatchID()];// round 
             cout << "Gameweek " << match.getRound() << " : " << getClubByID(f->getHomeTeam()) << "\tVS\t" << getClubByID(f->getAwayTeam()) << endl;
         }
         string gameweekNo;

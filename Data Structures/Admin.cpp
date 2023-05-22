@@ -602,7 +602,7 @@ EnterLeagueID:
 	if (System::AllLeagues.find(stoi(leagueID)) == System::AllLeagues.end()){
 		cout << "\t\tPlease Enter a valid League\n";
 		goto EnterLeagueID;
-	}
+	}	
 	League* currentleague = System::AllLeagues[stoi(leagueID)];
 	EnterEditChoice:
 	cout << "\t\tWhat do you want to edit for this league(" << currentleague->getName() << ") ?\n";
@@ -623,7 +623,7 @@ EnterLeagueID:
 		}
 	switch(choice[0]){
 		case'1':
-			cout << "This league is " << ((currentleague->IsPublic()==true) ? "Public":"Not Public");
+			cout << "This league is " << ((currentleague->IsPublic()) ? "Public":"Not Public");
 			cout << "\nWould you like to change it?(Y/N)";
 			cin >> confirm;
 			if (confirm == "Y" || confirm == "y") {

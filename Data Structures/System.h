@@ -32,7 +32,7 @@ public:
 	static unordered_map<int, Admin*> AllAdmins;//Admin id, Admin object
 	static unordered_map<string, Club*> AllClubs; //Club name,club object
 	static unordered_map < string, unordered_map<int, Player *>> AllPlayers;//position,{player id,player object}
-	static unordered_map <int, User_Team*> AllUsersTeams;//User Team id, User Team object
+	static unordered_map <int, User_Team*> AllUsersTeams;//User id, User Team object
 	static unordered_map<int, League*> AllLeagues; //League id, League object
 	static unordered_map<int,unordered_map<int, Fixture*>>AllFixtures;//gameweek number,{ fixture id, fixture }
 	//============= System Run ===========
@@ -48,19 +48,19 @@ public:
 	static void printSeprator_for_errors();
 	static void InputFaliure(string& choice, string message);
 	static bool Check_Name(string& name);
-	static bool Check_Phone(string& Phone);
+	static bool Check_Database(string&username);
 	static bool Check_Username(string& Username);
 	static bool Check_Password(string& Password);
 	static bool Check_Email(string& Email);
 	static bool Check_EmailDatabase(string&Email);
 	static void Pass_Encode(string& pass);
+	static bool Check_Phone(string& Phone);
+	static bool Check_PhoneDatabase(string phone);
 	static bool isNumber(string s);
 		
 	//============= Registeration functions ================
 	static void RegisterUser();
 	static void RegisterAdmin();
-	static bool Check_Database(string&username);
-	static bool Check_PhoneDatabase(string phone);
 	//============= login functions====================
 	static bool userLogin( string attemptedUsername, string attemptedPassword);
 	static bool AdminLogin(string attemptedUsername, string attemptedPassword);
@@ -98,7 +98,7 @@ public:
 	static void writeFixtures();
 	static void writeSystemconfig();
 	//===================Fixtures============================================
-	static Player* manageFixtures(); //return player to admin for editing
+	//static Player* manageFixtures(); //return player to admin for editing
 	static void displayFixtures(int week);
 	static int ChooseFixture(bool&);
 	static string ChooseFixtureClub(int fixtureID,bool&);
