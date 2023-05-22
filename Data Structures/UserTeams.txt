@@ -4,11 +4,11 @@
 5
 2
 0
-105468
+30
 ==========UserTeamClubsCount==============
 Arsenal:2
 Chelsea:1
-City:2
+Man City:2
 Fulham:1
 Liverpool:3
 Spurs:2

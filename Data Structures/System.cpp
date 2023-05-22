@@ -2155,7 +2155,6 @@ void System::manageLeagues() {
 
 
         if (AllLeagues[stoi(League_option)]->getLeagueCreatorID() == CurrUser->getID()) {
-            cout << "\t\t2 - Invite managers to your league\n";
         }
         else {
             cout << "\t\t2 - Leave League\n";
@@ -2219,7 +2218,8 @@ void System::manageLeagues() {
         case 2:
             if (currentLeague->getLeagueCreatorID() == CurrUser->getID()) {
                 //Invite
-
+                cout << "Invalid please choose again\n";
+                manageLeagues();
             }
             else {
                 //Leave
@@ -2478,7 +2478,6 @@ void System::Transfers() {
 
     int totalBudget = (float)Current_Team->getTotalBudget()/10;
     int Transfers_left = Current_Team->getTransfers();
-    cout << "Budget: " << totalBudget << endl;
     cout << "Remaining Transfers: " << Transfers_left << endl << endl;
     cout << "Please write id of the player you want to replace:\n";
     string user_option;
@@ -2496,7 +2495,7 @@ void System::Transfers() {
                             string option;
                             cout << "Are you sure you want to replace player, you will lose 4 points. (Y/N)\n";
                             cin >> option;
-                            if ((option != "Y" || option != "y")) {
+                            if ((option == "Y" || option == "y")) {
                                 Current_Team->RemovePlayer(x.second);
                                 position = x.second->getPosition();
                                 // Reduce Points
