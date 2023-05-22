@@ -15,8 +15,8 @@ Spurs:2
 ==========CurrentSquad==============
 GKP:15
 MID:283
-MID:301
 MID:724
+MID:301
 MID:428
 MID:446
 FWD:28
@@ -59,8 +59,8 @@ Spurs:2
 ==========CurrentSquad==============
 GKP:15
 MID:283
-MID:301
 MID:724
+MID:301
 MID:428
 MID:446
 FWD:28
@@ -94,8 +94,8 @@ MID:301
 MID:368
 MID:755
 FWD:318
-FWD:28
 FWD:427
+FWD:28
 FWD:617
 DEF:284
 DEF:285
