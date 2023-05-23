@@ -19,7 +19,7 @@
 using namespace std;
 
 string const System::choice_error = "\tPlease enter your choice here --->\t";
-vector<string>  System::domains= { "gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" } ;
+vector<string>  System::domains/*= { "gmail.com","outlook.com","yahoo.com","hotmail.com","icloud.com","cis.asu.edu.eg" }*/ ;
 string  System::startchoice="",
         System:: registerChoice = "",
         System::loginChoice = "",
@@ -403,6 +403,12 @@ void System::RegisterUser() {
         }
     } while (vUsername != true);
     cout << "\t\tThank You for registering on our system!\n";
+    cout << "Loging in to the system";
+
+    for (int i = 0; i < 3; i++) {
+        Sleep(1000);
+        cout << ". ";
+    }
     printSeprator();
     loginChoice = "2";
     startchoice = "1";
@@ -491,6 +497,12 @@ void System::RegisterAdmin() {
         }
     } while (vUsername != true);
     cout << "\t\tThank You for registering on our system!\n";
+    cout << "Loging in to the system";
+
+    for (int i = 0; i < 3; i++) {
+        Sleep(1000);
+        cout << ". ";
+    }
     printSeprator();
     loginChoice = "1";
     startchoice = "1";
@@ -721,13 +733,7 @@ void System::printAdminMenu() {
                             cout << ". ";
                         }
                         cout << "\n--------------------Thank You for using our system!--------------------\n";
-                        writeAdmins();
-                        writeUsers();
-                        writeUserTeams();
-                        writeLeagues();
-                        writeClub();
-                        writeFixtures();
-                        writeSystemconfig();
+                        write();
                         Sleep(1000);
                         exit(0);
                         break;
@@ -856,7 +862,7 @@ void System::printUserMenu() {
             }
         }
         displayPlayers(position_picked);
-        cout << "Enter the player ID\n";
+        cout << "\nEnter the player ID\n";
         while (true) {
             cin >> id;
             if (cin.fail())
@@ -875,6 +881,7 @@ void System::printUserMenu() {
             }
         }
         DisplayPlayerGameweek(AllPlayers[position_picked][stoi(id)]);
+        printSeprator();
         
         }
         break;
@@ -929,13 +936,7 @@ void System::printUserMenu() {
                         cout << ". ";
                     }
                     cout << "\n--------------------Thank You for using our system!--------------------\n";
-                    writeAdmins();
-                    writeUsers();
-                    writeUserTeams();
-                    writeLeagues();
-                    writeClub();
-                    writeFixtures();
-                    writeSystemconfig();
+                    write();
                     Sleep(1000);
                     exit(0);
                     break;
@@ -1106,15 +1107,15 @@ void System::RunSys() {
                     printSeprator();
                     break;
                 case '0':
+                    cout << "Exiting the system";
+
+                    for (int i = 0; i < 3; i++) {
+                        Sleep(1000);
+                        cout << ". ";
+                    }
                     cout << "--------------------Thank You for using our system!--------------------\n";
                     
-                    writeAdmins();
-                    writeUsers();
-                    writeUserTeams();
-                    writeLeagues();
-                    writeClub();
-                    writeFixtures();
-                    writeSystemconfig();
+                    write();
                     exit(0);
                     break;
                 default:
@@ -1127,15 +1128,15 @@ void System::RunSys() {
         }
         //Here is to exit the program
         else if (startchoice == "3") {
+            cout << "Exiting the system";
+
+            for (int i = 0; i < 3; i++) {
+                Sleep(1000);
+                cout << ". ";
+            }
             cout << "--------------------Thank You for using our system!--------------------\n";
             
-            writeAdmins();
-            writeUsers();
-            writeUserTeams();
-            writeLeagues();
-            writeClub();
-            writeFixtures();
-            writeSystemconfig();
+            write();
             exit(0);
 
         }
@@ -1168,7 +1169,13 @@ void System::displayPlayers(Player* p, bool flag = false, string delim = "\n") {
     cout << "Total Points: " << p->getTotalPoints() << delim;
     if (!flag) {
         cout << "Position: " << p->getPosition() << delim;
-        cout << "Status: " << p->getPlayer_History().back().getStatus() << delim;
+        //cout <<   "\t\N - Not sure to be able to play ,\n";
+        string status = (p->getPlayer_History().back().getStatus() == "a") ? "Available" :
+            (p->getPlayer_History().back().getStatus() == "i") ? "Injured" :
+            (p->getPlayer_History().back().getStatus() == "u") ? "UnAvailable Sold or on Loan out sted the preimer League" :
+            (p->getPlayer_History().back().getStatus() == "s") ? "Suspended this week" :
+            (p->getPlayer_History().back().getStatus() == "n") ? "Not sure to be able to play" : "Unknown";
+        cout << "Current Status: " << status << delim;
         cout << "Current Week Goals: " << p->getPlayer_History().back().getGoals_scored_gameweek() << delim;
         cout << "Total Goals: " << p->getTotalGoals() << delim;
         cout << "Current Week Assists: " << p->getPlayer_History().back().getAssists_gameweek() << delim;
@@ -1226,6 +1233,9 @@ void System::DisplayPlayerGameweek(Player *p) {
                     cout << "\t\t" << getClubByID(f->getHomeTeam()) << "\tVS\t" << getClubByID(f->getAwayTeam()) << endl;
                     match.displayGameweek(p->getPosition());
                     printSeprator_for_errors();
+                    string anything;
+                    cout << "Press anything to go back\n";
+                    cin >> anything;
                 }
             }
 
@@ -1234,9 +1244,6 @@ void System::DisplayPlayerGameweek(Player *p) {
         else {
             cout << "Invalid Choice\n Please choose again\n";
         }
-        string anything;
-        cout << "Press anything to exit\n";
-        cin >> anything;
     printSeprator_for_errors();
 }
 
@@ -1861,7 +1868,7 @@ void System::writeUsers()
             UsersFile << it->second->getPhoneNumber() << endl;
             UsersFile << it->second->getEmail() << endl;
             UsersFile << it->second->getTotalPoints() << endl;
-            UsersFile << it->second->getTeamName() << endl;
+            UsersFile << space2underscore(it->second->getTeamName()) << endl;
             it++;
         }
 
@@ -1984,7 +1991,8 @@ void System::createLeague() {
     bool isPublic;
 
     cout << "Enter League Name: ";
-    cin >> League_Name;
+    cin.ignore();
+    getline(cin, League_Name);
     if (cin.fail())
         InputFaliure(League_Name, "Enter League Name");
     cout << "Will the league be public? (Y/N)\n";
@@ -2469,7 +2477,7 @@ void System::Transfers() {
     User_Team* Current_Team = AllUsersTeams[CurrUser->getID()];
     Current_Team->displaySquadPrice();
 
-    int totalBudget = (float)Current_Team->getTotalBudget()/10;
+    float totalBudget = (float)Current_Team->getTotalBudget()/10;
     int Transfers_left = Current_Team->getTransfers();
     cout << "Budget: " << totalBudget << endl;
     cout << "Remaining Transfers: " << Transfers_left << endl << endl;
@@ -2489,14 +2497,14 @@ void System::Transfers() {
                             string option;
                             cout << "Are you sure you want to replace player, you will lose 4 points. (Y/N)\n";
                             cin >> option;
-                            if ((option != "Y" || option != "y")) {
+                            if ((option == "Y" || option == "y")) {
                                 Current_Team->RemovePlayer(x.second);
                                 position = x.second->getPosition();
                                 // Reduce Points
                                 Current_Team->PunishTransfers();
                                 flag = true;
                             }
-                                break;
+                            else return;
                             
                         }
                         else {
@@ -2522,7 +2530,7 @@ void System::Transfers() {
     }
     while (true) {
         displayPlayers(position);
-        cout << "Budget: " << (float)Current_Team->getTotalBudget() / 10 << endl;
+        cout << "\nBudget: " << (float)Current_Team->getTotalBudget() / 10 << endl;
         cout << "Remaining Transfers: " << Current_Team->getTransfers() << endl<<endl;
         cout << "Choose Player Id: ";
         string id;
@@ -2603,9 +2611,11 @@ void System::ManageSqaudMenu(User_Team& c) {
             }
             if (User_option == 1) {
                 Transfers();
+                printSeprator();
             }
             else if (User_option == 2) {
                 ViewPlayers();
+                printSeprator();
             }
             else if (User_option == 3) return;
 
@@ -2792,12 +2802,25 @@ void System::writeSystemconfig()
     {
         SystemFile << CurrGameWeek<<endl;
         SystemFile << "================StartDomains==================\n";
-        for (auto& domain : domains)
-            SystemFile << domain << endl;
+        for (int i = 0; i < System::domains.size(); i++) {
+
+            SystemFile << System::domains[i] << endl;
+
+        }
         SystemFile << "================EndDomains==================\n";
     }
 
     SystemFile.close();
+}
+void System::write()
+{
+    writeAdmins();
+    writeUsers();
+    writeUserTeams();
+    writeLeagues();
+    writeClub();
+    writeFixtures();
+    writeSystemconfig();
 }
 void System::ReadSystemconfig()
 {
@@ -2814,10 +2837,10 @@ void System::ReadSystemconfig()
             Systemfile >> DataLine;//"================StartDomains==================\n"
             Systemfile >> DataLine;
             while (DataLine != "================EndDomains==================") {
-                d.push_back(DataLine);
+                domains.push_back(DataLine);
                 Systemfile >> DataLine;
             }
-            domains = d;
+         
         }
         Systemfile.close();
         

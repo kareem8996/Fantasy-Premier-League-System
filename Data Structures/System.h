@@ -97,6 +97,7 @@ public:
 	static void writeClub();
 	static void writeFixtures();
 	static void writeSystemconfig();
+	static void write();
 	//===================Fixtures============================================
 	//static Player* manageFixtures(); //return player to admin for editing
 	static void displayFixtures(int week);

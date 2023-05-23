@@ -1,5 +1,16 @@
 #include "User_Team.h"
 #include "System.h"
+
+
+
+#include <Windows.h>
+
+
+
+
+
+
+
 User_Team::User_Team()
 {
 }
@@ -24,6 +35,12 @@ User_Team::User_Team(int id) {
 	Transfers_left = 0;
 }
 bool User_Team::canAddPlayerPosition(string pos) {
+	if (pos != "GKP" && !isGoalKeeper && totalPlayers == MAX_PLAYERS - 1) {
+		cout << "You have to Add a Goalkeeper to your sqaud\n";
+		return false;
+	}else if (pos == "GKP" && !isGoalKeeper && totalPlayers == MAX_PLAYERS - 1) {
+		return true;
+	}
 	if (pos == "GKP" && !isGoalKeeper) {
 		return true;
 	}
@@ -92,7 +109,7 @@ void User_Team::pickSquad() {
 		if (canAddPlayerPosition(position_picked)) {
 
 			System::displayPlayers(position_picked);
-			cout << "Current Budget available: " << (float)totalBudget / 10 << endl;
+			cout << "\nCurrent Budget available: " << (float)totalBudget / 10 << endl;
 			string id;
 			cout << "Enter the player ID\n";
 			while (true) {
@@ -130,19 +147,23 @@ void User_Team::pickSquad() {
 						}
 						else {
 							cout << "Players limit from the same team exceeded\n";
+							Sleep(3000);
 						}
 					}
 					else {
 						cout << "Player Price exceeds budget\n";
+						Sleep(3000);
 					}
 				}
 			}
 			else {
 				cout << "You already chose this player\n";
+				Sleep(3000);
 			}
 		}
 		else {
 			cout << "You have reached the maximum number of players from this position to choose from\n";
+			Sleep(3000);
 		}
 
 		System::printSeprator();

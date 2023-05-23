@@ -1,3 +1,9 @@
 37
 ================StartDomains==================
+gmail.com
+outlook.com
+yahoo.com
+hotmail.com
+icloud.com
+cis.asu.edu.eg
 ================EndDomains==================
