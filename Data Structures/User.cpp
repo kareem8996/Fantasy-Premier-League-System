@@ -37,9 +37,9 @@ void User::setPhoneNumber(string phoneNumber) {
     this->phoneNumber = phoneNumber;
 }
 
-void User::setBirthdate(string birthdate) {
-    this->birthdate = birthdate;
-}
+//void User::setBirthdate(string birthdate) {
+//    this->birthdate = birthdate;
+//}
 
 void User::setTotalPoints(int totalPoints) {
     this->totalPoints = totalPoints;
@@ -75,9 +75,9 @@ string User::getPhoneNumber() {
     return phoneNumber;
 }
 
-string User::getBirthdate() {
-    return birthdate;
-}
+//string User::getBirthdate() {
+//    return birthdate;
+//}
 
 int User::getTotalPoints() {
     return totalPoints;

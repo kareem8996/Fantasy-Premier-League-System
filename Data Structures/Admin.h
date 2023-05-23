@@ -9,7 +9,7 @@ private:
 	string phoneNumber, name, password, email, userName;
 	int id;
 public:
-
+		
 	Admin(int id,
 		string name,
 		string email,

@@ -235,10 +235,12 @@ void option_choise(int option,Player *&p) {
 		break;
 		///////////////////
 	case 5:
-		while (changed != "a" || changed != "d" || changed != "i" || changed != "n" || changed != "s" || changed != "u")
+		cout << "\t\tA - Available \n" << "\t\tU - Unavailable(Sold for a team outside the Premier League)\n"<< "\t\tI - Injured\n"<< "\t\S - Suspended\n"<< "\t\N - Not sure to be able to play ,\n";
+		while (changed != "a" || changed != "A" || changed != "d" ||changed != "D" || changed != "i" || changed != "I" || changed != "n" || changed != "s" || changed != "u")
 		{
-		cout << "what is the new status 'a d i n s u'";
+		cout << "what is the new status ?";
 			cin >> changed;
+			changed = tolower(changed[0]);
 		}
 		p->updateStatusGameweek(changed);
 		break;
@@ -388,7 +390,7 @@ void Admin::edit_player_menu()
 
 	System::displayPlayers(position_picked);
 	string id;
-	cout << "Enter the player ID\n";
+	cout << "\nEnter the player ID\n";
 	while (true) {
 		cin >> id;
 		if (cin.fail())
@@ -602,7 +604,7 @@ EnterLeagueID:
 	if (System::AllLeagues.find(stoi(leagueID)) == System::AllLeagues.end()){
 		cout << "\t\tPlease Enter a valid League\n";
 		goto EnterLeagueID;
-	}
+	}	
 	League* currentleague = System::AllLeagues[stoi(leagueID)];
 	EnterEditChoice:
 	cout << "\t\tWhat do you want to edit for this league(" << currentleague->getName() << ") ?\n";
@@ -623,7 +625,7 @@ EnterLeagueID:
 		}
 	switch(choice[0]){
 		case'1':
-			cout << "This league is " << ((currentleague->IsPublic()==true) ? "Public":"Not Public");
+			cout << "This league is " << ((currentleague->IsPublic()) ? "Public":"Not Public");
 			cout << "\nWould you like to change it?(Y/N)";
 			cin >> confirm;
 			if (confirm == "Y" || confirm == "y") {

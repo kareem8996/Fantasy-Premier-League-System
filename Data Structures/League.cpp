@@ -102,13 +102,16 @@ void League::removeUser(int id)
 }
 
 int League::generateCode() {
-    srand(time(NULL));
+	GenerateCode:
+	srand(time(NULL));
     int num1 = rand() % 10;
     int num2 = rand() % 10;
     int num3 = rand() % 10;
     int num4 = rand() % 10;
-
-   return num1 * 1000 + num2 * 100 + num3 * 10 + num4;
+	int code = num1 * 1000 + num2 * 100 + num3 * 10 + num4;
+	if (CodeExists(code) == true) goto GenerateCode;
+	return code;
+   
 }
 
 void League::insertUser(User*& u) {
@@ -160,6 +163,14 @@ void League::UpdateLeaderBoard()
 		newleaderboard.push({ (System::AllUsersTeams[(p + i)->second.first]->getTotalPointsPerWeek(System::CurrGameWeek - 1) + (p + i)->second.second->getTotalPoints()) , {(p + i)->second.first,(p + i)->second.second}});
 	}
 	this->leaderBoard = newleaderboard;
+}
+bool League::CodeExists(int code)
+{
+	for (auto& l : System::AllLeagues) {
+		if (code == l.second->getcode())
+			return true;
+	}
+	return false;
 }
 void League::togglePublic(){
 	this->isPublic = !this->isPublic;
